@@ -5,6 +5,7 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 
 import { cn } from "@/lib/utils";
+import { NavigationMenuDemo } from "@/components/navbar/NavBar";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,14 +23,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="lg:mx-auto lg:container">
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}
       >
-        {children}
+        <section className=" h-[70px] sticky bg-transparent shadow-lg rounded-lg flex p-5 z-10">
+          <NavigationMenuDemo />
+        </section>
+        <section className="justify-center items-center flex">
+          {children}
+        </section>
       </body>
     </html>
   );
