@@ -4,6 +4,7 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Button } from "../ui/button";
 import Plans from "./plans";
 import CardCarousel from "./cardCarousel";
+import Footer from "./footer";
 type typeModelsList = {
   title: string;
   image: string;
@@ -154,6 +155,7 @@ const HeroPage = () => {
       </section>
       <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
         <div className="w-full bg-black h-1 rounded-md" />
+        <Footer />
       </section>
     </div>
   );
