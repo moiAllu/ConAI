@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Logo from "./logo";
 import { Button } from "../ui/button";
+import { redirect } from "next/navigation";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -56,7 +57,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export const NavigationMenuDemo = () => {
   return (
-    <main className="sm:flex h-full items-center justify-between w-[100%] mx-20 hidden">
+    <div className="sm:flex h-full items-center justify-between w-[100%] mx-20 hidden">
       <Logo />
       <NavigationMenu>
         <NavigationMenuList>
@@ -120,8 +121,10 @@ export const NavigationMenuDemo = () => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <Button>Sign in</Button>
-    </main>
+      <Link href="/login" passHref>
+        <Button onClick={() => redirect("/login")}>Sign in</Button>
+      </Link>
+    </div>
   );
 };
 

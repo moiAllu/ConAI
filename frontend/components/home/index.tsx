@@ -88,14 +88,14 @@ const HeroPage = () => {
               All your AI tools at one place with conAI
             </p>
           </div>
-          <Button>Sign In</Button>
+          <Button>Get Started</Button>
         </div>
         <AspectRatio ratio={16 / 5} className="bg-muted rounded-lg">
           <Image
             src="/hero_grid.svg"
             alt="Photo by Drew Beamer"
             fill
-            className="rounded-md object-cover"
+            className="rounded-md object-cover "
           />
         </AspectRatio>
       </section>
@@ -103,7 +103,7 @@ const HeroPage = () => {
         <h2 className="text-4xl font-bold text-primary ">
           Explore our variety of language models
         </h2>
-        <div className="  bg-slate-100 h-[200px] w-full items-center flex justify-between px-20">
+        <div className="  bg-slate-100 h-[200px] w-full items-center flex justify-between px-20 rounded-md shadow-sm">
           {modelsList.map((model) => (
             <div className="flex items-center justify-center w-full px-2">
               <div className="p-1">

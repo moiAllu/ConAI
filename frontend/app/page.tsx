@@ -1,4 +1,4 @@
-import HeroPage from "@/components/home/hero";
+import HeroPage from "@/components/home";
 import Image from "next/image";
 
 export default function Home() {

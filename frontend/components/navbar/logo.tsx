@@ -12,6 +12,7 @@ const Logo = () => {
         width={100}
         height={100}
         className="rounded-md object-cover"
+        style={{ width: "auto", height: "auto" }}
       />
       {/* </AspectRatio> */}
     </div>
