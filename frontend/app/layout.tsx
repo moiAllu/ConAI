@@ -4,7 +4,8 @@ import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { NavigationMenuDemo } from "@/components/navbar/NavBar";
-
+import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/home/footer";
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -22,7 +23,7 @@ export default function RootLayout({
 }>) {
   const window = globalThis.window;
   return (
-    <html lang="en" className="lg:mx-auto lg:container">
+    <html lang="en" className="">
       <head>
         <title>ConAI</title>
       </head>
@@ -32,12 +33,13 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {excludeLinks.includes(window.location.pathname) && (
-          <div className=" h-[70px] sticky bg-transparent shadow-lg rounded-lg flex p-5 z-10">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {excludeLinks.includes(window.location.pathname) && (
             <NavigationMenuDemo />
-          </div>
-        )}
-        <div className="justify-center items-center flex">{children}</div>
+          )}
+          <div className="justify-center items-center flex">{children}</div>
+          {excludeLinks.includes(window.location.pathname) && <Footer />}
+        </ThemeProvider>
       </body>
     </html>
   );

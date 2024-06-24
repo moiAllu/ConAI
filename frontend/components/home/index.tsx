@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import Plans from "./plans";
 import CardCarousel from "./cardCarousel";
 import Footer from "./footer";
+import { Card } from "../ui/card";
 type typeModelsList = {
   title: string;
   image: string;
@@ -90,20 +91,24 @@ const HeroPage = () => {
           </div>
           <Button>Get Started</Button>
         </div>
-        <AspectRatio ratio={16 / 5} className="bg-muted rounded-lg">
+        <AspectRatio
+          ratio={16 / 5}
+          className="bg-muted rounded-lg border dark:border-gray-900 "
+        >
           <Image
             src="/hero_grid.svg"
             alt="Photo by Drew Beamer"
             fill
-            className="rounded-md object-cover "
+            className="rounded-md object-cover bg-white dark:bg-black saturate-0 dark:contrast-100 contrast-200"
           />
         </AspectRatio>
       </section>
+
       <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
-        <h2 className="text-4xl font-bold text-primary ">
+        <h2 className="text-4xl font-bold text-primary">
           Explore our variety of language models
         </h2>
-        <div className="  bg-slate-100 h-[200px] w-full items-center flex justify-between px-20 rounded-md shadow-sm">
+        <Card className="  h-[200px] w-full items-center flex justify-between px-20 rounded-md shadow-sm">
           {modelsList.map((model) => (
             <div className="flex items-center justify-center w-full px-2">
               <div className="p-1">
@@ -118,7 +123,7 @@ const HeroPage = () => {
               <h3 className="text-lg font-bold text-primary ">{model.title}</h3>
             </div>
           ))}
-        </div>
+        </Card>
       </section>
       <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
         <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%]">
@@ -152,10 +157,6 @@ const HeroPage = () => {
         <div className="flex gap-4 justify-center items-center">
           <CardCarousel />
         </div>
-      </section>
-      <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
-        <div className="w-full bg-black h-1 rounded-md" />
-        <Footer />
       </section>
     </div>
   );
