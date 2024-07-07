@@ -99,16 +99,16 @@ const HeroPage = () => {
             src="/hero_grid.svg"
             alt="Photo by Drew Beamer"
             fill
-            className="rounded-md object-cover bg-white dark:bg-black saturate-0 dark:contrast-100 contrast-200"
+            className="rounded-md object-cover bg-white dark:bg-black saturate-0 dark:brightness-[400%] contrast-[400%]"
           />
         </AspectRatio>
       </section>
 
-      <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
+      <section className=" w-full flex flex-col p-4 sm:p-10 gap-20 justify-center items-center ">
         <h2 className="text-4xl font-bold text-primary">
           Explore our variety of language models
         </h2>
-        <Card className="  h-[200px] w-full items-center flex justify-between px-20 rounded-md shadow-sm">
+        <Card className=" sm:h-[200px] w-full items-center sm:flex justify-between sm:px-20 rounded-md shadow-sm">
           {modelsList.map((model) => (
             <div className="flex items-center justify-center w-full px-2">
               <div className="p-1">
@@ -125,7 +125,7 @@ const HeroPage = () => {
           ))}
         </Card>
       </section>
-      <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
+      <section className=" w-full flex flex-col p-4 sm:p-10  gap-20 justify-center items-center ">
         <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%]">
           <h2 className="text-4xl font-bold text-primary ">Our Plans</h2>
           <h3 className="text-xl text-gray-800 text-primary ">
@@ -133,7 +133,7 @@ const HeroPage = () => {
             effortlessly
           </h3>
         </div>
-        <div className="flex gap-4 justify-center items-center">
+        <div className="grid grid-flow-row sm:grid-cols-3  gap-4 justify-center items-center">
           {plansData.map((plan) => (
             <Plans
               title={plan.title}
@@ -144,12 +144,12 @@ const HeroPage = () => {
           ))}
         </div>
       </section>
-      <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center ">
-        <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%]">
+      <section className=" w-full flex flex-col sm:p-10 p-4 gap-20 justify-center items-center ">
+        <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%] ">
           <h2 className="text-4xl font-bold text-primary ">
             Don't take our word
           </h2>
-          <h3 className="text-xl text-gray-800 text-primary ">
+          <h3 className="text-xl text-gray-800 text-primary ml-4 ">
             Hear from satisfied users whose stories reflect our commitment to
             excellence and user success
           </h3>

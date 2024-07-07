@@ -93,9 +93,9 @@ const footerData = [
 const Footer = () => {
   const { theme } = useTheme();
   return (
-    <section className=" w-full flex flex-col sm:p-10w-full gap-20 justify-center items-center mt-20 lg:mx-auto lg:container ">
+    <section className=" w-full flex flex-col sm:p-10 gap-20 justify-center items-center mt-20 lg:mx-auto lg:container ">
       <div className="w-full bg-black  dark:bg-white h-1 rounded-md" />
-      <div className=" w-full h-full flex flex-col justify-start space-y-10">
+      <div className=" w-full h-full flex flex-col justify-start space-y-10 sm:p-2 p-8">
         <div className="flex  md:px-20 justify-between">
           <div className="flex-grow-1">
             <h1 className="text-2xl font-bold">ConAi</h1>
@@ -105,7 +105,7 @@ const Footer = () => {
             </p>
             {/* <p className="text-sm">© 2021 Conai. All rights reserved.</p> */}
           </div>
-          <div className="flex gap-10">
+          <div className="sm:flex grid grid-flow-row grid-cols-1 gap-10">
             {footerData.map((data) => (
               <div className="flex flex-col gap-2 justify-start items-center ">
                 <h1 className="text-lg font-semibold">{data.title}</h1>

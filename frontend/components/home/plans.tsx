@@ -18,7 +18,7 @@ type Props = {
 };
 const Plans = (props: Props) => {
   return (
-    <Card className="w-[350px] min-h-[550px] justify-between flex flex-col shadow-md">
+    <Card className="w-[350px] min-h-[550px] justify-between flex flex-col shadow-md ">
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardDescription>{props.description}</CardDescription>
