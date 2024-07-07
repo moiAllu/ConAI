@@ -50,7 +50,7 @@ export default function CreateAccount() {
               Create an account
             </Button>
             <Button variant="outline" className="w-full">
-              Sign up with GitHub
+              Sign up with Google
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
