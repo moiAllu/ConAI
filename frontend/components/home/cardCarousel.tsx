@@ -78,7 +78,7 @@ const CardCarousel = () => {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-full max-w-[550px]"
+      className="w-full sm:max-w-[550px] max-w-[300px] "
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
@@ -86,7 +86,7 @@ const CardCarousel = () => {
         {testimonials.map((testimonial) => (
           <CarouselItem key={testimonial.id}>
             <div className="p-1 ">
-              <Card className="min-h-[350px] flex flex-col justify-center">
+              <Card className="sm:min-h-[350px] flex flex-col justify-center">
                 <CardHeader className=" flex flex-col text-xl justify-center items-center w-full ">
                   <Avatar>
                     <AvatarImage src={testimonial.image} alt="Avatar" />
