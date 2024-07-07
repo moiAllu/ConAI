@@ -1,0 +1,57 @@
+import { Metadata } from "next";
+import { cookies } from "next/headers";
+import React, { use } from "react";
+import ResizeableSidebar from "./components/resizeable-sidebar";
+
+export const metadata: Metadata = {
+  title: "Forms",
+  description: "Advanced form example using react-hook-form and Zod.",
+};
+
+const sidebarNavItems = [
+  {
+    title: "Profile",
+    href: "/forms",
+  },
+  {
+    title: "Account",
+    href: "/forms/account",
+  },
+  {
+    title: "Appearance",
+    href: "/forms/appearance",
+  },
+  {
+    title: "Notifications",
+    href: "/forms/notifications",
+  },
+];
+
+interface SettingsLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function DashboardLayout({ children }: SettingsLayoutProps) {
+  const layout = cookies().get("react-resizable-panels:layout");
+  const collapsed = cookies().get("react-resizable-panels:collapsed");
+
+  // const defaultLayout = layout ? JSON?.parse(layout.value) : undefined;
+  // const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : false;
+  const defaultLayout = undefined;
+  const defaultCollapsed = false;
+  return (
+    <>
+      <div className="hidden md:block w-full max-w-[1440px]">
+        <ResizeableSidebar
+          defaultLayout={defaultLayout}
+          defaultCollapsed={defaultCollapsed}
+          navCollapsedSize={5}
+        >
+          <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+            <div className="flex-1 lg:max-w-2xl">{children}</div>
+          </div>
+        </ResizeableSidebar>
+      </div>
+    </>
+  );
+}
