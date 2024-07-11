@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   // const defaultLayout = layout ? JSON?.parse(layout.value) : undefined;
   // const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : false;
   const defaultLayout = undefined;
-  const defaultCollapsed = false;
+  const defaultCollapsed = true;
   return (
     <>
       <div className="hidden md:block w-full max-w-[1440px]">
@@ -47,9 +47,7 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
           defaultCollapsed={defaultCollapsed}
           navCollapsedSize={5}
         >
-          <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-            <div className="flex-1 lg:max-w-2xl">{children}</div>
-          </div>
+          {children}
         </ResizeableSidebar>
       </div>
     </>

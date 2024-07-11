@@ -7,13 +7,12 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import Logo from "@/components/navbar/logo";
-import { Button } from "@/components/ui/button";
 import { Nav } from "../components/nav";
 import { SquarePen, ReceiptText } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Separator } from "@/components/ui/separator";
 import { Inbox, BookText, Siren, MessageSquareMore, Image } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -26,12 +25,13 @@ const UserData = {
   image: "https://images.unsplash.com/photo-1550525811-e5869dd03032",
 };
 const ResizeableSidebar = ({
-  defaultLayout = [16, 440, 655],
-  defaultCollapsed = false,
+  defaultLayout = [5, 440, 655],
+  defaultCollapsed = true,
   navCollapsedSize,
   children,
 }: ResizeableSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
+  console.log(isCollapsed, "isCollapsed");
   const onCollapsed = (collapsed: any) => {
     // setIsCollapsed(collapsed);
     setIsCollapsed(true);
@@ -45,18 +45,18 @@ const ResizeableSidebar = ({
       <ResizablePanelGroup
         direction="horizontal"
         className=" min-h-screen"
-        onLayout={(sizes: number[]) => {
-          document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-            sizes
-          )}`;
-        }}
+        // onLayout={(sizes: number[]) => {
+        //   document.cookie = `react-resizable-panels:layout=${JSON.stringify(
+        //     sizes
+        //   )}`;
+        // }}
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
           collapsedSize={navCollapsedSize}
           collapsible={true}
           minSize={12}
-          maxSize={25}
+          maxSize={18}
           onCollapse={onCollapsed}
           className={cn(
             isCollapsed &&
@@ -138,7 +138,10 @@ const ResizeableSidebar = ({
               />
             </div>
             {isCollapsed ? (
-              <div className=" w-full flex items-center justify-center mb-5">
+              <Link
+                className=" w-full flex items-center justify-center mb-5"
+                href="/forms"
+              >
                 <Avatar className="border border-violet-800">
                   <AvatarImage src={UserData.image} alt="Avatar" />
                   <AvatarFallback>
@@ -146,9 +149,12 @@ const ResizeableSidebar = ({
                       UserData.title.charAt(0) + UserData.title.charAt(1)}
                   </AvatarFallback>
                 </Avatar>
-              </div>
+              </Link>
             ) : (
-              <div className=" w-full flex items-center gap-2 p-2 border rounded-lg mb-5">
+              <Link
+                className=" w-full flex items-center gap-2 p-2 border rounded-lg mb-5"
+                href="/forms"
+              >
                 <Avatar className="border border-violet-800">
                   <AvatarImage src={UserData.image} alt="Avatar" />
                   <AvatarFallback>
@@ -162,16 +168,12 @@ const ResizeableSidebar = ({
                   </span>
                   <span className="text-xs text-gray-500">Admin</span>
                 </div>
-              </div>
+              </Link>
             )}
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={75}>
-          <div className="flex h-full w-full items-center justify-center p-6">
-            {children}
-          </div>
-        </ResizablePanel>
+        <ResizablePanel>{children}</ResizablePanel>
       </ResizablePanelGroup>
     </div>
   );
