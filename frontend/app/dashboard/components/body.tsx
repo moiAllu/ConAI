@@ -5,7 +5,7 @@ import {
   BookText,
   Siren,
   MessageSquareMore,
-  Image,
+  ImagePlus,
   Book,
 } from "lucide-react";
 
@@ -43,7 +43,7 @@ const cardsData = [
     title: "AI Chat",
     description:
       "Create easy to understand summaries from websites and long texts.",
-    icon: <Image />,
+    icon: <ImagePlus /> || "",
     link: "/dashboard/aichat",
   },
   {
@@ -57,8 +57,8 @@ const cardsData = [
 const Body = () => {
   return (
     <div className="grid md:grid-cols-2 sm:p-10 gap-4">
-      {cardsData.map((card) => (
-        <Link href={card.link} className="w-full h-full">
+      {cardsData.map((card, index) => (
+        <Link href={card.link} className="w-full h-full" key={index}>
           <Card className=" shadow-sm cursor-pointer w-full h-full">
             <CardHeader className="px-6 py-4">
               <CardTitle className="text-xl">

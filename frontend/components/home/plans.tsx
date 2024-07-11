@@ -25,9 +25,9 @@ const Plans = (props: Props) => {
       </CardHeader>
       <CardContent>
         <ul>
-          {props.features.map((feature) => {
+          {props.features.map((feature, index) => {
             return (
-              <li className="flex gap-2 items-center p-2  ">
+              <li className="flex gap-2 items-center p-2  " key={index}>
                 <span className="flex h-2 w-2 rounded-full bg-black" />
                 <span className="text-[14px]">{feature}</span>
               </li>

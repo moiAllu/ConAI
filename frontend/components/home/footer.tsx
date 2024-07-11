@@ -106,12 +106,15 @@ const Footer = () => {
             {/* <p className="text-sm">© 2021 Conai. All rights reserved.</p> */}
           </div>
           <div className="sm:flex grid grid-flow-row grid-cols-1 gap-10">
-            {footerData.map((data) => (
-              <div className="flex flex-col gap-2 justify-start items-center ">
+            {footerData.map((data, index) => (
+              <div
+                className="flex flex-col gap-2 justify-start items-center "
+                key={index}
+              >
                 <h1 className="text-lg font-semibold">{data.title}</h1>
                 <div className="text-sm text-gray-400 flex flex-col">
-                  {data.links.map((link) => (
-                    <a href={link.link} className="text-sm">
+                  {data.links.map((link, index) => (
+                    <a href={link.link} className="text-sm" key={index}>
                       {link.title}
                     </a>
                   ))}

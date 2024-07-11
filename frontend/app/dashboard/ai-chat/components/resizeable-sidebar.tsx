@@ -122,15 +122,16 @@ const ResizeableSidebar = ({
             }
             <CirclePlus onClick={() => {}} className="cursor-pointer" />
           </div>
-          {filterChatHistory.map((chat) => (
-            <div className="w-full">
+          {filterChatHistory.map((chat, index) => (
+            <div className="w-full" key={index}>
               <h3 className="text-sm font-semibold">{chat.category}</h3>
               <Separator className="my-1" />
-              {chat.messages.map((message) => (
+              {chat.messages.map((message, index) => (
                 <Button
                   className="py-1 w-full justify-start my-1"
                   size="sm"
                   variant="secondary"
+                  key={index}
                 >
                   <p className="text-xs dark:text-gray-400">{message.title}</p>
                 </Button>

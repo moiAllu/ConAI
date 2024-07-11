@@ -112,8 +112,11 @@ const HeroPage = () => {
           Explore our variety of language models
         </h2>
         <Card className=" sm:h-[200px] w-full items-center sm:flex justify-between sm:px-20 rounded-md shadow-sm">
-          {modelsList.map((model) => (
-            <div className="flex items-center justify-center w-full px-2">
+          {modelsList.map((model, index) => (
+            <div
+              className="flex items-center justify-center w-full px-2"
+              key={index}
+            >
               <div className="p-1">
                 <Image
                   src={`/models/${model.image}.svg`}
@@ -137,8 +140,9 @@ const HeroPage = () => {
           </h3>
         </div>
         <div className="grid grid-flow-row sm:grid-cols-3  gap-4 justify-center items-center">
-          {plansData.map((plan) => (
+          {plansData.map((plan, index) => (
             <Plans
+              key={index}
               title={plan.title}
               description={plan.description}
               features={plan.features}
@@ -150,7 +154,7 @@ const HeroPage = () => {
       <section className=" w-full flex flex-col sm:p-10 p-4 gap-20 justify-center items-center ">
         <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%] ">
           <h2 className="text-4xl font-bold text-primary ">
-            Don't take our word
+            {"Don't take our word"}
           </h2>
           <h3 className="text-xl text-gray-800 text-primary ml-4 ">
             Hear from satisfied users whose stories reflect our commitment to
