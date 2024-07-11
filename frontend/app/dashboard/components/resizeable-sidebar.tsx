@@ -31,13 +31,12 @@ const ResizeableSidebar = ({
   children,
 }: ResizeableSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  console.log(isCollapsed, "isCollapsed");
-  const onCollapsed = (collapsed: any) => {
+  const onCollapsed = () => {
     // setIsCollapsed(collapsed);
     setIsCollapsed(true);
-    document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-      collapsed
-    )}`;
+    // document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+    //   collapsed
+    // )}`;
   };
 
   return (
