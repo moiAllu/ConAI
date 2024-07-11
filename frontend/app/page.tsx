@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <main className="w-full h-full lg:mx-auto lg:container">
-      <HeroPage></HeroPage>
+      <HeroPage />
     </main>
   );
 }

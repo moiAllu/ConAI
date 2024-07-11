@@ -40,16 +40,14 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (
-    <>
-      <div className="hidden md:block w-full max-w-[1440px]">
-        <ResizeableSidebar
-          defaultLayout={defaultLayout}
-          defaultCollapsed={defaultCollapsed}
-          navCollapsedSize={5}
-        >
-          {children}
-        </ResizeableSidebar>
-      </div>
-    </>
+    <div className="hidden md:block w-screen h-screen  max-w-[2160px] max-h-[1440px]">
+      <ResizeableSidebar
+        defaultLayout={defaultLayout}
+        defaultCollapsed={defaultCollapsed}
+        navCollapsedSize={5}
+      >
+        {children}
+      </ResizeableSidebar>
+    </div>
   );
 }

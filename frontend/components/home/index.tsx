@@ -6,6 +6,7 @@ import Plans from "./plans";
 import CardCarousel from "./cardCarousel";
 import Footer from "./footer";
 import { Card } from "../ui/card";
+import Link from "next/link";
 type typeModelsList = {
   title: string;
   image: string;
@@ -89,7 +90,9 @@ const HeroPage = () => {
               All your AI tools at one place with conAI
             </p>
           </div>
-          <Button>Get Started</Button>
+          <Link href="/dashboard">
+            <Button>Get Started</Button>
+          </Link>
         </div>
         <AspectRatio
           ratio={16 / 5}

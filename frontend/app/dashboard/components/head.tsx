@@ -1,23 +1,14 @@
 import React from "react";
-import { BellRing, Info, CirclePlus } from "lucide-react";
-import Link from "next/link";
+import { Info, CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+import ReactivateSubscription from "./reactivate-subscription";
 const Head = () => {
   return (
     <div className="w-full">
-      <Link
-        className="flex justify-end items-end cursor-pointer"
-        href="/forms/account"
-      >
-        <div className="flex px-2 py-1 items-end mr-20 mt-8 gap-2 justify-center rounded outline outline-gray-400 shadow-sm">
-          <BellRing size={18} />
-          <h1 className="font-medium text-sm font-sans">
-            {"Reactivate your subscription"}
-          </h1>
-        </div>
-      </Link>
+      <div className="mt-8">
+        <ReactivateSubscription />
+      </div>
       <div className="flex flex-col justify-center items-center w-full sm:mt-2 md:space-y-14 space-y-5">
         <h1 className="font-bold text-4xl">Apps</h1>
         <div className="flex flex-col w-full  items-center space-y-1">

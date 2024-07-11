@@ -44,7 +44,7 @@ const ResizeableSidebar = ({
     <div className="w-full h-full">
       <ResizablePanelGroup
         direction="horizontal"
-        className=" min-h-screen"
+        className="w-full h-full"
         // onLayout={(sizes: number[]) => {
         //   document.cookie = `react-resizable-panels:layout=${JSON.stringify(
         //     sizes
@@ -60,7 +60,7 @@ const ResizeableSidebar = ({
           onCollapse={onCollapsed}
           className={cn(
             isCollapsed &&
-              "min-w-[50px] transition-all duration-300 ease-in-out"
+              "min-w-[50px] min-h-full transition-all duration-300 ease-in-out"
           )}
           onExpand={() => setIsCollapsed(false)}
         >
