@@ -34,11 +34,7 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {excludeLinks.includes(window.location.pathname) && (
-            <NavigationMenuDemo />
-          )}
-          <div className="justify-center items-center flex">{children}</div>
-          {excludeLinks.includes(window.location.pathname) && <Footer />}
+          {children}
         </ThemeProvider>
       </body>
     </html>

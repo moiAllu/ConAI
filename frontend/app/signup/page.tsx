@@ -4,9 +4,9 @@ import { InputOTPForm } from "./components/opt-verification";
 
 const SignUp = () => {
   return (
-    <div className="md:flex justify-between items-center gap-8 ">
+    <div className="w-full h-screen md:flex justify-center items-center space-x-8">
       <CreateAccount />
-      <div className=" flex flex-col gap-4 w-full h-full max-w-[300px]">
+      <div className=" flex flex-col gap-4 w-full h-full max-w-[300px] justify-center">
         <div>
           <h2 className="text-2xl font-bold">Verify your email</h2>
           <p className="text-sm text-gray-500">

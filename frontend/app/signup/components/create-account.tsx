@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 
 export default function CreateAccount() {
   return (
-    <div className="h-screen w-full flex justify-center items-center">
+    <div className="flex justify-center items-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">Sign Up</CardTitle>

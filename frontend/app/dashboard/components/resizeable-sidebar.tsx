@@ -110,28 +110,28 @@ const ResizeableSidebar = ({
                     label: "",
                     icon: Image,
                     variant: "ghost",
-                    href: "dashboard/image-generator",
+                    href: "/dashboard/image-generator",
                   },
                   {
                     title: "Content Detector",
                     label: "",
                     icon: Siren,
                     variant: "ghost",
-                    href: "dashboard/content-detector",
+                    href: "/dashboard/content-detector",
                   },
                   {
                     title: "AI Chat",
                     label: "",
                     icon: MessageSquareMore,
                     variant: "ghost",
-                    href: "dashboard/ai-chat",
+                    href: "/dashboard/ai-chat",
                   },
                   {
                     title: "Summarizer",
                     label: "",
                     icon: BookText,
                     variant: "ghost",
-                    href: "dashboard/summarizer",
+                    href: "/dashboard/summarizer",
                   },
                 ]}
               />

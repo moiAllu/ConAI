@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 export default function ForgotPasswordForm() {
   return (
     <div className="h-screen w-full flex justify-center items-center space-x-4">
-      <Card className="mx-auto max-w-sm">
+      <Card className="max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Forgot Password</CardTitle>
           <CardDescription>
@@ -51,7 +51,7 @@ export default function ForgotPasswordForm() {
           </div>
         </CardContent>
       </Card>
-      <Card className=" max-w-[350px]">
+      <Card className="max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Email Sent</CardTitle>
           <CardDescription>
