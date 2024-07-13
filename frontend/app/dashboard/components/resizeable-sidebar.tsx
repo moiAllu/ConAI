@@ -67,10 +67,9 @@ const ResizeableSidebar = ({
             <div
               className={`${
                 isCollapsed ? "flex" : "flex flex-col"
-              }mb-10 items-center justify-between`}
+              }my-10 items-center justify-between`}
             >
               <Logo />
-
               {!isCollapsed && <ThemeToggle />}
             </div>
             <div className="flex-1 sm: mt-5">
