@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { NavigationMenuDemo } from "@/components/navbar/NavBar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "@/components/home/footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
