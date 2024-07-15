@@ -96,12 +96,13 @@ const Footer = () => {
     <section className=" w-full flex flex-col sm:p-10 gap-20 justify-center items-center mt-20 lg:mx-auto lg:container ">
       <div className="w-full bg-black  dark:bg-white h-1 rounded-md" />
       <div className=" w-full h-full flex flex-col justify-start space-y-10 sm:p-2 p-8">
-        <div className="flex  md:px-20 justify-between">
-          <div className="flex-grow-1">
+        <div className="grid sm:flex md:px-20 justify-between w-full ">
+          <div className=" sm:flex grid grid-flow-row grid-cols-1 sm:flex-col justify-items-center mb-10 sm:mb-0 ">
             <h1 className="text-2xl font-bold">ConAi</h1>
-            <p className="text-sm w-[70%] text-gray-600">
-              Conai is a platform that allows you to access the latest AI
-              models.
+            <p className="sm:text-sm w-[70%] text-gray-600 text-xs text-center sm:text-start ">
+              {
+                "Conai is a platform that allows you to access the latest AI models."
+              }
             </p>
             {/* <p className="text-sm">© 2021 Conai. All rights reserved.</p> */}
           </div>

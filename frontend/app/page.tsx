@@ -1,3 +1,4 @@
+"use client";
 import HeroPage from "@/components/home";
 import Footer from "@/components/home/footer";
 import { NavigationMenuDemo } from "@/components/navbar/NavBar";

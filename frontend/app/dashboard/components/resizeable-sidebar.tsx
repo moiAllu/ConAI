@@ -1,5 +1,5 @@
 "use client";
-import React, { Children } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 import {
   ResizableHandle,
@@ -13,6 +13,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Inbox, BookText, Siren, MessageSquareMore, Image } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { useWindowSize } from "@/lib/hooks";
+import { usePathname } from "next/navigation";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -38,9 +40,11 @@ const ResizeableSidebar = ({
     //   collapsed
     // )}`;
   };
+  const pathname = usePathname();
+  const isPhone = useWindowSize().width < 640;
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full ">
       <ResizablePanelGroup
         direction="horizontal"
         className="w-full h-full"
@@ -65,12 +69,17 @@ const ResizeableSidebar = ({
         >
           <div className="flex flex-col h-full justify-between p-2 gap-5">
             <div
-              className={`${
-                isCollapsed ? "flex" : "flex flex-col"
-              }mb-10 items-center justify-between`}
+              className={` ${
+                isCollapsed && "h-16"
+              } flex items-center justify-between w-full `}
             >
-              <Logo />
-
+              {isCollapsed ? (
+                <div className="flex items-center justify-center w-full">
+                  <span className="text-4xl font-bold ">C</span>
+                </div>
+              ) : (
+                <Logo />
+              )}
               {!isCollapsed && <ThemeToggle />}
             </div>
             <div className="flex-1 sm: mt-5">
@@ -80,21 +89,26 @@ const ResizeableSidebar = ({
                   {
                     title: "Dashboard",
                     icon: Inbox,
-                    variant: "default",
+                    variant: pathname === "/dashboard" ? "default" : "ghost",
                     href: "/dashboard",
                   },
                   {
                     title: "Rewrite",
                     label: "",
                     icon: SquarePen,
-                    variant: "ghost",
+                    variant:
+                      pathname === "/dashboard/rewrite" ? "default" : "ghost",
+
                     href: "/dashboard/rewrite",
                   },
                   {
                     title: "AI Writing",
                     label: "",
                     icon: ReceiptText,
-                    variant: "ghost",
+                    variant:
+                      pathname === "/dashboard/ai-writing"
+                        ? "default"
+                        : "ghost",
                     href: "/dashboard/ai-writing",
                   },
                 ]}
@@ -109,28 +123,38 @@ const ResizeableSidebar = ({
                     title: "Image Generator",
                     label: "",
                     icon: Image,
-                    variant: "ghost",
+                    variant:
+                      pathname === "/dashboard/image-generator"
+                        ? "default"
+                        : "ghost",
                     href: "/dashboard/image-generator",
                   },
                   {
                     title: "Content Detector",
                     label: "",
                     icon: Siren,
-                    variant: "ghost",
+                    variant:
+                      pathname === "/dashboard/content-detector"
+                        ? "default"
+                        : "ghost",
                     href: "/dashboard/content-detector",
                   },
                   {
                     title: "AI Chat",
                     label: "",
                     icon: MessageSquareMore,
-                    variant: "ghost",
+                    variant:
+                      pathname === "/dashboard/ai-chat" ? "default" : "ghost",
                     href: "/dashboard/ai-chat",
                   },
                   {
                     title: "Summarizer",
                     label: "",
                     icon: BookText,
-                    variant: "ghost",
+                    variant:
+                      pathname === "/dashboard/summarizer"
+                        ? "default"
+                        : "ghost",
                     href: "/dashboard/summarizer",
                   },
                 ]}
