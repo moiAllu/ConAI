@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (
-    <div className=" md:block w-screen h-screen  max-w-[2160px] max-h-[1440px]">
+    <div className=" block w-screen h-screen  max-w-[2160px] max-h-[1440px]">
       <ResizeableSidebar
         defaultLayout={defaultLayout}
         defaultCollapsed={defaultCollapsed}

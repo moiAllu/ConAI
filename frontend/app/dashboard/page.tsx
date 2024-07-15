@@ -3,7 +3,7 @@ import Head from "./components/head";
 
 const Dashboard = () => {
   return (
-    <div className="w-full h-full max-h-screen flex flex-col space-y-5 justify-evenly">
+    <div className="w-full h-full max-h-screen flex flex-col space-y-5 justify-evenly p-2">
       <Head />
       <Body />
     </div>

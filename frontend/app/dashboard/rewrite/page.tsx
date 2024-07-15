@@ -10,7 +10,7 @@ const RewritePage = () => {
       <Nav>
         <DynamicCard />
       </Nav>
-      <div className="py-5 h-full w-full flex px-5 items-center  space-x-4">
+      <div className="p-2 sm:p-5 h-full w-full flex  items-center  space-x-4">
         {!isPhone && <DynamicCard />}
         <OutputCard />
       </div>

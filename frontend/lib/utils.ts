@@ -23,7 +23,6 @@ export function categorizeChatMessages(chatMessages: ChatMessage[]): IndexedChat
   chatMessages.forEach(message => {
       const messageDate = message.dateTime;
       const diffTime = now.getTime() - messageDate.getTime(); // Difference in milliseconds
-    console.log(diffTime)
       // Convert difference to days
       const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24) -1);
 

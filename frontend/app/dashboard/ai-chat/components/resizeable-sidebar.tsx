@@ -82,7 +82,6 @@ const ResizeableSidebar = ({
 }: ResizeableSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const filterChatHistory = categorizeChatMessages(chatHistory);
-  console.log(filterChatHistory);
   const onCollapsed = (collapsed: any) => {
     // setIsCollapsed(collapsed);
     setIsCollapsed(true);
