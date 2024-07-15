@@ -58,7 +58,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export const NavigationMenuDemo = () => {
   return (
-    <div className=" h-[60px] sticky top-0 bg-white dark:bg-black bg-opacity-95 shadow-md dark:shadow-sm dark:shadow-gray-900 rounded-lg flex p-5 z-10 lg:mx-auto lg:container">
+    <div className=" h-[60px]  sticky top-0 bg-white dark:bg-black bg-opacity-95 shadow-md dark:shadow-sm dark:shadow-gray-900 rounded-lg flex p-5 z-10 md:mx-auto md:container">
       <div className="sm:flex h-full items-center justify-between w-[100%] mx-20 hidden">
         <Logo />
         <NavigationMenu>
