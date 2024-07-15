@@ -98,14 +98,14 @@ export function AppearanceForm() {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="grid max-w-md grid-cols-2 gap-8 pt-2"
+                className="grid max-w-md sm:grid-cols-2 gap-8 pt-2"
               >
                 <FormItem>
                   <FormLabel className="[&:has([data-state=checked])>div]:border-primary">
                     <FormControl>
                       <RadioGroupItem value="light" className="sr-only" />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted p-1 hover:border-accent">
+                    <div className=" items-center rounded-md border-2 border-muted p-1 hover:border-accent mx-10 sm:mx-0">
                       <div className="space-y-2 rounded-sm bg-[#ecedef] p-2">
                         <div className="space-y-2 rounded-md bg-white p-2 shadow-sm">
                           <div className="h-2 w-[80px] rounded-lg bg-[#ecedef]" />
@@ -131,7 +131,7 @@ export function AppearanceForm() {
                     <FormControl>
                       <RadioGroupItem value="dark" className="sr-only" />
                     </FormControl>
-                    <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground">
+                    <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground  mx-10 sm:mx-0">
                       <div className="space-y-2 rounded-sm bg-slate-950 p-2">
                         <div className="space-y-2 rounded-md bg-slate-800 p-2 shadow-sm">
                           <div className="h-2 w-[80px] rounded-lg bg-slate-400" />
@@ -157,7 +157,9 @@ export function AppearanceForm() {
           )}
         />
 
-        <Button type="submit">Update preferences</Button>
+        <Button type="submit" className="w-full">
+          Update preferences
+        </Button>
       </form>
     </Form>
   );

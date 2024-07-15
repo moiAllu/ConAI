@@ -23,20 +23,20 @@ const AIWritingPage = () => {
       <Separator className="my-4" />
       <div className="w-full h-full justify-between flex-col flex">
         <div className="w-full h-full flex-col">
-          <div className="justify-center flex flex-grow flex-col sm:p-6 p-2 items-center">
+          <div className="justify-center flex flex-grow flex-col sm:p-6 p-2 items-center text-center">
             <h1 className="text-3xl font-semibold">AI Chat</h1>
             <p className="text-gray-500 dark:text-gray-700 text-sm">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit.
             </p>
           </div>
           <div className="w-full justify-center flex min-w-lg ">
-            <Card className="grid grid-cols-2 gap-2 sm:p-5 p-2 items-center w-[90%]  border-none ">
-              <Card>
+            <Card className="grid sm:grid-cols-2 gap-2 sm:p-5 p-2 items-center w-[90%]  border-none ">
+              <Card className="hidden sm:flex flex-col">
                 <CardHeader>
                   <CardTitle className="text-md">AI Writing</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <span>
+                  <span className="text-center">
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   </span>
                 </CardContent>
@@ -46,7 +46,7 @@ const AIWritingPage = () => {
                   <CardTitle className="text-md">AI Writing</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <span>
+                  <span className="text-center">
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   </span>
                 </CardContent>
@@ -63,23 +63,22 @@ const AIWritingPage = () => {
               </Button>
             </div>
             <div className="flex justify-between w-full items-center">
-              <div className=" flex items-start w-full text-gray-600 sm:space-x-2">
+              <div className=" flex items-start w-full text-gray-600 sm:space-x-2 ">
                 <Button
                   variant="ghost"
                   size="sm"
                   className="flex items-center sm:space-x-1"
                 >
                   <Paperclip size={18} />
-                  <span>Attach</span>
+                  <span className=" hidden sm:flex">Attach</span>
                 </Button>
-                <Separator orientation="vertical" />
                 <Button
                   variant="ghost"
                   size="sm"
                   className="flex items-center space-x-1"
                 >
                   <FileSearch size={18} />
-                  <span>Browse Propmts</span>
+                  <span className=" hidden sm:flex">Browse Propmts</span>
                 </Button>
               </div>
               <div>

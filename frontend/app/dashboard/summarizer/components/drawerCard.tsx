@@ -18,15 +18,15 @@ const DrawerCard = () => {
       <fieldset className="flex flex-col rounded-lg border p-4 w-full  h-full rela">
         <legend className="px-1 text-sm font-medium">Settings</legend>
         <div className="w-full ">
-          <Label htmlFor="role">Standards</Label>
-          <Select defaultValue="system">
+          <Label htmlFor="role">Level</Label>
+          <Select defaultValue="Medium">
             <SelectTrigger>
               <SelectValue placeholder="Select a role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="system">System</SelectItem>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="assistant">Assistant</SelectItem>
+              <SelectItem value="Short">Short</SelectItem>
+              <SelectItem value="Medium">Medium</SelectItem>
+              <SelectItem value="Long">Long</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -40,7 +40,7 @@ const DrawerCard = () => {
         </div>
       </fieldset>
       <Button type="submit" className="w-full">
-        Detect Content
+        Summarize
       </Button>
     </form>
   );

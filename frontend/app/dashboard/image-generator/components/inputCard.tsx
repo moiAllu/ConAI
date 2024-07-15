@@ -1,13 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/registry/new-york/ui/textarea";
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/new-york/ui/select";
 import SelectInput from "./selectInput";
 import { Button } from "@/components/ui/button";
 const differentInputs = [
@@ -39,7 +32,13 @@ const differentInputs = [
   {
     label: "Color",
     defaultValue: "No Color",
-    options: ["Warm tone", "Cool tone", "Muted Color", "Vibrant Color"],
+    options: [
+      "Warm tone",
+      "Cool tone",
+      "Muted Color",
+      "Vibrant Color",
+      "No Color",
+    ],
   },
   {
     label: "Format",

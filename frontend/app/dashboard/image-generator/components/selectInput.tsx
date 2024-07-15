@@ -18,7 +18,7 @@ const SelectInput = (props: SelectInputProps) => {
   return (
     <div className="grid gap-3" key={props.index}>
       <Label htmlFor="role">{props.label}</Label>
-      <Select defaultValue="system">
+      <Select defaultValue={props.defaultValue}>
         <SelectTrigger>
           <SelectValue placeholder={props.defaultValue} />
         </SelectTrigger>
