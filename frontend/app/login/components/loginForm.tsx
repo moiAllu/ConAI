@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,43 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import LoadingSpinner from "@/components/loading-spinner";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const formSubmitHandler = async (e: any) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const user = await fetch("http://localhost:8000/api/login", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+        method: "POST",
+      });
+      const data = await user.json();
+      if (data.message === "Login successful") {
+        console.log("Login successful");
+
+        router.push("/dashboard");
+      } else {
+        setError(data.message);
+      }
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setError("Internal server error");
+    }
+  };
+
   return (
     <div className="h-screen w-full flex justify-center items-center">
       <Card className="mx-auto max-w-sm">
@@ -22,14 +58,17 @@ export default function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
+          <form className="grid gap-4" onSubmit={formSubmitHandler}>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
                 required
+                className={`${error && "bg-red-100 border-red-700"}`}
               />
             </div>
             <div className="grid gap-2">
@@ -42,15 +81,36 @@ export default function LoginForm() {
                   Forgot your password?
                 </Link>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                className={`${error && "bg-red-100 border-red-700"}`}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            {error && (
+              <div className="text-red-500 text-sm text-center">{error}</div>
+            )}
+            <Button
+              type="submit"
+              className="w-full flex items-center space-x-2"
+              disabled={loading}
+              variant={loading ? "ghost" : "default"}
+            >
+              <span>Login</span>
+              {loading && <LoadingSpinner />}
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button
+              variant="outline"
+              className="w-full"
+              type="submit"
+              disabled={loading}
+            >
               Login with Google
             </Button>
-          </div>
+          </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="underline">
