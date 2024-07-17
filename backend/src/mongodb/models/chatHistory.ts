@@ -2,16 +2,16 @@ import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 
 interface IChatMessage {
-  user: string;
   role: 'user' | 'assistant';
   message: string;
-  created_at: Date;
+  createdAt?: Date;
 }
 
 interface IChatHistory extends Document {
-  createdAt: Date;
-  title: string;
+  userId: string;
+  title?: string;
   messages: IChatMessage[];
+  createdAt?: Date;
 }
 
 const chatHistorySchema = new Schema<IChatHistory>({
@@ -22,15 +22,15 @@ const chatHistorySchema = new Schema<IChatHistory>({
 
   title: {
     type: String,
+  },
+
+  userId: {
+    type: String,
     required: true,
   },
 
   messages: [
     {
-      user: {
-        type: String,
-        required: true,
-      },
       role: {
         type: String,
         required: true,
@@ -39,7 +39,7 @@ const chatHistorySchema = new Schema<IChatHistory>({
         type: String,
         required: true,
       },
-      created_at: {
+      createdAt: {
         type: Date,
         default: Date.now,
       },
