@@ -1,15 +1,15 @@
-"use client";
-import React, { Children } from "react";
-import { cn } from "@/lib/utils";
+'use client';
+import React, { Children } from 'react';
+import { cn } from '@/lib/utils';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/navbar/logo";
-import { SquarePen, ReceiptText } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+} from '@/components/ui/resizable';
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/navbar/logo';
+import { SquarePen, ReceiptText } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Inbox,
   BookText,
@@ -17,11 +17,13 @@ import {
   MessageSquareMore,
   Image,
   CirclePlus,
-} from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
-import { categorizeChatMessages } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
+} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
+import { categorizeChatMessages } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
+import { IChat } from '../store';
+import { useRouter } from 'next/navigation';
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -29,50 +31,50 @@ interface ResizeableSidebarProps {
   children: React.ReactNode;
 }
 
-const chatHistory: ChatMessage[] = [
-  {
-    title: "Morning Coffee Plans",
-    dateTime: new Date("2024-07-11T07:30:00"), // Example date and time (YYYY-MM-DDTHH:mm:ss)
-    content:
-      "Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️",
-  },
-  {
-    title: "Morning Coffee Plans",
-    dateTime: new Date("2024-07-11T07:30:00"), // Example date and time (YYYY-MM-DDTHH:mm:ss)
-    content:
-      "Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️",
-  },
-  {
-    title: "Morning Coffee Plans",
-    dateTime: new Date("2024-07-11T07:30:00"), // Example date and time (YYYY-MM-DDTHH:mm:ss)
-    content:
-      "Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️",
-  },
-  {
-    title: "Project Update",
-    dateTime: new Date("2024-07-10T10:15:00"),
-    content:
-      "Team A shares progress updates and assigns tasks for the day. 📈📋",
-  },
-  {
-    title: "Lunch Break Ideas",
-    dateTime: new Date("2024-07-09T12:00:00"),
-    content:
-      "Alice and Bob brainstorm lunch options and decide on a nearby restaurant. 🍔🥗",
-  },
-  {
-    title: "Client Meeting Prep",
-    dateTime: new Date("2024-07-04T14:30:00"),
-    content:
-      "Alice and Emily discuss strategies and preparations for an upcoming client meeting. 📊📅",
-  },
-  {
-    title: "Technical Discussion",
-    dateTime: new Date("2024-06-27T16:45:00"),
-    content:
-      "Alice and Charlie troubleshoot technical issues and brainstorm solutions. 💻🔧",
-  },
-];
+// const chatHistory: IChat[] = [
+//   {
+//     title: 'Morning Coffee Plans',
+//     dateTime: new Date('2024-07-11T07:30:00'), // Example date and time (YYYY-MM-DDTHH:mm:ss)
+//     content:
+//       'Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️',
+//   },
+//   {
+//     title: 'Morning Coffee Plans',
+//     dateTime: new Date('2024-07-11T07:30:00'), // Example date and time (YYYY-MM-DDTHH:mm:ss)
+//     content:
+//       'Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️',
+//   },
+//   {
+//     title: 'Morning Coffee Plans',
+//     dateTime: new Date('2024-07-11T07:30:00'), // Example date and time (YYYY-MM-DDTHH:mm:ss)
+//     content:
+//       'Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️',
+//   },
+//   {
+//     title: 'Project Update',
+//     dateTime: new Date('2024-07-10T10:15:00'),
+//     content:
+//       'Team A shares progress updates and assigns tasks for the day. 📈📋',
+//   },
+//   {
+//     title: 'Lunch Break Ideas',
+//     dateTime: new Date('2024-07-09T12:00:00'),
+//     content:
+//       'Alice and Bob brainstorm lunch options and decide on a nearby restaurant. 🍔🥗',
+//   },
+//   {
+//     title: 'Client Meeting Prep',
+//     dateTime: new Date('2024-07-04T14:30:00'),
+//     content:
+//       'Alice and Emily discuss strategies and preparations for an upcoming client meeting. 📊📅',
+//   },
+//   {
+//     title: 'Technical Discussion',
+//     dateTime: new Date('2024-06-27T16:45:00'),
+//     content:
+//       'Alice and Charlie troubleshoot technical issues and brainstorm solutions. 💻🔧',
+//   },
+// ];
 
 const ResizeableSidebar = ({
   defaultLayout = [5, 440, 655],
@@ -81,13 +83,42 @@ const ResizeableSidebar = ({
   children,
 }: ResizeableSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const filterChatHistory = categorizeChatMessages(chatHistory);
+  const [filterChatHistory, setChatHistory] = React.useState(
+    categorizeChatMessages([])
+  );
+  const router = useRouter();
+
   const onCollapsed = (collapsed: any) => {
     // setIsCollapsed(collapsed);
     setIsCollapsed(true);
     document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
       collapsed
     )}`;
+  };
+
+  React.useEffect(() => {
+    // fetch Chat History
+    async function fetchChatHistory(userId: string) {
+      const res = await fetch(
+        'http://localhost:8000/api/chat/ai-assistant/chats/' + userId
+      );
+      const resp = await res.json();
+      console.log('chats hist', resp);
+
+      if (resp?.data?.length) {
+        setChatHistory(() => categorizeChatMessages(resp.data));
+      }
+    }
+
+    fetchChatHistory('1234');
+  }, []);
+
+  const handleChatChange = (chat: any) => {
+    if (chat?._id) {
+      return router.push(`/dashboard/ai-chat?chatId=${chat._id}`);
+    }
+
+    return router.push(`/dashboard/ai-chat`);
   };
 
   return (
@@ -109,7 +140,7 @@ const ResizeableSidebar = ({
         // onCollapse={onCollapsed}
         className={cn(
           isCollapsed &&
-            "min-w-[50px] transition-all duration-300 ease-in-out w-full"
+            'min-w-[50px] transition-all duration-300 ease-in-out w-full'
         )}
         onExpand={() => setIsCollapsed(false)}
       >
@@ -119,20 +150,27 @@ const ResizeableSidebar = ({
             {
               // Chat add button
             }
-            <CirclePlus onClick={() => {}} className="cursor-pointer" />
+            <CirclePlus
+              onClick={() => handleChatChange(null)}
+              className="cursor-pointer"
+            />
           </div>
-          {filterChatHistory.map((chat, index) => (
+          {filterChatHistory.map((grp, index) => (
             <div className="w-full" key={index}>
-              <h3 className="text-sm font-semibold">{chat.category}</h3>
+              <h3 className="text-sm font-semibold">{grp.category}</h3>
               <Separator className="my-1" />
-              {chat.messages.map((message, index) => (
+              {grp.chats.map((message, index) => (
                 <Button
                   className="py-1 w-full justify-start my-1"
                   size="sm"
                   variant="secondary"
                   key={index}
+                  onClick={() => handleChatChange(message)}
                 >
-                  <p className="text-xs dark:text-gray-400">{message.title}</p>
+                  <p className="text-xs dark:text-gray-400">
+                    {message?.title ||
+                      message?.messages[0]?.message?.slice(0, 10) + '...'}
+                  </p>
                 </Button>
               ))}
               <Separator className="my-1" />

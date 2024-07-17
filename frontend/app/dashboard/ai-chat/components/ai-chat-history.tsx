@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { IMessage, useAIChatStore } from '../store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useSearchParams } from 'next/navigation';
 
 type Props = {};
 
@@ -37,7 +38,8 @@ const Message = ({ message }: { message: IMessage }) => {
 
 const AIChatHistory = (props: Props) => {
   const chats = useAIChatStore((state) => state.chats);
-  const chat = chats.find((chat) => chat.id === '1');
+  const searchParams = useSearchParams();
+  const chat = chats.find((chat) => chat.id === searchParams.get('chatId'));
   const hasMessages = chat?.messages?.length || 0;
 
   useEffect(() => {
@@ -57,11 +59,15 @@ const AIChatHistory = (props: Props) => {
       }
     }
 
-    fetchMessages('1');
-  }, []);
+    // fetch chatId from query params
+    const chatId = searchParams.get('chatId');
+    if (chatId) {
+      fetchMessages(chatId);
+    }
+  }, [searchParams]);
 
   return (
-    <div className="justify-center flex flex-grow flex-col sm:p-6 p-2 items-center text-center overflow-y-auto h-[65vh]">
+    <div className="flex flex-grow flex-col sm:p-6 p-2 items-center justify-end text-center overflow-y-auto h-[65vh]">
       {hasMessages ? (
         chat?.messages.map((message) => (
           <Message key={message.id} message={message} />

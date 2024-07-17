@@ -3,7 +3,31 @@ import { getGPTResponse } from '../open-ai';
 import {
   storeMessageInChatHistory,
   getChatHistory,
+  getUserChats,
 } from '../services/chatHistory';
+
+export const getUserChatsController = async (req: Request, res: Response) => {
+  try {
+    // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
+    // const userId = req.user.id;
+    const userId = '1234';
+
+    // get from MOngo Model
+    const userChats = await getUserChats(userId);
+
+    return res.status(200).json({
+      message: 'User chats fetched successfully',
+      status: 200,
+      data: userChats,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      message: 'Internal server error',
+      status: 500,
+    });
+  }
+};
 
 export const getChatHistoryController = async (req: Request, res: Response) => {
   const { chatId } = req.params;

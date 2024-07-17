@@ -9,12 +9,12 @@ export interface IMessage {
   createdAt: string;
 }
 
-interface IChat {
+export interface IChat {
   id: string;
   messages: IMessage[];
   userId: string;
   title?: string;
-  createdAt?: Date;
+  createdAt: Date;
 }
 
 interface States {
@@ -43,6 +43,7 @@ export const useAIChatStore = create<States & Actions>((set) => ({
           id: chatId,
           messages: [message],
           userId: '1',
+          createdAt: new Date(),
         });
       }
 
@@ -62,6 +63,7 @@ export const useAIChatStore = create<States & Actions>((set) => ({
           id: chatId,
           messages,
           userId: '1',
+          createdAt: new Date(),
         });
       }
 

@@ -23,6 +23,11 @@ export const storeMessageInChatHistory = async (
 };
 
 export const getChatHistory = async (id: string, userId: string) => {
-  const chatHistory = await ChatHistory.findOne({ id, userId });
+  const chatHistory = await ChatHistory.findOne({ _id: id, userId });
   return chatHistory;
+};
+
+export const getUserChats = async (userId: string) => {
+  const userChats = await ChatHistory.find({ userId });
+  return userChats;
 };
