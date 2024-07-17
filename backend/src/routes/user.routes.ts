@@ -1,3 +1,4 @@
+import { requestForOtpVerificationCode,otpVerification } from '../controllers/optverification.controller';
 import { login, signup, update_user, delete_user, logout } from '../controllers/user.controller';
 import express, { Request, Response } from 'express';
 
@@ -17,6 +18,12 @@ router.put('/update', update_user);
 
 // User delete route with additional verification middleware
 router.delete('/delete', delete_user);
+
+//User otp request router request route
+router.post("/user/otp-request", requestForOtpVerificationCode);
+
+//User otp verification router request route
+router.post("/user/otp-verification", otpVerification);
 
 
 

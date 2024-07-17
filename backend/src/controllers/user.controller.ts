@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import {UserModel}  from "../mongodb/models" ;
 import * as jwt from 'jsonwebtoken';
 import {utils} from "../helpers/utils";
+import * as cookie from 'cookie';
+import * as bcrypt from 'bcrypt';
 
 const cookieConfig = {
     httpOnly: true, // to disable accessing cookie via client side js
@@ -12,10 +14,10 @@ const cookieConfig = {
 // Login controller
 export const login = async(req: Request, res: Response) => {
     // TODO: Implement login logic
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
     try{
         // Check if user exists
-        const user = await UserModel.findOne({
+        let user = await UserModel.findOne({
             email: email
         });
         if(!user){
@@ -24,8 +26,8 @@ export const login = async(req: Request, res: Response) => {
             });
         }
         // Check if password is correct
-        const checkPass= utils.compareHash(user.password, password);
-        if(user && checkPass){
+        // const checkPass= utils.compareHash(user.password, password);
+        if(bcrypt.compareSync(password,user.password)){
             // Generate JWT token
             const token = jwt.sign({
                 email: user.email,
@@ -33,15 +35,28 @@ export const login = async(req: Request, res: Response) => {
             }, process.env.JWT_SECRET, {
                 expiresIn: "1h"
             })
-            delete user.password;
-            res.cookie('token', token, cookieConfig);
+
+            user.password = undefined;
+
+            res.setHeader(
+                'Set-Cookie',
+                cookie.serialize("conai", token, {
+                  httpOnly: true,
+                  maxAge: 8 * 60 * 60,
+                  path: '/',
+                  sameSite: 'lax',
+                  secure: "true",
+                })
+              )
             // Send token to client
             return res.status(200).json({
                 message: "Login successful",
-                user: user,
-                token: token
+                user: user
             });
         }
+        return res.status(400).json({
+            message: "Password incorrect"
+        });
 
     }catch(e){
         console.log(e);
@@ -62,7 +77,8 @@ export const signup = async(req: Request, res: Response) => {
         });
         if(user){
             return res.status(400).json({
-                message: "User already exists"
+                message: "User already exists",
+                status: 400
             });
         }
         // Hash password
@@ -82,17 +98,27 @@ export const signup = async(req: Request, res: Response) => {
             expiresIn: "1h"
         });
         delete newUser.password;
-        res.cookie('token', token, cookieConfig);
+        res.setHeader(
+            'Set-Cookie',
+            cookie.serialize("conai", token, {
+              httpOnly: true,
+              maxAge: 8 * 60 * 60,
+              path: '/',
+              sameSite: 'lax',
+              secure: "true",
+            })
+          )
         // Send token to client
         return res.status(201).json({
             message: "Signup successful",
-            user: newUser,
-            token: token
+            status: 201,
+            user: newUser
         });
     }catch(e){
         console.log(e);
         return res.status(500).json({
-            message: "Internal server error"
+            message: "Internal server error",
+            status: 500
         });
     }
 };
