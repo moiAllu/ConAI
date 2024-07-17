@@ -6,14 +6,30 @@ import { useSearchParams } from 'next/navigation';
 
 type Props = {};
 
-const Message = ({ message }: { message: IMessage }) => {
+const Message = ({
+  message,
+  isLastMsg,
+}: {
+  message: IMessage;
+  isLastMsg: boolean;
+}) => {
   const isUserMessage = message.role === 'user';
 
   const cardClasses = `p-2 sm:p-4 sm:w-[90%] space-y-2`;
   const textClasses = `text-md ${isUserMessage ? 'text-right' : 'text-left'}`;
 
+  useEffect(() => {
+    if (isLastMsg) {
+      const element = document.getElementById(message.id);
+      element?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    return () => {};
+  }, [isLastMsg, message.id]);
+
   return (
     <div
+      id={message.id}
       className={`text-md flex items-center justify-between w-full p-2  ${
         isUserMessage ? 'flex-row-reverse' : 'flex-row'
       }`}
@@ -70,8 +86,12 @@ const AIChatHistory = (props: Props) => {
     // <div className="flex flex-grow flex-col sm:p-6 p-2 items-center justify-end text-center overflow-y-auto h-[55vh]">
     <div className="sm:p-6 p-2 text-center overflow-y-auto h-[65vh]">
       {hasMessages ? (
-        chat?.messages.map((message) => (
-          <Message key={message.id} message={message} />
+        chat?.messages.map((message, idx) => (
+          <Message
+            key={message.id}
+            message={message}
+            isLastMsg={idx === chat.messages.length - 1}
+          />
         ))
       ) : (
         <>
