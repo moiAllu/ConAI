@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactivateSubscription from '../components/reactivate-subscription';
 import { Separator } from '@/components/ui/separator';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SelectModel } from './components/select-model';
 import AIChatForm from './components/ai-chat-form';
+import AIChatHistory from './components/ai-chat-history';
 
 const AIWritingPage = () => {
   return (
@@ -14,38 +14,7 @@ const AIWritingPage = () => {
       </div>
       <Separator className="my-4" />
       <div className="w-full h-full justify-between flex-col flex">
-        <div className="w-full h-full flex-col">
-          <div className="justify-center flex flex-grow flex-col sm:p-6 p-2 items-center text-center">
-            <h1 className="text-3xl font-semibold">AI Chat</h1>
-            <p className="text-gray-500 dark:text-gray-700 text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </p>
-          </div>
-          <div className="w-full justify-center flex min-w-lg ">
-            <Card className="grid sm:grid-cols-2 gap-2 sm:p-5 p-2 items-center w-[90%]  border-none ">
-              <Card className="hidden sm:flex flex-col">
-                <CardHeader>
-                  <CardTitle className="text-md">AI Writing</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <span className="text-center">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  </span>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-md">AI Writing</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <span className="text-center">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  </span>
-                </CardContent>
-              </Card>
-            </Card>
-          </div>
-        </div>
+        <AIChatHistory />
         <div className="w-full justify-center flex min-w-lg">
           <AIChatForm />
         </div>

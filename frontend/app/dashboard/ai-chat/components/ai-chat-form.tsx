@@ -2,20 +2,33 @@
 
 import React from 'react';
 import { Input } from '@/components/ui/input';
-import { SendHorizontal, Paperclip, FileSearch, Car } from 'lucide-react';
+import { SendHorizontal, Paperclip, FileSearch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AI_CHAT_CONFIG } from '@/config';
+import { useAIChatStore } from '../store';
 type Props = {};
 
 const AIChatForm = (props: Props) => {
   const [input, setInput] = React.useState('');
+  const addMessageToChat = useAIChatStore((state) => state.addMessageToChat);
+  const chatId = '1';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input.trim() === '') {
       return;
     }
+
+    addMessageToChat(
+      {
+        id: Math.random().toString(),
+        role: 'user',
+        message: input,
+        createdAt: new Date().toISOString(),
+      },
+      chatId
+    );
 
     const response = await fetch(
       'http://localhost:8000/api/chat/ai-assistant/open-ai',
@@ -29,6 +42,16 @@ const AIChatForm = (props: Props) => {
     );
     const data = await response.json();
     console.log(data);
+
+    addMessageToChat(
+      {
+        id: Math.random().toString(),
+        role: 'assistant',
+        message: data.data,
+        createdAt: new Date().toISOString(),
+      },
+      chatId
+    );
   };
 
   return (
@@ -65,7 +88,7 @@ const AIChatForm = (props: Props) => {
             className="flex items-center space-x-1"
           >
             <FileSearch size={18} />
-            <span className=" hidden sm:flex">Browse Propmts</span>
+            <span className=" hidden sm:flex">Browse Prompts</span>
           </Button>
         </div>
         <div>

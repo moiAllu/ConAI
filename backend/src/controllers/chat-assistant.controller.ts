@@ -1,6 +1,41 @@
 import { Request, Response } from 'express';
 import { getGPTResponse } from '../open-ai';
-import { storeMessageInChatHistory } from '../services/chatHistory';
+import {
+  storeMessageInChatHistory,
+  getChatHistory,
+} from '../services/chatHistory';
+
+export const getChatHistoryController = async (req: Request, res: Response) => {
+  const { chatId } = req.params;
+  try {
+    // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
+    // const userId = req.user.id;
+    const userId = '1234';
+
+    // get from MOngo Model
+
+    const chatHistory = await getChatHistory(chatId, userId);
+
+    if (!chatHistory) {
+      return res.status(404).json({
+        message: 'Chat not found',
+        status: 404,
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Chat history fetched successfully',
+      status: 200,
+      data: chatHistory,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      message: 'Internal server error',
+      status: 500,
+    });
+  }
+};
 
 export const getGPTReponseController = async (req: Request, res: Response) => {
   const { chatId, title, prompt } = req.body;
