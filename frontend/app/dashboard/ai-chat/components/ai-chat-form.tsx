@@ -7,18 +7,22 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AI_CHAT_CONFIG } from '@/config';
 import { useAIChatStore } from '../store';
+import { useSearchParams } from 'next/navigation';
 type Props = {};
 
 const AIChatForm = (props: Props) => {
   const [input, setInput] = React.useState('');
   const addMessageToChat = useAIChatStore((state) => state.addMessageToChat);
-  const chatId = '1';
+  const searchParams = useSearchParams();
+  const chatId = searchParams.get('chatId') || '1';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input.trim() === '') {
       return;
     }
+
+    setInput('');
 
     addMessageToChat(
       {
@@ -36,7 +40,7 @@ const AIChatForm = (props: Props) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ prompt: input, chatId }),
         method: 'POST',
       }
     );

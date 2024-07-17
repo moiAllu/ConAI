@@ -7,7 +7,7 @@ export const storeMessageInChatHistory = async (
   role: 'user' | 'assistant',
   message: string
 ) => {
-  const chatHistory = await ChatHistory.findOne({ id });
+  const chatHistory = await ChatHistory.findOne({ _id: id });
 
   if (!chatHistory) {
     const newChatHistory = new ChatHistory({

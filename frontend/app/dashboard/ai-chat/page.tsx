@@ -13,7 +13,7 @@ const AIWritingPage = () => {
         <ReactivateSubscription />
       </div>
       <Separator className="my-4" />
-      <div className="w-full h-full justify-between flex-col flex">
+      <div className="w-full h-full justify-between flex-col flex overflow-y-auto">
         <AIChatHistory />
         <div className="w-full justify-center flex min-w-lg">
           <AIChatForm />

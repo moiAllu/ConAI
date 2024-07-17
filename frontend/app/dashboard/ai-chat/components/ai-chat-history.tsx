@@ -67,7 +67,8 @@ const AIChatHistory = (props: Props) => {
   }, [searchParams]);
 
   return (
-    <div className="flex flex-grow flex-col sm:p-6 p-2 items-center justify-end text-center overflow-y-auto h-[65vh]">
+    // <div className="flex flex-grow flex-col sm:p-6 p-2 items-center justify-end text-center overflow-y-auto h-[55vh]">
+    <div className="sm:p-6 p-2 text-center overflow-y-auto h-[65vh]">
       {hasMessages ? (
         chat?.messages.map((message) => (
           <Message key={message.id} message={message} />

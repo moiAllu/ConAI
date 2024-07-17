@@ -84,12 +84,11 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
     // const userId = req.user.id;
     const userId = '1234';
-    const chatId2 = '669821ca7fce64ab05a88de5';
 
     // async operations, no need to wait for response
     // kind of fire and forget
-    storeMessageInChatHistory(chatId2, title, userId, 'user', prompt);
-    storeMessageInChatHistory(chatId2, title, userId, 'assistant', aiResp);
+    await storeMessageInChatHistory(chatId, title, userId, 'user', prompt);
+    await storeMessageInChatHistory(chatId, title, userId, 'assistant', aiResp);
   } catch (e) {
     console.log(e);
     return res.status(500).json({
