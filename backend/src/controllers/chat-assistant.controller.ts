@@ -72,8 +72,8 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
     }
 
     // UNCOMMENT WHEN NEEDED
-    // const aiResp = await getGPTResponse(prompt);
-    const aiResp = 'UNCOMMENT THE ABOVE LINE TO GET AI RESPONSE';
+    const aiResp = await getGPTResponse(prompt);
+    // const aiResp = 'UNCOMMENT THE ABOVE LINE TO GET AI RESPONSE';
 
     res.status(200).json({
       message: 'AI response generated successfully',
