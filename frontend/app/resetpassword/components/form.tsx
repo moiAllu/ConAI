@@ -13,31 +13,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import LoadingSpinner from "@/components/loading-spinner";
-import { useRouter } from "next/navigation";
+import { useWindowSize } from "@/lib/hooks";
 
-export default function LoginForm() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
+export default function PasswordResetForm() {
   const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
   const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const isPhone = useWindowSize().width < 640;
   const formSubmitHandler = async (e: any) => {
-    e.preventDefault();
+    e.preventDefault;
     setError("");
     setLoading(true);
     try {
-      const user = await fetch("http://localhost:8000/api/login", {
+      const response = await fetch("http://localhost:8000/api/reset-password", {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, verifyPassword }),
         method: "POST",
       });
-      const data = await user.json();
-      if (data.message === "Login successful") {
-        console.log("Login successful");
-
-        router.push("/dashboard");
+      const data = await response.json();
+      if (data.status === 200) {
+        console.log("Email sent");
+        setSuccess(data.message);
       } else {
         setError(data.message);
       }
@@ -47,24 +48,24 @@ export default function LoginForm() {
       setError("Internal server error");
     }
   };
-
   return (
     <div className="h-screen w-full flex justify-center items-center">
-      <Card className="mx-auto max-w-sm">
+      <Card className="max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Reset Password</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Your password reset request have generated. Enter your new password
+            down below
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="grid gap-4" onSubmit={formSubmitHandler}>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="password"
+                type="password"
+                placeholder="**********"
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
                 required
@@ -72,49 +73,26 @@ export default function LoginForm() {
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/forgotpassword"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
+              <Label htmlFor="verify-password">Verify Password</Label>
               <Input
-                id="password"
+                id="verify-password"
                 type="password"
+                placeholder="**********"
                 required
                 className={`${error && " border-red-700 "}`}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
               />
             </div>
-            {error && (
-              <div className="text-red-500 text-sm text-center">{error}</div>
-            )}
-            <Button
-              type="submit"
-              className="w-full flex items-center space-x-2"
-              disabled={loading}
-              variant={loading ? "ghost" : "default"}
-            >
-              <span>Login</span>
+            <Button type="submit" className="w-full flex items-center">
+              <span>Submit</span>
               {loading && <LoadingSpinner />}
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-              type="submit"
-              disabled={loading}
-            >
-              Login with Google
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline">
-              Sign up
+            <Link href="/login" className="underline">
+              Log In
             </Link>
           </div>
         </CardContent>

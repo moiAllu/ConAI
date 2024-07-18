@@ -1,29 +1,17 @@
-'use client';
-import React, { Children } from 'react';
-import { cn } from '@/lib/utils';
+"use client";
+import React, { Children } from "react";
+import { cn } from "@/lib/utils";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/ui/resizable';
-import { Button } from '@/components/ui/button';
-import Logo from '@/components/navbar/logo';
-import { SquarePen, ReceiptText } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme-toggle';
-import {
-  Inbox,
-  BookText,
-  Siren,
-  MessageSquareMore,
-  Image,
-  CirclePlus,
-} from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Link from 'next/link';
-import { categorizeChatMessages } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
-import { IChat } from '../store';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/resizable";
+
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { CirclePlus } from "lucide-react";
+import { categorizeChatMessages } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -100,17 +88,17 @@ const ResizeableSidebar = ({
     // fetch Chat History
     async function fetchChatHistory(userId: string) {
       const res = await fetch(
-        'http://localhost:8000/api/chat/ai-assistant/chats/' + userId
+        "http://localhost:8000/api/chat/ai-assistant/chats/" + userId
       );
       const resp = await res.json();
-      console.log('chats hist', resp);
+      console.log("chats hist", resp);
 
       if (resp?.data?.length) {
         setChatHistory(() => categorizeChatMessages(resp.data));
       }
     }
 
-    fetchChatHistory('1234');
+    fetchChatHistory("1234");
   }, []);
 
   const handleChatChange = (chat: any) => {
@@ -140,7 +128,7 @@ const ResizeableSidebar = ({
         // onCollapse={onCollapsed}
         className={cn(
           isCollapsed &&
-            'min-w-[50px] transition-all duration-300 ease-in-out w-full'
+            "min-w-[50px] transition-all duration-300 ease-in-out w-full"
         )}
         onExpand={() => setIsCollapsed(false)}
       >
@@ -169,7 +157,7 @@ const ResizeableSidebar = ({
                 >
                   <p className="text-xs dark:text-gray-400">
                     {message?.title ||
-                      message?.messages[0]?.message?.slice(0, 10) + '...'}
+                      message?.messages[0]?.message?.slice(0, 10) + "..."}
                   </p>
                 </Button>
               ))}

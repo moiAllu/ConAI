@@ -107,6 +107,7 @@ export default function CreateAccount({
                   required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
+                  className={`${error && " border-red-700"}`}
                   disabled={loading}
                 />
               </div>
@@ -118,6 +119,7 @@ export default function CreateAccount({
                   required
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
+                  className={`${error && " border-red-700"}`}
                   disabled={loading}
                 />
               </div>
@@ -131,6 +133,7 @@ export default function CreateAccount({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={`${error && " border-red-700"}`}
                 disabled={loading}
               />
             </div>
@@ -141,6 +144,7 @@ export default function CreateAccount({
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className={`${error && " border-red-700"}`}
                 disabled={loading}
               />
             </div>
