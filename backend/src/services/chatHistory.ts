@@ -7,19 +7,20 @@ export const storeMessageInChatHistory = async (
   role: 'user' | 'assistant',
   message: string
 ) => {
-  const chatHistory = await ChatHistory.findOne({ _id: id });
-
-  if (!chatHistory) {
-    const newChatHistory = new ChatHistory({
-      userId,
-      title,
-      messages: [{ role, message }],
-    });
-    await newChatHistory.save();
-  } else {
+  if (id) {
+    const chatHistory = await ChatHistory.findOne({ _id: id });
     chatHistory.messages.push({ role, message });
     await chatHistory.save();
+    return null;
   }
+
+  const newChatHistory = new ChatHistory({
+    userId,
+    title,
+    messages: [{ role, message }],
+  });
+  const newChat = await newChatHistory.save();
+  return newChat._id;
 };
 
 export const getChatHistory = async (id: string, userId: string) => {

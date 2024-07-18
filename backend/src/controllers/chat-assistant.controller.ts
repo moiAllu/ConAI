@@ -75,20 +75,32 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
     const aiResp = await getGPTResponse(prompt);
     // const aiResp = 'UNCOMMENT THE ABOVE LINE TO GET AI RESPONSE';
 
-    res.status(200).json({
-      message: 'AI response generated successfully',
-      status: 200,
-      data: aiResp,
-    });
-
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
     // const userId = req.user.id;
     const userId = '1234';
 
-    // async operations, no need to wait for response
-    // kind of fire and forget
-    await storeMessageInChatHistory(chatId, title, userId, 'user', prompt);
-    await storeMessageInChatHistory(chatId, title, userId, 'assistant', aiResp);
+    const newChatId = await storeMessageInChatHistory(
+      chatId,
+      title,
+      userId,
+      'user',
+      prompt
+    );
+
+    await storeMessageInChatHistory(
+      newChatId ? newChatId : chatId,
+      title,
+      userId,
+      'assistant',
+      aiResp
+    );
+
+    return res.status(200).json({
+      message: 'AI response generated successfully',
+      status: 200,
+      data: aiResp,
+      chatId: newChatId ? newChatId : undefined,
+    });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
