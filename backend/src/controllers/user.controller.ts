@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import {UserModel}  from "../mongodb/models" ;
+import {OtpVerification, UserModel}  from "../mongodb/models" ;
 import * as jwt from 'jsonwebtoken';
-import {utils} from "../helpers/utils";
+import {sendPasswordResetLink, sendVerificationCode, utils} from "../helpers/utils";
 import * as cookie from 'cookie';
 import * as bcrypt from 'bcrypt';
 
@@ -210,3 +210,81 @@ export const logout = async(req: Request, res: Response) => {
         message: "Logout successful"
     });
 }
+
+export const forgotPassword = async(req: Request, res: Response) => {
+    const { email } = req.body;
+    const PasswordResetLink = process.env.PASSWORD_RESET_LINK;
+    try{ 
+        // Check if user exists
+        const user = await UserModel.findOne({
+            email: email
+        });
+        if(!user){
+            return res.status(400).json({
+                message: "User not found"
+            });
+        }
+        // Generate OTP
+        const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink);
+
+        if(resetLinkGenerated){
+            return res.status(200).json({
+                message: "Email sent"
+            });
+        }
+        return res.status(400).json({
+            message: "Email sending failed"
+        });
+    }catch(e){
+        console.log(e);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+
+export const resetPassword = async(req: Request, res: Response) => {
+    const { email, password, verifyPassword } = req.body;
+    try{
+        // Check if user exists
+        if(!email || !password || !verifyPassword){
+            return res.status(400).json({
+                message: "All fields are required"
+            });
+        }
+        if(password !== verifyPassword){
+            return res.status(400).json({
+                message: "Passwords do not match"
+            });
+        }
+        const user =
+        await UserModel.findOne({
+            email: email
+        });
+        if(!user){
+            return res.status(400).json({
+                message: "User not found"
+            });
+        }
+
+        // Hash password
+        const hashedPassword = await utils.genSalt(10,password);
+        // Update password
+        await UserModel.updateOne({
+            email: email
+        }, {
+            password: hashedPassword
+        });
+        // Send response
+        return res.status(200).json({
+            message: "Password reset successful"
+        });
+    }catch(e){
+        console.log(e);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+
+

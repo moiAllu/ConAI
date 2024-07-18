@@ -1,5 +1,5 @@
 import { requestForOtpVerificationCode,otpVerification } from '../controllers/optverification.controller';
-import { login, signup, update_user, delete_user, logout } from '../controllers/user.controller';
+import { login, signup, update_user, delete_user, logout, forgotPassword, resetPassword } from '../controllers/user.controller';
 import express, { Request, Response } from 'express';
 
 const router = express.Router();
@@ -24,6 +24,13 @@ router.post("/user/otp-request", requestForOtpVerificationCode);
 
 //User otp verification router request route
 router.post("/user/otp-verification", otpVerification);
+
+//User forger password router request route
+router.post("/user/forgot-password", forgotPassword);
+
+//User reset password router request route
+router.post("/user/reset-password", resetPassword);
+
 
 
 

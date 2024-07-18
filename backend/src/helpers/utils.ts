@@ -64,3 +64,16 @@ export const sendVerificationCode = async (email: string, otp: string) => {
   }
   
 }
+
+export const sendPasswordResetLink = async (email: string, link: string) => {
+  try{
+    return await transporter.sendMail({
+      from: "noreply@conai.com",
+      to: email,
+      subject: "Password Reset Link",
+      html: `<p>Click <a href="${link}">here</a> to reset your password</p>`
+    })
+  }catch(e){
+    console.log(e)
+  }
+}
