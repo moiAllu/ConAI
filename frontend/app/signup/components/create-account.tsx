@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LoadingSpinner from "@/components/loading-spinner";
+import { number } from "zod";
 
 interface CreateAccountProps {
   setOtpRequestGen: (otpRequestGen: any) => void;
@@ -44,11 +45,44 @@ export default function CreateAccount({
 
   const formSubmitHandler = async (e: any) => {
     e.preventDefault();
-
     setOtpRequestGen(null);
     setSuccess("");
     setError("");
     setLoading(true);
+    if (!firstName || !lastName || !email || !password) {
+      setError("Please fill all the fields");
+      setLoading(false);
+      setOtpRequestGen(null);
+      return;
+    }
+
+    if (firstName === lastName) {
+      setError("First name and last name cannot be the same");
+      setLoading(false);
+      setOtpRequestGen(null);
+
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be atleast 8 characters long");
+      setLoading(false);
+      setOtpRequestGen(null);
+      return;
+    }
+
+    if (firstName.length < 3 || lastName.length < 3) {
+      setError("First name and last name must be atleast 3 characters long");
+      setLoading(false);
+      setOtpRequestGen(null);
+      return;
+    }
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Invalid email address");
+      setLoading(false);
+      setOtpRequestGen(null);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8000/api/signup", {
         headers: {
@@ -106,7 +140,13 @@ export default function CreateAccount({
                   placeholder="Max"
                   required
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => {
+                    setError("");
+                    if (/\d/.test(e.target.value)) {
+                      return setError("Invalid cannot enter number");
+                    }
+                    return setFirstName(e.target.value);
+                  }}
                   className={`${error && " border-red-700"}`}
                   disabled={loading}
                 />
@@ -118,7 +158,13 @@ export default function CreateAccount({
                   placeholder="Robinson"
                   required
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={(e) => {
+                    setError("");
+                    if (/\d/.test(e.target.value)) {
+                      return setError("Invalid cannot enter number");
+                    }
+                    return setLastName(e.target.value);
+                  }}
                   className={`${error && " border-red-700"}`}
                   disabled={loading}
                 />

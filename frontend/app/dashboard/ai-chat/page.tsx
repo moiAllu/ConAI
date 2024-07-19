@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactivateSubscription from '../components/reactivate-subscription';
-import { Separator } from '@/components/ui/separator';
-import { SelectModel } from './components/select-model';
-import AIChatForm from './components/ai-chat-form';
-import AIChatHistory from './components/ai-chat-history';
+import React, { Suspense } from "react";
+import ReactivateSubscription from "../components/reactivate-subscription";
+import { Separator } from "@/components/ui/separator";
+import { SelectModel } from "./components/select-model";
+import AIChatForm from "./components/ai-chat-form";
+import AIChatHistory from "./components/ai-chat-history";
 
 const AIWritingPage = () => {
   return (
@@ -14,9 +14,13 @@ const AIWritingPage = () => {
       </div>
       <Separator className="my-4" />
       <div className="w-full h-full justify-between flex-col flex overflow-y-auto">
-        <AIChatHistory />
+        <Suspense fallback={<div>Loading...</div>}>
+          <AIChatHistory />
+        </Suspense>
         <div className="w-full justify-center flex min-w-lg">
-          <AIChatForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <AIChatForm />
+          </Suspense>
         </div>
       </div>
     </div>
