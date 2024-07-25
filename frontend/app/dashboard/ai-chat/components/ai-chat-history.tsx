@@ -1,8 +1,9 @@
-'use client';
-import React, { useEffect } from 'react';
-import { IMessage, useAIChatStore } from '../store';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useSearchParams } from 'next/navigation';
+"use client";
+import React, { useEffect } from "react";
+import { IMessage, useAIChatStore } from "../store";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
+import { useMeStore } from "../../store";
 
 type Props = {};
 
@@ -13,15 +14,15 @@ const Message = ({
   message: IMessage;
   isLastMsg: boolean;
 }) => {
-  const isUserMessage = message.role === 'user';
+  const isUserMessage = message.role === "user";
 
   const cardClasses = `p-2 sm:p-4 sm:w-[90%] space-y-2`;
-  const textClasses = `text-md ${isUserMessage ? 'text-right' : 'text-left'}`;
+  const textClasses = `text-md ${isUserMessage ? "text-right" : "text-left"}`;
 
   useEffect(() => {
     if (isLastMsg) {
       const element = document.getElementById(message.id);
-      element?.scrollIntoView({ behavior: 'smooth' });
+      element?.scrollIntoView({ behavior: "smooth" });
     }
 
     return () => {};
@@ -31,7 +32,7 @@ const Message = ({
     <div
       id={message.id}
       className={`text-md flex items-center justify-between w-full p-2  ${
-        isUserMessage ? 'flex-row-reverse' : 'flex-row'
+        isUserMessage ? "flex-row-reverse" : "flex-row"
       }`}
     >
       {/* Avatar */}
@@ -53,9 +54,13 @@ const Message = ({
 };
 
 const AIChatHistory = (props: Props) => {
+  const { _id } = useMeStore();
+
   const chats = useAIChatStore((state) => state.chats);
+  console.log(chats);
   const searchParams = useSearchParams();
-  const chat = chats.find((chat) => chat.id === searchParams.get('chatId'));
+  const chat = chats.find((chat) => chat.id === searchParams.get("chatId"));
+  console.log("chat", chat);
   const hasMessages = chat?.messages?.length || 0;
 
   useEffect(() => {
@@ -63,7 +68,14 @@ const AIChatHistory = (props: Props) => {
 
     async function fetchMessages(chatId: string) {
       const res = await fetch(
-        'http://localhost:8000/api/chat/ai-assistant/' + chatId
+        "http://localhost:8000/api/chat/ai-assistant/" + chatId,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken") || "",
+          },
+        }
       );
 
       const resp = await res.json();
@@ -71,12 +83,12 @@ const AIChatHistory = (props: Props) => {
       if (resp?.data?.messages?.length) {
         useAIChatStore
           .getState()
-          .setAllMessagesInChat(resp.data.messages, chatId);
+          .setAllMessagesInChat(resp.data.messages, chatId, _id);
       }
     }
 
     // fetch chatId from query params
-    const chatId = searchParams.get('chatId');
+    const chatId = searchParams.get("chatId");
     if (chatId) {
       fetchMessages(chatId);
     }

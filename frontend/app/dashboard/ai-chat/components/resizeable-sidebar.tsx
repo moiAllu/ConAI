@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
 import { categorizeChatMessages } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { useMeStore } from "../../store";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -75,6 +76,8 @@ const ResizeableSidebar = ({
     categorizeChatMessages([])
   );
   const router = useRouter();
+  const { _id } = useMeStore();
+  console.log(_id);
 
   const onCollapsed = (collapsed: any) => {
     // setIsCollapsed(collapsed);
@@ -88,17 +91,24 @@ const ResizeableSidebar = ({
     // fetch Chat History
     async function fetchChatHistory(userId: string) {
       const res = await fetch(
-        "http://localhost:8000/api/chat/ai-assistant/chats/" + userId
+        "http://localhost:8000/api/chat/ai-assistant/chats/" + userId,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken") || "",
+          },
+          method: "GET",
+          credentials: "include",
+        }
       );
       const resp = await res.json();
-      console.log("chats hist", resp);
 
       if (resp?.data?.length) {
         setChatHistory(() => categorizeChatMessages(resp.data));
       }
     }
 
-    fetchChatHistory("1234");
+    fetchChatHistory(_id);
   }, []);
 
   const handleChatChange = (chat: any) => {

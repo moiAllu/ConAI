@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,9 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { use, useState } from "react";
 import LoadingSpinner from "@/components/loading-spinner";
 import { useRouter } from "next/navigation";
+import { useMeStore } from "@/app/dashboard/store";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser } = useMeStore();
   const formSubmitHandler = async (e: any) => {
     e.preventDefault();
     setError("");
@@ -32,11 +33,13 @@ export default function LoginForm() {
         },
         body: JSON.stringify({ email, password }),
         method: "POST",
+        credentials: "include",
       });
       const data = await user.json();
       if (data.message === "Login successful") {
         console.log("Login successful");
-
+        setUser(data.user);
+        localStorage.setItem("accessToken", data.token);
         router.push("/dashboard");
       } else {
         setError(data.message);

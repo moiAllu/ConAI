@@ -26,6 +26,7 @@ import {
 } from "@/registry/new-york/ui/select";
 import { Textarea } from "@/registry/new-york/ui/textarea";
 import { toast } from "@/registry/new-york/ui/use-toast";
+import { useMeStore } from "../dashboard/store";
 
 const profileFormSchema = z.object({
   username: z
@@ -68,6 +69,7 @@ export function ProfileForm() {
     defaultValues,
     mode: "onChange",
   });
+  const { name, email, _id, verified } = useMeStore();
 
   const { fields, append } = useFieldArray({
     name: "urls",
@@ -95,7 +97,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Ali Abbasi" {...field} />
+                <Input placeholder={name} {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a

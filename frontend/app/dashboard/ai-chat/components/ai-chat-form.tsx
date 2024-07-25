@@ -1,65 +1,69 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Input } from '@/components/ui/input';
-import { SendHorizontal, Paperclip, FileSearch } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { AI_CHAT_CONFIG } from '@/config';
-import { useAIChatStore } from '../store';
-import { useRouter, useSearchParams } from 'next/navigation';
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { SendHorizontal, Paperclip, FileSearch } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { AI_CHAT_CONFIG } from "@/config";
+import { useAIChatStore } from "../store";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMeStore } from "../../store";
 type Props = {};
 
 const AIChatForm = (props: Props) => {
-  const [input, setInput] = React.useState('');
+  const [input, setInput] = React.useState("");
   const addMessageToChat = useAIChatStore((state) => state.addMessageToChat);
   const searchParams = useSearchParams();
-  const chatId = searchParams.get('chatId') || '';
+  const chatId = searchParams.get("chatId") || "";
   const router = useRouter();
+  const { _id } = useMeStore();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (input.trim() === '') {
+    if (input.trim() === "") {
       return;
     }
 
-    setInput('');
+    setInput("");
 
     addMessageToChat(
       {
         id: Math.random().toString(),
-        role: 'user',
+        role: "user",
         message: input,
         createdAt: new Date().toISOString(),
       },
-      chatId
+      chatId,
+      _id
     );
 
     const response = await fetch(
-      'http://localhost:8000/api/chat/ai-assistant/open-ai',
+      "http://localhost:8000/api/chat/ai-assistant/open-ai",
       {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("accessToken") || "",
         },
-        body: JSON.stringify({ prompt: input, chatId }),
-        method: 'POST',
+        body: JSON.stringify({ prompt: input, chatId, _id }),
+        method: "POST",
       }
     );
     const data = await response.json();
-    console.log(data);
+    console.log("response test", data);
 
     if (data?.chatId) {
       router.push(`/dashboard/ai-chat?chatId=${data.chatId}`);
     }
-
     addMessageToChat(
       {
         id: Math.random().toString(),
-        role: 'assistant',
+        role: "assistant",
         message: data.data,
         createdAt: new Date().toISOString(),
       },
-      chatId
+      chatId,
+      _id
     );
   };
 
