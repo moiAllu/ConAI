@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { set, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,6 +46,24 @@ export function InputOTPForm({ otpRequestGen, email }: InputOTPFormProps) {
     },
   });
 
+  useEffect(() => {
+    const otpRequestGen = async () => {
+      const otpResponse = await fetch(
+        "http://localhost:8000/api/user/otp-request",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+          method: "POST",
+        }
+      );
+      const otpRequest = await otpResponse.json();
+      console.log(otpRequest);
+    };
+    otpRequestGen();
+  }, []);
+
   async function onSubmit(data: z.infer<typeof FormSchema>, e: any) {
     e.preventDefault();
     setError("");
@@ -62,9 +80,11 @@ export function InputOTPForm({ otpRequestGen, email }: InputOTPFormProps) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ otp, email }),
+          credentials: "include",
         }
       );
       const result = await response.json();
+      console.log(result);
       if (result.status === 200) {
         setSuccess(result.message);
         toast({

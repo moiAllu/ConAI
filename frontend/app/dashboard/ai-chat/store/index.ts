@@ -23,15 +23,15 @@ interface States {
 
 // Action types
 interface Actions {
-  addMessageToChat: (message: IMessage, chatId: string) => void;
-  setAllMessagesInChat: (messages: IMessage[], chatId: string) => void;
+  addMessageToChat: (message: IMessage, chatId: string, _id: string) => void;
+  setAllMessagesInChat: (messages: IMessage[], chatId: string, _id: string) => void;
 }
 
 // useAIChatStore hook
 export const useAIChatStore = create<States & Actions>((set) => ({
   chats: [],
-
-  addMessageToChat: (message, chatId) => {
+  
+  addMessageToChat: (message, chatId ,_id) => {
     set((state) => {
       const newState = _.cloneDeep(state);
       const existing = _.find(newState.chats, { id: chatId });
@@ -42,7 +42,7 @@ export const useAIChatStore = create<States & Actions>((set) => ({
         newState.chats.push({
           id: chatId,
           messages: [message],
-          userId: '1',
+          userId: _id,
           createdAt: new Date(),
         });
       }
@@ -51,7 +51,7 @@ export const useAIChatStore = create<States & Actions>((set) => ({
     });
   },
 
-  setAllMessagesInChat: (messages, chatId) => {
+  setAllMessagesInChat: (messages, chatId,_id) => {
     set((state) => {
       const newState = _.cloneDeep(state);
       const existing = _.find(newState.chats, { id: chatId });
@@ -62,7 +62,7 @@ export const useAIChatStore = create<States & Actions>((set) => ({
         newState.chats.push({
           id: chatId,
           messages,
-          userId: '1',
+          userId: _id,
           createdAt: new Date(),
         });
       }
