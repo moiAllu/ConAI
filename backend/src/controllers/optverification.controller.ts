@@ -1,6 +1,8 @@
 import { sendVerificationCode } from "../helpers/utils";
 import { OtpVerification, UserModel } from "../mongodb/models";
 import { Request, Response } from "express";
+import * as jwt from "jsonwebtoken";
+import * as cookie from "cookie";
 
 export const otpVerification = async (req:Request, res:Response) => {
     const {email, otp} = req.body;
@@ -11,7 +13,7 @@ export const otpVerification = async (req:Request, res:Response) => {
                 status: 400
             });
         }
-
+        
         const response =  await OtpVerification.findOne({email});
         if(!response){
             return res.status(400).json({
@@ -21,11 +23,28 @@ export const otpVerification = async (req:Request, res:Response) => {
         }
         if(response.otp===otp){
             await OtpVerification.findOneAndDelete({email,otp});
-            await UserModel.findOneAndUpdate({email},{verified:true});
+            const user= await UserModel.findOneAndUpdate({email},{verified:true});
+            delete user.password;
 
+            const token = jwt.sign({user}, process.env.JWT_SECRET, {
+                expiresIn: "1h"
+            })
+            res.setHeader(
+                'Set-Cookie',
+                cookie.serialize("CONAI", token, {
+                  httpOnly: true,
+                  maxAge: 8 * 60 * 60,
+                  path: '/',
+                  sameSite: 'lax',
+                  secure: "true",
+                  overwrite: true
+                })
+              )
             return res.status(200).json({
                 message: "OTP verified successfully",
-                status: 200
+                status: 200,
+                user,
+                token
             });
         }
         return res.status(400).json({

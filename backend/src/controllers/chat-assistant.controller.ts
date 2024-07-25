@@ -5,12 +5,12 @@ import {
   getChatHistory,
   getUserChats,
 } from '../services/chatHistory';
+import jwt from 'jsonwebtoken';
 
 export const getUserChatsController = async (req: Request, res: Response) => {
+  const {userId} =req.params;
   try {
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
-    // const userId = req.user.id;
-    const userId = '1234';
 
     // get from MOngo Model
     const userChats = await getUserChats(userId);
@@ -31,14 +31,13 @@ export const getUserChatsController = async (req: Request, res: Response) => {
 
 export const getChatHistoryController = async (req: Request, res: Response) => {
   const { chatId } = req.params;
+  const token = req.header('Authorization');
   try {
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
     // const userId = req.user.id;
-    const userId = '1234';
-
+    const {user} = jwt.verify(token, process.env.JWT_SECRET)
     // get from MOngo Model
-
-    const chatHistory = await getChatHistory(chatId, userId);
+    const chatHistory = await getChatHistory(chatId, user._id);
 
     if (!chatHistory) {
       return res.status(404).json({
@@ -62,7 +61,7 @@ export const getChatHistoryController = async (req: Request, res: Response) => {
 };
 
 export const getGPTReponseController = async (req: Request, res: Response) => {
-  const { chatId, title, prompt } = req.body;
+  const { chatId, title, prompt, _id } = req.body;
   try {
     if (!prompt) {
       return res.status(400).json({
@@ -77,7 +76,7 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
 
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
     // const userId = req.user.id;
-    const userId = '1234';
+    const userId = _id;
 
     const newChatId = await storeMessageInChatHistory(
       chatId,

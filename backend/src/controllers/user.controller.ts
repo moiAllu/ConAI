@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 
 const cookieConfig = {
     httpOnly: true, // to disable accessing cookie via client side js
-    //secure: true, // to force https (if you use it)
+    secure: true, // to force https (if you use it)
     maxAge: 1000000, // ttl in seconds (remove this option and cookie will die when browser is closed)
     signed: true // if you use the secret with cookieParser
 };
@@ -28,30 +28,29 @@ export const login = async(req: Request, res: Response) => {
         // Check if password is correct
         // const checkPass= utils.compareHash(user.password, password);
         if(bcrypt.compareSync(password,user.password)){
+            delete user.password;
+            user.password = undefined;
             // Generate JWT token
-            const token = jwt.sign({
-                email: user.email,
-                userId: user._id
-            }, process.env.JWT_SECRET, {
+            const token = jwt.sign({user}, process.env.JWT_SECRET, {
                 expiresIn: "1h"
             })
 
-            user.password = undefined;
-
             res.setHeader(
                 'Set-Cookie',
-                cookie.serialize("conai", token, {
+                cookie.serialize("CONAI", token, {
                   httpOnly: true,
                   maxAge: 8 * 60 * 60,
                   path: '/',
                   sameSite: 'lax',
                   secure: "true",
+                  overwrite: true
                 })
               )
             // Send token to client
             return res.status(200).json({
                 message: "Login successful",
-                user: user
+                user: user,
+                token
             });
         }
         return res.status(400).json({
@@ -92,20 +91,20 @@ export const signup = async(req: Request, res: Response) => {
         await newUser.save();
         // Generate JWT token
         const token = jwt.sign({
-            email: newUser.email,
-            userId: newUser._id
+            user: newUser
         }, process.env.JWT_SECRET, {
             expiresIn: "1h"
         });
         delete newUser.password;
         res.setHeader(
             'Set-Cookie',
-            cookie.serialize("conai", token, {
+            cookie.serialize("CONAI", token, {
               httpOnly: true,
               maxAge: 8 * 60 * 60,
               path: '/',
               sameSite: 'lax',
               secure: "true",
+              overwrite: true
             })
           )
         // Send token to client
