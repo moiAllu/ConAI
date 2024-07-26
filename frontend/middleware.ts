@@ -3,10 +3,10 @@ import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyJwt } from './lib/auth';
 
-export default async function middleware(req: NextRequest) {
-  const user = cookies().get('CONAI');
-  if(user){
-  const response = await verifyJwt(user?.value ||'') as any
+export default async function middleware(req: NextRequest, ) {
+  const userFromCookie = cookies().get('CONAI');
+  if(userFromCookie){
+  const response = await verifyJwt(userFromCookie?.value ||'') as any
     if(response.payload.user?.verified){
       return NextResponse.next();
     }

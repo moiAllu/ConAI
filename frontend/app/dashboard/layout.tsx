@@ -1,8 +1,9 @@
 "use client";
 import { Metadata } from "next";
 // import { cookies } from "next/headers";
-import React, { use } from "react";
+import React, { use, useEffect } from "react";
 import ResizeableSidebar from "./components/resizeable-sidebar";
+import { useMeStore } from "@/app/dashboard/store";
 
 // export const metadata: Metadata = {
 //   title: "Forms",
@@ -38,6 +39,24 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
 
   // const defaultLayout = layout ? JSON?.parse(layout.value) : undefined;
   // const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : false;
+  const { setUser } = useMeStore();
+  useEffect(() => {
+    const setUserToState = async () => {
+      const user = await fetch("http://localhost:8000/api/me", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await user.json();
+      if (data.status === 200) {
+        setUser(data.user);
+      }
+    };
+    setUserToState();
+  }, []);
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (

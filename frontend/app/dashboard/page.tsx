@@ -1,3 +1,4 @@
+"use client";
 import Body from "./components/body";
 import Head from "./components/head";
 

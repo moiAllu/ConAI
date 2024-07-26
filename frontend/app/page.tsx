@@ -4,7 +4,8 @@ import Footer from "@/components/home/footer";
 import { NavigationMenuDemo } from "@/components/navbar/NavBar";
 import Image from "next/image";
 import { Suspense } from "react";
-export default function Home() {
+
+export default async function Home() {
   return (
     <main className="w-full h-full">
       <NavigationMenuDemo />

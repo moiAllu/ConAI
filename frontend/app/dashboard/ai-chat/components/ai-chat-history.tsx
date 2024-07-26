@@ -4,58 +4,12 @@ import { IMessage, useAIChatStore } from "../store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
+import Message from "./ai-message";
 
 type Props = {};
 
-const Message = ({
-  message,
-  isLastMsg,
-}: {
-  message: IMessage;
-  isLastMsg: boolean;
-}) => {
-  const isUserMessage = message.role === "user";
-
-  const cardClasses = `p-2 sm:p-4 sm:w-[90%] space-y-2`;
-  const textClasses = `text-md ${isUserMessage ? "text-right" : "text-left"}`;
-
-  useEffect(() => {
-    if (isLastMsg) {
-      const element = document.getElementById(message.id);
-      element?.scrollIntoView({ behavior: "smooth" });
-    }
-
-    return () => {};
-  }, [isLastMsg, message.id]);
-
-  return (
-    <div
-      id={message.id}
-      className={`text-md flex items-center justify-between w-full p-2  ${
-        isUserMessage ? "flex-row-reverse" : "flex-row"
-      }`}
-    >
-      {/* Avatar */}
-      {isUserMessage ? (
-        <div className="flex items-center justify-center w-12 h-12 text-white rounded-full bg-blue-500">
-          You
-        </div>
-      ) : (
-        <div className="flex items-center justify-center w-12 h-12 text-white rounded-full bg-green-500 ">
-          AI
-        </div>
-      )}
-
-      <Card className={cardClasses}>
-        <p className={textClasses}>{message.message}</p>
-      </Card>
-    </div>
-  );
-};
-
 const AIChatHistory = (props: Props) => {
   const { _id } = useMeStore();
-
   const chats = useAIChatStore((state) => state.chats);
   console.log(chats);
   const searchParams = useSearchParams();
@@ -65,7 +19,6 @@ const AIChatHistory = (props: Props) => {
 
   useEffect(() => {
     // fetch from API and load messages
-
     async function fetchMessages(chatId: string) {
       const res = await fetch(
         "http://localhost:8000/api/chat/ai-assistant/" + chatId,

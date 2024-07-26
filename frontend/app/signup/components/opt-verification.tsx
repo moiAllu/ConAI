@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/input-otp";
 import { toast, useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { ToastAction } from "@/components/ui/toast";
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
@@ -60,6 +61,10 @@ export function InputOTPForm({ otpRequestGen, email }: InputOTPFormProps) {
       );
       const otpRequest = await otpResponse.json();
       console.log(otpRequest);
+      toast({
+        title: "success",
+        description: otpRequest.message,
+      });
     };
     otpRequestGen();
   }, []);
