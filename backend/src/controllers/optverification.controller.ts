@@ -22,11 +22,18 @@ export const otpVerification = async (req:Request, res:Response) => {
             });
         }
         if(response.otp===otp){
+            res.clearCookie("CONAI");
             await OtpVerification.findOneAndDelete({email,otp});
             const user= await UserModel.findOneAndUpdate({email},{verified:true});
-            delete user.password;
-
-            const token = jwt.sign({user}, process.env.JWT_SECRET, {
+            if(!user){
+                return res.status(400).json({
+                    message: "User not found",
+                    status: 400
+                });
+            }
+            user.password = undefined;
+            user.verified= true;
+            const token = await jwt.sign({user}, process.env.JWT_SECRET, {
                 expiresIn: "1h"
             })
             res.setHeader(
@@ -64,7 +71,12 @@ export const requestForOtpVerificationCode = async (req:Request, res:Response) =
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     console.log(email,otp)
     try{
-
+        const user = await UserModel.findOne({email});
+        if(user.verified){
+            return res.status(400).json({
+                message: "User already verified"
+            });
+        }
        const alreadyOtpGen= await OtpVerification.findOneAndUpdate({email},{
             otp
         });

@@ -1,5 +1,6 @@
+import { validateRoute } from '../helpers';
 import { requestForOtpVerificationCode,otpVerification } from '../controllers/optverification.controller';
-import { login, signup, update_user, delete_user, logout, forgotPassword, resetPassword } from '../controllers/user.controller';
+import { login, signup, update_user, delete_user, logout, forgotPassword, resetPassword, getUser } from '../controllers/user.controller';
 import express, { Request, Response } from 'express';
 
 const router = express.Router();
@@ -31,8 +32,7 @@ router.post("/user/forgot-password", forgotPassword);
 //User reset password router request route
 router.post("/user/reset-password", resetPassword);
 
-
-
-
+//get user details
+router.get("/me",validateRoute, getUser);
 
 export default router;

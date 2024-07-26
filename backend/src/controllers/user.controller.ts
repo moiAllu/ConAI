@@ -31,7 +31,7 @@ export const login = async(req: Request, res: Response) => {
             delete user.password;
             user.password = undefined;
             // Generate JWT token
-            const token = jwt.sign({user}, process.env.JWT_SECRET, {
+            const token = await jwt.sign({user}, process.env.JWT_SECRET, {
                 expiresIn: "1h"
             })
 
@@ -286,4 +286,19 @@ export const resetPassword = async(req: Request, res: Response) => {
     }
 }
 
+export const getUser = async(req: any, res: Response) => {
+    const {user} = req.user;
+    try{
+        return res.status(200).json({
+            status: 200,
+            user
+        });
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
 
+}
