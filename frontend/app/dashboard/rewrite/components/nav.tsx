@@ -51,7 +51,7 @@ const Nav = (props: NavProps) => {
           variant="ghost"
         >
           <UploadIcon />
-          <span>Share</span>
+          <span className="hidden sm:flex">Share</span>
         </Button>
       </div>
       <Separator className="my-2" />

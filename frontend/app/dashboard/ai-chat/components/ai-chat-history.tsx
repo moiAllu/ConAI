@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { IMessage, useAIChatStore } from "../store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
@@ -52,11 +52,13 @@ const AIChatHistory = (props: Props) => {
     <div className="sm:p-6 p-2 text-center overflow-y-auto h-[65vh]">
       {hasMessages ? (
         chat?.messages.map((message, idx) => (
-          <Message
-            key={message.id}
-            message={message}
-            isLastMsg={idx === chat.messages.length - 1}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Message
+              key={message.id}
+              message={message}
+              isLastMsg={idx === chat.messages.length - 1}
+            />
+          </Suspense>
         ))
       ) : (
         <>
