@@ -32,7 +32,7 @@ export const login = async(req: Request, res: Response) => {
             user.password = undefined;
             // Generate JWT token
             const token = await jwt.sign({user}, process.env.JWT_SECRET, {
-                expiresIn: "1h"
+                expiresIn: "8h"
             })
 
             res.setHeader(
@@ -93,7 +93,7 @@ export const signup = async(req: Request, res: Response) => {
         const token = jwt.sign({
             user: newUser
         }, process.env.JWT_SECRET, {
-            expiresIn: "1h"
+            expiresIn: "8h"
         });
         delete newUser.password;
         res.setHeader(

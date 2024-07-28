@@ -34,7 +34,7 @@ export const otpVerification = async (req:Request, res:Response) => {
             user.password = undefined;
             user.verified= true;
             const token = await jwt.sign({user}, process.env.JWT_SECRET, {
-                expiresIn: "1h"
+                expiresIn: "8h"
             })
             res.setHeader(
                 'Set-Cookie',
