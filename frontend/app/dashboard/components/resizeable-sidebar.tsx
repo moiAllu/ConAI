@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useWindowSize } from "@/lib/hooks";
 import { usePathname } from "next/navigation";
+import { useMeStore } from "../store";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -33,6 +34,7 @@ const ResizeableSidebar = ({
   children,
 }: ResizeableSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
+  const { name, avatar } = useMeStore();
   const onCollapsed = () => {
     // setIsCollapsed(collapsed);
     setIsCollapsed(true);
@@ -166,10 +168,9 @@ const ResizeableSidebar = ({
                 href="/forms"
               >
                 <Avatar className="border border-violet-800">
-                  <AvatarImage src={UserData.image} alt="Avatar" />
+                  <AvatarImage src={avatar} alt="Avatar" />
                   <AvatarFallback>
-                    {!UserData.image &&
-                      UserData.title.charAt(0) + UserData.title.charAt(1)}
+                    {!avatar && name.charAt(0) + name.charAt(1)}
                   </AvatarFallback>
                 </Avatar>
               </Link>
@@ -179,16 +180,13 @@ const ResizeableSidebar = ({
                 href="/forms"
               >
                 <Avatar className="border border-violet-800">
-                  <AvatarImage src={UserData.image} alt="Avatar" />
+                  <AvatarImage src={avatar} alt="Avatar" />
                   <AvatarFallback>
-                    {!UserData.image &&
-                      UserData.title.charAt(0) + UserData.title.charAt(1)}
+                    {!avatar && name.charAt(0) + name.charAt(1)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold ">
-                    {UserData.title}
-                  </span>
+                  <span className="text-sm font-semibold ">{name}</span>
                   <span className="text-xs text-gray-500">Admin</span>
                 </div>
               </Link>

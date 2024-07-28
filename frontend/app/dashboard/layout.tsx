@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import React, { use, useEffect } from "react";
 import ResizeableSidebar from "./components/resizeable-sidebar";
 import { useMeStore } from "@/app/dashboard/store";
+import { useWindowSize } from "@/lib/hooks";
+import { Navbar } from "@/components/navbar/NavBar";
 
 // export const metadata: Metadata = {
 //   title: "Forms",
@@ -34,6 +36,7 @@ interface SettingsLayoutProps {
 }
 
 export default function DashboardLayout({ children }: SettingsLayoutProps) {
+  const isPhone = useWindowSize().width < 640;
   // const layout = cookies().get("react-resizable-panels:layout");
   // const collapsed = cookies().get("react-resizable-panels:collapsed");
 
@@ -60,14 +63,23 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (
-    <div className=" block w-screen h-screen  max-w-[2160px] max-h-[1440px]">
-      <ResizeableSidebar
-        defaultLayout={defaultLayout}
-        defaultCollapsed={defaultCollapsed}
-        navCollapsedSize={5}
-      >
-        {children}
-      </ResizeableSidebar>
+    <div className="w-full h-full">
+      {isPhone ? (
+        <>
+          <Navbar />
+          <div className="h-[calc(100vh-60px)] w-full">{children}</div>
+        </>
+      ) : (
+        <div className="block h-screen w-screen max-h-[1080px] max-w-[1920px]">
+          <ResizeableSidebar
+            defaultLayout={defaultLayout}
+            defaultCollapsed={defaultCollapsed}
+            navCollapsedSize={5}
+          >
+            {children}
+          </ResizeableSidebar>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,14 +6,14 @@ import ReactivateSubscription from "./reactivate-subscription";
 const Head = () => {
   return (
     <div className="w-full">
-      <div className="mt-8">
+      <div className="mt-8 sm:mr-10">
         <ReactivateSubscription />
       </div>
       <div className="flex flex-col justify-center items-center w-full sm:mt-2 md:space-y-14 space-y-5">
-        <h1 className="font-bold text-4xl">Apps</h1>
+        <h1 className="font-bold sm:text-4xl text-2xl">Apps</h1>
         <div className="flex flex-col w-full  items-center space-y-1">
           <div className="flex space-x-1">
-            <p className="text-sm text-blue-800 underline">
+            <p className="sm:text-sm text-xs text-blue-800 underline">
               Select an app from below or create your own using AI.
             </p>
             <Info size={16} color="rgb(30 64 175)" />

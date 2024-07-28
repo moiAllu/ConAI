@@ -8,11 +8,11 @@ import Nav from "./components/nav";
 const AIWriting = () => {
   const isPhone = useWindowSize().width < 640;
   return (
-    <div className="py-5 flex flex-col w-full h-full ">
+    <div className="sm:py-5 py-2 flex flex-col w-full h-full justify-between ">
       <Nav>
         <DynamicCard />
       </Nav>
-      <div className="p-2 sm:p-5 h-full w-full flex  items-center  space-x-4">
+      <div className="px-2 sm:p-5 h-full w-full flex  items-center  sm:space-x-4">
         {!isPhone && <DynamicCard />}
         <OutputCard />
       </div>

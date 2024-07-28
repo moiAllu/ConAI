@@ -3,9 +3,7 @@
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { NavigationMenuDemo } from "@/components/navbar/NavBar";
 import { ThemeProvider } from "@/components/theme-provider";
-import Footer from "@/components/home/footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TooltipProvider } from "@/components/ui/tooltip";
 const fontSans = FontSans({

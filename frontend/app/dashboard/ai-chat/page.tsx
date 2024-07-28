@@ -7,8 +7,8 @@ import AIChatHistory from "./components/ai-chat-history";
 
 const AIWritingPage = () => {
   return (
-    <div className="p-2 flex flex-col w-full h-full max-h-[1440px] ">
-      <div className="flex justify-between w-full items-center justify-items-center mt-6">
+    <div className="p-2 flex flex-col w-full h-full ">
+      <div className="flex justify-between w-full items-center justify-items-center sm:mt-6 mt-2 px-2">
         <SelectModel />
         <ReactivateSubscription />
       </div>
