@@ -25,7 +25,7 @@ const Nav = (props: NavProps) => {
       <div className="flex items-center justify-between px-4">
         <div className=" flex space-x-2 items-center">
           <ReceiptText className="font-bold " />
-          <h1 className="text-2xl font-bold">{props.title}</h1>
+          <h1 className="sm:text-2xl font-bold text-xl">{props.title}</h1>
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -49,7 +49,7 @@ const Nav = (props: NavProps) => {
           variant="ghost"
         >
           <UploadIcon />
-          <span>Share</span>
+          <span className="hidden sm:flex">Share</span>
         </Button>
       </div>
       <Separator className="my-2" />

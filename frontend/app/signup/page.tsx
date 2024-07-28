@@ -11,6 +11,7 @@ const SignUp = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const isPhone = useWindowSize().width < 768;
+
   console.log(otpRequestGen);
   if (isPhone) {
     return (

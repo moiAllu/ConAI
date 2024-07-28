@@ -1,4 +1,6 @@
-import { Metadata } from "next";
+"use client";
+import { useEffect } from "react";
+import { useMeStore } from "@/app/dashboard/store";
 import Image from "next/image";
 import { ChevronLeft } from "lucide-react";
 
@@ -6,10 +8,6 @@ import { Separator } from "@/registry/new-york/ui/separator";
 import { SidebarNav } from "@/app/forms/components/sidebar-nav";
 import ResizeableSidebar from "@/app/dashboard/components/resizeable-sidebar";
 import Link from "next/link";
-export const metadata: Metadata = {
-  title: "Forms",
-  description: "Advanced form example using react-hook-form and Zod.",
-};
 
 const sidebarNavItems = [
   {
@@ -39,6 +37,24 @@ interface SettingsLayoutProps {
 }
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
+  const { setUser } = useMeStore();
+  useEffect(() => {
+    const setUserToState = async () => {
+      const user = await fetch("http://localhost:8000/api/me", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await user.json();
+      if (data.status === 200) {
+        setUser(data.user);
+      }
+    };
+    setUserToState();
+  }, []);
   return (
     <>
       <div className="space-y-6 p-5 pb-16 md:block w-full md:mx-20 max-w-[1440px]">

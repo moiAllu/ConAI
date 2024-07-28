@@ -57,10 +57,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 // This can come from your database or API.
 const defaultValues: Partial<ProfileFormValues> = {
   bio: "Software Engineer",
-  urls: [
-    { value: "https://conAI.com" },
-    { value: "http://twitter.com/shadcn" },
-  ],
+  urls: [{ value: "https://conAI.com" }],
 };
 
 export function ProfileForm() {
@@ -113,21 +110,28 @@ export function ProfileForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={verified}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
+                    <SelectValue placeholder={email} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
-                </SelectContent>
+                {!verified && (
+                  <Button type="reset" onClick={() => {}}>
+                    Verify
+                  </Button>
+                )}
               </Select>
               <FormDescription>
-                You can manage verified email addresses in your{" "}
-                <Link href="/examples/forms">email settings</Link>.
+                {verified ? (
+                  "Your email is verified."
+                ) : (
+                  <>Your email is not verified. Please verify your email.</>
+                )}
               </FormDescription>
               <FormMessage />
             </FormItem>

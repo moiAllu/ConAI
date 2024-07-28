@@ -18,6 +18,7 @@ import {
 } from "@/registry/new-york/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group";
 import { toast } from "@/registry/new-york/ui/use-toast";
+import { useTheme } from "next-themes";
 
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"], {
@@ -37,11 +38,16 @@ const defaultValues: Partial<AppearanceFormValues> = {
 };
 
 export function AppearanceForm() {
+  const { theme, setTheme } = useTheme();
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
     defaultValues,
   });
-
+  form.watch((value) => {
+    if (value.theme) {
+      setTheme(value.theme);
+    }
+  });
   function onSubmit(data: AppearanceFormValues) {
     toast({
       title: "You submitted the following values:",

@@ -48,6 +48,7 @@ export default function LoginForm() {
     } catch (e) {
       console.log(e);
       setError("Internal server error");
+      setLoading(false);
     }
   };
 

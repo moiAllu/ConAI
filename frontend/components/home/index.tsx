@@ -151,7 +151,7 @@ const HeroPage = () => {
           ))}
         </div>
       </section>
-      <section className=" w-full flex flex-col sm:p-10 p-4 gap-20 justify-center items-center ">
+      {/* <section className=" w-full flex flex-col sm:p-10 p-4 gap-20 justify-center items-center ">
         <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%] text-center sm:text-start ">
           <h2 className="text-4xl font-bold text-primary ">
             {"Don't take our word"}
@@ -164,7 +164,7 @@ const HeroPage = () => {
         <div className="flex gap-4 justify-center items-center">
           <CardCarousel />
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
