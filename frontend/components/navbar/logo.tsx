@@ -3,7 +3,11 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import Image from "next/image";
 import React from "react";
 import { useTheme } from "next-themes";
-const Logo = () => {
+type LogoProps = {
+  width?: number;
+  height?: number;
+};
+const Logo = ({ width, height }: LogoProps) => {
   const { theme } = useTheme();
   return (
     <div>
@@ -11,8 +15,8 @@ const Logo = () => {
       <Image
         src={theme === "dark" ? "/conai-dark.png" : "/conai-light.png"}
         alt="Image"
-        width={80}
-        height={80}
+        width={width || 80}
+        height={height || 80}
         className="rounded-md object-cover"
         style={{ width: "auto", height: "auto" }}
       />
