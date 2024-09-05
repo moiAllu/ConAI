@@ -71,7 +71,7 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
     }
 
     // UNCOMMENT WHEN NEEDED
-    const aiResp = await getGPTResponse(prompt);
+    const aiResp = await getGPTResponse({prompt});
     // const aiResp = 'UNCOMMENT THE ABOVE LINE TO GET AI RESPONSE';
 
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
