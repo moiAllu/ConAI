@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SquarePen, UploadIcon, ReceiptText } from "lucide-react";
-import { Settings } from "lucide-react";
+import { Settings, History } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +16,7 @@ import {
   DrawerDescription,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import DrawerHistory from "./drawer-history";
 
 interface NavProps {
   children: React.ReactNode;
@@ -28,6 +29,20 @@ const Nav = (props: NavProps) => {
         <div className=" flex space-x-2 items-center">
           <ReceiptText className="font-bold " />
           <h1 className="text-xl font-bold">AI Writing</h1>
+          <Drawer direction="left">
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="">
+                <History />
+                <span className="sr-only">history</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="w-screen max-w-[450px]">
+              <DrawerHeader>
+                <DrawerTitle>History</DrawerTitle>
+              </DrawerHeader>
+              <DrawerHistory />
+            </DrawerContent>
+          </Drawer>
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">

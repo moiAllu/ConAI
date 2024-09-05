@@ -11,6 +11,7 @@ export interface IMessage {
 
 export interface IChat {
   id: string;
+  _id?: string;
   messages: IMessage[];
   userId: string;
   title?: string;
@@ -25,6 +26,7 @@ interface States {
 interface Actions {
   addMessageToChat: (message: IMessage, chatId: string, _id: string) => void;
   setAllMessagesInChat: (messages: IMessage[], chatId: string, _id: string) => void;
+  deleteMessageFromChat: (messageId: string, chatId: string) => void;
 }
 
 // useAIChatStore hook
@@ -45,6 +47,19 @@ export const useAIChatStore = create<States & Actions>((set) => ({
           userId: _id,
           createdAt: new Date(),
         });
+      }
+
+      return newState;
+    });
+  },
+  
+  deleteMessageFromChat: (messageId, chatId) => {
+    set((state) => {
+      const newState = _.cloneDeep(state);
+      const existing = _.find(newState.chats, { id: chatId });
+
+      if (existing) {
+        existing.messages = existing.messages.filter((m) => m.id !== messageId);
       }
 
       return newState;

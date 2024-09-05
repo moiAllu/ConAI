@@ -13,57 +13,13 @@ import { CirclePlus } from "lucide-react";
 import { categorizeChatMessages } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useMeStore } from "../../store";
+import { Ellipsis } from "lucide-react";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;
   children: React.ReactNode;
 }
-
-// const chatHistory: IChat[] = [
-//   {
-//     title: 'Morning Coffee Plans',
-//     dateTime: new Date('2024-07-11T07:30:00'), // Example date and time (YYYY-MM-DDTHH:mm:ss)
-//     content:
-//       'Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️',
-//   },
-//   {
-//     title: 'Morning Coffee Plans',
-//     dateTime: new Date('2024-07-11T07:30:00'), // Example date and time (YYYY-MM-DDTHH:mm:ss)
-//     content:
-//       'Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️',
-//   },
-//   {
-//     title: 'Morning Coffee Plans',
-//     dateTime: new Date('2024-07-11T07:30:00'), // Example date and time (YYYY-MM-DDTHH:mm:ss)
-//     content:
-//       'Alice and Bob discuss plans to meet for coffee later in the day. 🍵☕️',
-//   },
-//   {
-//     title: 'Project Update',
-//     dateTime: new Date('2024-07-10T10:15:00'),
-//     content:
-//       'Team A shares progress updates and assigns tasks for the day. 📈📋',
-//   },
-//   {
-//     title: 'Lunch Break Ideas',
-//     dateTime: new Date('2024-07-09T12:00:00'),
-//     content:
-//       'Alice and Bob brainstorm lunch options and decide on a nearby restaurant. 🍔🥗',
-//   },
-//   {
-//     title: 'Client Meeting Prep',
-//     dateTime: new Date('2024-07-04T14:30:00'),
-//     content:
-//       'Alice and Emily discuss strategies and preparations for an upcoming client meeting. 📊📅',
-//   },
-//   {
-//     title: 'Technical Discussion',
-//     dateTime: new Date('2024-06-27T16:45:00'),
-//     content:
-//       'Alice and Charlie troubleshoot technical issues and brainstorm solutions. 💻🔧',
-//   },
-// ];
 
 const ResizeableSidebar = ({
   defaultLayout = [5, 440, 655],
@@ -77,6 +33,8 @@ const ResizeableSidebar = ({
   );
   const router = useRouter();
   const { _id } = useMeStore();
+  const [mouseEnter, setMouseEnter] = React.useState("");
+  console.log("MouseEnter", mouseEnter);
 
   const onCollapsed = (collapsed: any) => {
     // setIsCollapsed(collapsed);
@@ -157,18 +115,34 @@ const ResizeableSidebar = ({
               <h3 className="text-sm font-semibold">{grp.category}</h3>
               <Separator className="my-1" />
               {grp.chats.map((message, index) => (
-                <Button
-                  className="py-1 w-full justify-start my-1"
-                  size="sm"
-                  variant="secondary"
+                <div
+                  className="flex items-center w-full  my-1"
+                  onMouseEnter={() => setMouseEnter(message._id || "")}
+                  onMouseLeave={() => setMouseEnter("")}
                   key={index}
-                  onClick={() => handleChatChange(message)}
                 >
-                  <p className="text-xs dark:text-gray-400">
-                    {message?.title ||
-                      message?.messages[0]?.message?.slice(0, 10) + "..."}
-                  </p>
-                </Button>
+                  <Button
+                    className="py-1 w-full justify-start rounded-r-none"
+                    size="sm"
+                    variant="secondary"
+                    key={index}
+                    onClick={() => handleChatChange(message)}
+                  >
+                    <p className="text-xs dark:text-gray-400">
+                      {message?.title ||
+                        message?.messages[0]?.message?.slice(0, 10) + "..."}
+                    </p>
+                  </Button>
+                  {mouseEnter === message._id && (
+                    <Button
+                      className="py-1 justify-start rounded-l-none"
+                      size="sm"
+                      variant="secondary"
+                    >
+                      <Ellipsis />
+                    </Button>
+                  )}
+                </div>
               ))}
               <Separator className="my-1" />
             </div>

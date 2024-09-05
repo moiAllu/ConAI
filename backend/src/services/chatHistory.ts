@@ -11,7 +11,7 @@ export const storeMessageInChatHistory = async (
     const chatHistory = await ChatHistory.findOne({ _id: id });
     chatHistory.messages.push({ role, message });
     await chatHistory.save();
-    return null;
+    return null;  
   }
 
   const newChatHistory = new ChatHistory({
