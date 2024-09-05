@@ -44,7 +44,7 @@ const cardsData = [
     description:
       "Create easy to understand summaries from websites and long texts.",
     icon: <ImagePlus /> || "",
-    link: "/dashboard/aichat",
+    link: "/dashboard/ai-chat",
   },
   {
     title: "Summarizer",
