@@ -52,7 +52,7 @@ const AIChatHistory = (props: Props) => {
     <div className="sm:p-6 p-2 text-center overflow-y-auto h-[65vh]">
       {hasMessages ? (
         chat?.messages.map((message, idx) => (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div key={idx}>Loading...</div>}>
             <Message
               key={message.id}
               message={message}

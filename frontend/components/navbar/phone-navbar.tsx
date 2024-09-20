@@ -112,8 +112,9 @@ const PhoneNavbar = () => {
           </div>
           <Separator className="my-2" />
           <div className="flex flex-col space-y-1">
-            {topLinks.map((link) => (
+            {topLinks.map((link, itx) => (
               <Link
+                key={itx}
                 href={link.href}
                 passHref
                 className=" flex items-center space-x-2 text-sm ml-6 hover:bg-muted"
@@ -134,8 +135,9 @@ const PhoneNavbar = () => {
             <span className="text-md font-semibold ">Tools</span>
           </div>
           <div className="flex flex-col space-y-1">
-            {toolsLinks.map((link) => (
+            {toolsLinks.map((link, itx) => (
               <Link
+                key={itx}
                 href={link.href}
                 passHref
                 className=" flex items-center space-x-2 text-sm ml-6 hover:bg-muted"
@@ -154,8 +156,9 @@ const PhoneNavbar = () => {
           </div>
           <Separator className="my-2" />
           <div className="flex flex-col ">
-            {links.map((link) => (
+            {links.map((link, itx) => (
               <Link
+                key={itx}
                 href={link.href}
                 passHref
                 className=" flex items-center space-x-2 text-sm ml-6 hover:bg-muted"
