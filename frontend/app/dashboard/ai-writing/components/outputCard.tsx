@@ -50,13 +50,12 @@ const OutputCard = () => {
       </Badge>
       <div className="h-full w-full overflow-y-auto p-4 ">
         <p className="text-sm text-text-secondary">
-          {documents?.documents.at(-1)?.content ||
-            "Start typing to see the output here"}
+          {documents?.documents.at(-1)?.content || "See the output here"}
         </p>
       </div>
 
       {/* <div className="flex-1" /> */}
-      <form
+      {/* <form
         className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring "
         x-chunk="dashboard-03-chunk-1"
       >
@@ -69,7 +68,7 @@ const OutputCard = () => {
           className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
         />
         <div className="flex items-center p-3 pt-0">
-          {/* <TooltipProvider>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -88,13 +87,13 @@ const OutputCard = () => {
               </TooltipTrigger>
               <TooltipContent side="top">Use Microphone</TooltipContent>
             </Tooltip>
-          </TooltipProvider> */}
+          </TooltipProvider>
           <Button type="submit" size="sm" className="ml-auto  gap-1.5 mb-5">
             Send Message
             <CornerDownLeft className="size-3.5" />
           </Button>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 };

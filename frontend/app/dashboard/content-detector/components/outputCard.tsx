@@ -10,13 +10,37 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useContentDetectorStore } from "../store";
+import { useSearchParams } from "next/navigation";
+import { useMeStore } from "../../store";
 
 const OutputCard = () => {
+  const aiHistory = useContentDetectorStore((state) => state.aiHistory);
+  const plagrimHistory = useContentDetectorStore(
+    (state) => state.plagrismHistory
+  );
+  const compareHistory = useContentDetectorStore(
+    (state) => state.compareHistory
+  );
+  const searchParams = useSearchParams();
+  const { _id: userId } = useMeStore();
+  const documentId = searchParams.get("documentId") || "";
   return (
     <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
       <Badge variant="outline" className="absolute right-3 top-3">
         Output
       </Badge>
+      <div>
+        <div>
+          <span>Total words: </span>
+          <span>100</span>
+        </div>
+        <div>
+          <span>match percentage</span>
+          <span>match words</span>
+        </div>
+        <div>graph</div>
+      </div>
       {/* <div className="flex-1" /> */}
       {/* <form
         className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"

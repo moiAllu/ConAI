@@ -200,7 +200,9 @@ const DynamicCard = () => {
       inputType,
       inputTone,
       inputAgeGroup,
-      inputLength,
+      inputLength:
+        inputLength.split("(")[1].split(" ")[0].split("-")[1] ||
+        inputLength.split("(")[1].split(" ")[0].split("-")[0],
     };
     const response = await generateAiResponse(
       promptMods,
