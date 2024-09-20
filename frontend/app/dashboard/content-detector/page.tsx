@@ -9,7 +9,11 @@ const ContentDetectionPage = () => {
   const isPhone = useWindowSize().width < 640;
   return (
     <div className="sm:py-5 py-2 flex flex-col w-full h-full ">
-      <Nav title="Content-Detector" icon={SquareActivity}>
+      <Nav
+        title="Content-Detector"
+        icon={SquareActivity}
+        history=<DrawerCard />
+      >
         <DrawerCard />
       </Nav>
       <div className="p-2 sm:p-5 h-full w-full flex  items-center  space-x-4">

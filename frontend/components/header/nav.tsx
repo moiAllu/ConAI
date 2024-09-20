@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { UploadIcon, ReceiptText, IconNode, LucideIcon } from "lucide-react";
-import { Settings } from "lucide-react";
+import { Settings, History } from "lucide-react";
 
 import {
   Drawer,
@@ -15,6 +15,7 @@ import {
 
 interface NavProps {
   children: React.ReactNode;
+  history?: React.ReactNode;
   title: string;
   icon: LucideIcon;
 }
@@ -26,6 +27,20 @@ const Nav = (props: NavProps) => {
         <div className=" flex space-x-2 items-center">
           <ReceiptText className="font-bold " />
           <h1 className="sm:text-2xl font-bold text-xl">{props.title}</h1>
+          <Drawer direction="left">
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="">
+                <History />
+                <span className="sr-only">history</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="w-screen max-w-[450px]">
+              <DrawerHeader>
+                <DrawerTitle>History</DrawerTitle>
+              </DrawerHeader>
+              <DrawerDescription>{props.history}</DrawerDescription>
+            </DrawerContent>
+          </Drawer>
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">

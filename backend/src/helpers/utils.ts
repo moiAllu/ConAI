@@ -35,11 +35,12 @@ export const utils = {
 }
 
 export const transporter = createTransport({
-    host :"sandbox.smtp.mailtrap.io",
-    port: 2525,
+    host :"smtp-api-pk2.infobip.com",
+    port: 587,
+    authMethod:"LOGIN",
     auth : {
-        user: "da790aed33f7b7",
-        pass: "37911721ba8a1d"
+      user:"al5690410",
+      pass:"lawaN@123"
     }
 })
 
@@ -53,6 +54,7 @@ export const transporter = createTransport({
 // })
 
 export const sendVerificationCode = async (email: string, otp: string) => {
+  console.log(email,otp)
   try{
     return await transporter.sendMail({
       from: "noreply@conai.com",
