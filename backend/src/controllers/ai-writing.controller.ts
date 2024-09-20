@@ -46,8 +46,16 @@ export const getAiWritingById = async (req: Request, res: Response) => {
 
 export const aiWritingController= async (req: Request, res: Response) => {
     const { promptMods,prompt,userId,chatId} = req.body;
-    const promptTuning = `Create a ${promptMods.inputFormat}${promptMods.inputType ? " in the format of " + promptMods.inputType : ""}. The tone should be ${promptMods.inputTone}, tailored for an audience of ${promptMods.inputAgeGroup}. Ensure the content is specifically suited for this age group, with a length of ${promptMods.inputLength}. The topic is: ${prompt}.`;
-
+    const lengthDescriptor = promptMods.inputLength === "500"
+    ? "around 500 words (between 450 and 550 words)"
+    : promptMods.inputLength === "1500"
+    ? "around 1500 words (between 1400 and 1600 words)"
+    : promptMods.inputLength === "3000"
+    ? "around 3000 words (between 2900 and 3100 words)"
+    : `${promptMods.inputLength} words`;
+  
+    const promptTuning = `Create a ${promptMods.inputFormat}${promptMods.inputType ? " in the format of " + promptMods.inputType : ""}. The tone should be ${promptMods.inputTone}, tailored for an audience of ${promptMods.inputAgeGroup}. Ensure the content is specifically suited for this age group, with a length of ${lengthDescriptor}. The topic is: ${prompt}.`;
+  
 
     try {
         const aiResp = await getGPTResponse({prompt: promptTuning});
