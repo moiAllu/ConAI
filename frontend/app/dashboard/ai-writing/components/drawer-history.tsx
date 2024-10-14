@@ -30,7 +30,6 @@ const DrawerHistory = () => {
     };
     getAiResponse();
   }, []);
-  console.log(history);
   return (
     <div className="overflow-y-auto overflow-x-hidden p-2">
       <DrawerDescription className="text-left">
