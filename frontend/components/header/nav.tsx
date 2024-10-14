@@ -22,7 +22,7 @@ interface NavProps {
 
 const Nav = (props: NavProps) => {
   return (
-    <div className="w-full ">
+    <div className="w-full">
       <div className="flex items-center justify-between px-4">
         <div className=" flex space-x-2 items-center">
           <ReceiptText className="font-bold " />
