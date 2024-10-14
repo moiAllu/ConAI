@@ -2,6 +2,8 @@ import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 
 interface IPlagrismDetection{
+    _id?: string;
+    prompt: string;
     querywords: number;
     count: number;
     cost: number;
@@ -32,7 +34,12 @@ const plagrismDetectionSchema = new Schema<IPlagrismDetectionHistory>({
         required: true
     },
     data: [
-        {
+        {   
+            
+            prompt: {
+                type: String,
+                required: true
+            },
             querywords: {
                 type: Number,
                 required: true

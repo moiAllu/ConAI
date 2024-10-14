@@ -16,8 +16,6 @@ export const generateCopyscapeResponse = async (text: string) => {
         });
 
         const result = await response.json();  // Since you expect a JSON response
-
-        console.log(result);
         return result;
     } catch (error) {   
         console.log('generateCopyscape Error:', error);
