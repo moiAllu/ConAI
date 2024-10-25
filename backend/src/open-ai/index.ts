@@ -1,20 +1,26 @@
 import { CONFIG } from '../config';
 import openAIClient from '../config/open-ai';
+import { pipeline } from "node:stream/promises";
 
 interface gptResponseInterface {
   model?: string;
   prompt: string;
 }
-
+const systemPrompt = "Please respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. Include headings."
 export const getGPTResponse = async ({prompt, model}: gptResponseInterface) => {
   try {
     const chatCompletion = await openAIClient.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: prompt }, { role: 'assistant', content: systemPrompt }],
       model: model || CONFIG.OPENAI_GPT_MODEL,
-      stream: false,
+      stream: true,
     },
   );
-    return chatCompletion.choices[0].message.content;
+  const fullResponse = [];
+     for await(const chunks of chatCompletion){
+      chunks.choices[0]?.delta?.content || 'Error generating AI response';
+      fullResponse.push(chunks.choices[0]?.delta?.content);
+     }
+     return fullResponse.join('');
   } catch (error) {
     console.log('getGPTResponse ', error);
     return 'Error generating AI response';

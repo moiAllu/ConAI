@@ -2,6 +2,7 @@ import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 
 interface IChatMessage {
+  _id?: string;
   role: 'user' | 'assistant';
   message: string;
   createdAt?: Date;
