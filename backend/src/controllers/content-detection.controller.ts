@@ -47,16 +47,15 @@ export const getContentDetectionResponse = async (req:Request,res:Response) => {
             return res.status(200).json({
                 message: 'Content fetched successfully',
                 status: 200,
-                data: responseFromCopyscape
+                data: user.data[user.data.length-1]
             });
         }
         const response = new PlagrismDetection({method, userId, data:{ prompt:content, querywords: responseFromCopyscape.querywords, count: responseFromCopyscape.count, cost: responseFromCopyscape.cost, result: responseFromCopyscape.result}});
         await response.save();
-        
         return res.status(200).json({
             message: 'Content fetched successfully',
             status: 200,
-            data: responseFromCopyscape
+            data: response.data[response.data.length-1]
         });
     }else if(method === "Ai Detection"){
         const tunePrompt = `Your task is to detect whether the following text contains AI-generated content.Analyze the text and return a response with the following format, do not add any "\n" or "\t" in the response:"{"aiDetected": true/false,"confidence": 0 - 1,"aiPercentage": 0 - 100,"aiContent": string[]}".The analysis should be based on the provided text: '${content}'`;
@@ -82,7 +81,7 @@ export const getContentDetectionResponse = async (req:Request,res:Response) => {
             return res.status(200).json({
                 message: 'Content fetched successfully',
                 status: 200,
-                data: responseFromOpenAi
+                data: response.data[response.data.length-1]
             });
         }
         const newResponse = new AiDetection({method, userId, data:{
@@ -95,7 +94,7 @@ export const getContentDetectionResponse = async (req:Request,res:Response) => {
         return res.status(200).json({
             message: 'Content fetched successfully',
             status: 200,
-            data: responseFromOpenAi
+            data: newResponse.data[newResponse.data.length-1]
         });
         
     }
