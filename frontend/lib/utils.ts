@@ -9,15 +9,19 @@ export function cn(...inputs: ClassValue[]) {
 export function isDev() {
   return process.env.NODE_ENV === 'development';
 }
-
+interface Ichat{
+  createdAt: string;
+  title: string;
+  chatId: string;
+}
 interface IndexedChatMessages {
   category: string;
-  chats: IChat[];
+  chats: Ichat[];
 }
 export function categorizeChatMessages(
-  chatMessages: IChat[]
+  chatMessages: Ichat[]
 ): IndexedChatMessages[] {
-  const categorizedMessages: { [key: string]: IChat[] } = {};
+  const categorizedMessages: { [key: string]: Ichat[] } = {};
 
   const now = new Date(); // Current date and time
 

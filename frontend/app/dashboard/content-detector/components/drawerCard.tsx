@@ -14,12 +14,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { createContentDetection } from "@/lib/apicalls/auth";
+import { useContentDetectorStore } from "../store";
+import { useRouter } from "next/navigation";
 
 const DrawerCard = () => {
+  const router = useRouter();
   const [method, setMethod] = React.useState("Ai Detection");
   const [content, setContent] = React.useState("");
   const [compareTo, setCompareTo] = React.useState("");
   const { _id: userId } = useMeStore();
+  const { aiHistory, addAiHistory, addPlagrismHistory } =
+    useContentDetectorStore();
   const countWords = (str: string) => {
     if (str.split(" ").length === 1) return "10 / 3000";
     return str.split(" ").length;
@@ -33,7 +38,21 @@ const DrawerCard = () => {
       content,
       compareTo
     );
-    console.log(contentDetection);
+    if (contentDetection.status === 200) {
+      if (method === "Ai Detection") {
+        addAiHistory(contentDetection.data, userId, "ai detection");
+        router.push(
+          `/dashboard/content-detector?documentId=${contentDetection.data?._id}`
+        );
+        console.log(contentDetection);
+      } else if (method === "Plagirism Detection") {
+        addPlagrismHistory(contentDetection.data, userId, "plagrism detection");
+        router.push(
+          `/dashboard/content-detector?documentId=${contentDetection.data?._id}`
+        );
+        console.log(contentDetection);
+      }
+    }
   };
   return (
     <form
