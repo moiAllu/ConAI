@@ -15,6 +15,9 @@ import { useAIWritingStore } from "../store";
 import { useSearchParams } from "next/navigation";
 import { getAiWritingById } from "@/lib/apicalls/auth";
 import { useMeStore } from "../../store";
+import ReactMarkdown from "react-markdown";
+import styles from "./OutputCard.module.css";
+import remarkGfm from "remark-gfm";
 
 const OutputCard = () => {
   const history = useAIWritingStore((state) => state.history);
@@ -48,10 +51,10 @@ const OutputCard = () => {
       <Badge variant="outline" className="absolute right-3 top-3">
         <span>Output</span>
       </Badge>
-      <div className="h-full w-full overflow-y-auto p-4 ">
-        <p className="text-sm text-text-secondary">
+      <div className="h-full w-full prose prose-base  overflow-y-auto p-4 ">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {documents?.documents.at(-1)?.content || "See the output here"}
-        </p>
+        </ReactMarkdown>
       </div>
 
       {/* <div className="flex-1" /> */}

@@ -19,6 +19,7 @@ import { IAiDetection, IPlagrismDetection } from "@/types/contentDetection";
 const OutputCard = () => {
   const { aiHistory, addAiHistory, addPlagrismHistory } =
     useContentDetectorStore();
+
   const plagrimHistory = useContentDetectorStore(
     (state) => state.plagrismHistory
   );
@@ -62,8 +63,6 @@ const OutputCard = () => {
       (doc) => doc._id === searchParams.get("documentId")
     );
 
-  console.log("doc", aiDocument);
-
   return (
     <div className="relative flex h-full  w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto">
       <Badge variant="outline" className="absolute right-3 top-3">
@@ -88,8 +87,8 @@ const OutputCard = () => {
                 AI Model Confidence {aiDocument?.response.confidence}
               </span>
               <div>
-                {aiDocument?.response.aiContent.map((content) => (
-                  <span>{content}</span>
+                {aiDocument?.response.aiContent.map((content, idx) => (
+                  <span key={idx}>{content}</span>
                 ))}
               </div>
             </div>
@@ -106,8 +105,8 @@ const OutputCard = () => {
                 <span>Query Words: {plagDocument?.querywords}</span>
                 <span>Count: {plagDocument?.count}</span>
                 <div>
-                  {plagDocument?.result.map((content) => (
-                    <div>
+                  {plagDocument?.result.map((content, idx) => (
+                    <div key={idx}>
                       <span>URL: {content.url}</span>
                       <span>Index: {content.index}</span>
                       <span>Title: {content.title}</span>
