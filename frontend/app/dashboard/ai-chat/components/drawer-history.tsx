@@ -25,8 +25,8 @@ const DrawerChatHistory = () => {
   const { _id } = useMeStore();
 
   const handleChatChange = (chat: any) => {
-    if (chat?._id) {
-      return router.push(`/dashboard/ai-chat?chatId=${chat._id}`);
+    if (chat?.chatId) {
+      return router.push(`/dashboard/ai-chat?chatId=${chat.chatId}`);
     }
 
     return router.push(`/dashboard/ai-chat`);
@@ -48,12 +48,12 @@ const DrawerChatHistory = () => {
       const resp = await res.json();
 
       if (resp?.data?.length) {
-        setChatHistory(() => categorizeChatMessages(resp.data));
+        setChatHistory(() => categorizeChatMessages(resp.data.reverse()));
       }
     }
 
     fetchChatHistory(_id);
-  }, []);
+  }, [_id]);
   return (
     <div className="sm:hidden">
       <Drawer direction="right">
@@ -66,15 +66,15 @@ const DrawerChatHistory = () => {
         <DrawerContent>
           <DrawerHeader className="jusitfy-start">
             <DrawerTitle className="text-left">History</DrawerTitle>
-            <DrawerDescription className="text-left">
+            <DrawerDescription className="text-left h-full ">
               {filterChatHistory.map((grp, index) => (
-                <div className="w-full" key={index}>
+                <div className="w-full overflow-y-auto" key={index}>
                   <h3 className="text-sm font-semibold">{grp.category}</h3>
                   <Separator className="my-1" />
                   {grp.chats.map((message, index) => (
                     <div
                       className="flex items-center w-full  my-1"
-                      onMouseEnter={() => setMouseEnter(message._id || "")}
+                      onMouseEnter={() => setMouseEnter(message.chatId || "")}
                       onMouseLeave={() => setMouseEnter("")}
                       key={index}
                     >
@@ -86,11 +86,10 @@ const DrawerChatHistory = () => {
                         onClick={() => handleChatChange(message)}
                       >
                         <p className="text-xs dark:text-gray-400">
-                          {message?.title ||
-                            message?.messages[0]?.message?.slice(0, 10) + "..."}
+                          {message?.title.slice(0, 25) + "..."}
                         </p>
                       </Button>
-                      {mouseEnter === message._id && (
+                      {mouseEnter === message.chatId && (
                         <Button
                           className="py-1 justify-start rounded-l-none"
                           size="sm"
