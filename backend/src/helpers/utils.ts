@@ -1,6 +1,8 @@
 
 import * as bcrypt from 'bcrypt'
+import { Models } from 'interfaces/openAiModels';
 import { createTransport } from 'nodemailer'
+import openaiTokenCounter from 'openai-gpt-token-counter';
 export const utils = {
     isJSON: (data: string) => {
       try {
@@ -32,6 +34,11 @@ export const utils = {
         })
       })
     },
+}
+
+export const countTokens = (messages: any, model:  "gpt-3.5-turbo"|"gpt-3.5-turbo-16k"|"gpt-4"|"gpt-4-32k" ) => {
+  const tokenCount= openaiTokenCounter.chat(messages,model)
+  return tokenCount
 }
 
 export const transporter = createTransport({

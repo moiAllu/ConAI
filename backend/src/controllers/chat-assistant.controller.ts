@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getGPTResponse } from '../open-ai';
+import { getGPTResponse, getSummarizeChatHistoryOpenAiRes } from '../open-ai';
 import {
   storeMessageInChatHistory,
   getChatHistory,
@@ -7,6 +7,8 @@ import {
 } from '../services/chatHistory';
 import jwt from 'jsonwebtoken';
 import openAIClient from '../config/open-ai';
+import { countTokens } from '../helpers';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 
 export const getUserChatsController = async (req: Request, res: Response) => {
@@ -72,17 +74,51 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
     }
     // UNCOMMENT WHEN NEEDED
     const systemPrompt = "Please respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. Include headings."
+    let assistantMessages: ChatCompletionMessageParam[]= [];
+
+    if (chatId) {
+      const chatHistory = await getChatHistory(chatId, _id);
+      if (chatHistory && chatHistory.messages) {
+        assistantMessages = chatHistory.messages
+          .filter(item => item.role === 'assistant')
+          .map(item => ({ role: item.role, content: item.message }));
+      }
+    }
+
+    let messages: ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemPrompt },
+      ...assistantMessages,
+      { role: 'user', content: prompt },
+    ];
+    const tokens = countTokens(messages, 'gpt-3.5-turbo');
+    const maxTokens = 2096;
+
+    if (tokens > maxTokens - 500) {
+      const messagesToSummarize = assistantMessages.slice(1, -5);
+      const summarizedContent = await getSummarizeChatHistoryOpenAiRes(
+        messagesToSummarize,
+        "gpt-3.5-turbo-0125"
+      );
+      messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'assistant', content: summarizedContent },
+        { role: 'user', content: prompt },
+      ];
+    }
+
     const chatCompletion = await openAIClient.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }, { role: 'assistant', content: systemPrompt }],
+      messages: messages,
       // model: model || CONFIG.OPENAI_GPT_MODEL,
       model: 'gpt-3.5-turbo-0125',
       stream: true,
     },
   );
   if(!chatCompletion){
-     console.log('Content not found');
-     return res.write(`error: ${JSON.stringify('Content not found')}\n\n`);
+    console.log('Content not found');
+    return res.write(`error: ${JSON.stringify('Content not found')}\n\n`);
   }
+  // const countToken = countTokens([{role: 'user', content: prompt}],"gpt-3.5-turbo");
+  // console.log(countToken)
     // const aiResp = 'UNCOMMENT THE ABOVE LINE TO GET AI RESPONSE';
   
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
