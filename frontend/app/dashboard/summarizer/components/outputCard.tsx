@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import styles from "./OutputCard.module.css";
 
 const OutputCard = () => {
   const [response, setResponse] = React.useState("");
@@ -74,7 +73,7 @@ const OutputCard = () => {
       <div className="flex flex-col w-full h-full">
         <Button onClick={getStreamResponse}>Get Response</Button>
         <div className={`flex flex-col w-full h-full overflow-y-auto `}>
-          <ReactMarkdown className={styles.message}>{response}</ReactMarkdown>
+          <ReactMarkdown>{response}</ReactMarkdown>
         </div>
       </div>
     </div>

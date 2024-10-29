@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import _ from 'lodash';
-
+import { persist } from 'zustand/middleware';
 // State types
 export interface IMessage {
   _id?: string;
@@ -32,7 +32,7 @@ interface Actions {
 }
 
 // useAIChatStore hook
-export const useAIChatStore = create<States & Actions>((set) => ({
+export const useAIChatStore = create<States & Actions>()(persist((set) => ({
   chats: [],
   
   addMessageToChat: (message, chatId ,_id) => {
@@ -101,4 +101,4 @@ export const useAIChatStore = create<States & Actions>((set) => ({
       return newState;
     });
   },
-}));
+}),{ name: "aiChatStore", getStorage: () => localStorage }));

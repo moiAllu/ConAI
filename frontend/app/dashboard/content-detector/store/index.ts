@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface IPlagrismDetection{
     _id?: string;
@@ -61,9 +62,10 @@ interface Actions {
     removeAiHistory: (userId: string) => void;
     removePlagrismHistory: (userId: string) => void;
     removeCompareHistory: (userId: string) => void;
+    clearHistory: () => void;
 }
 
-export const useContentDetectorStore = create<States & Actions>((set) => (
+export const useContentDetectorStore = create<States & Actions>()(persist((set) => (
     {
         aiHistory:{
             method:'',
@@ -154,7 +156,28 @@ export const useContentDetectorStore = create<States & Actions>((set) => (
                 }
                 return newState;
             });
+        },
+        clearHistory: () => {
+            set((state) => {
+                const newState = _.cloneDeep(state);
+                newState.aiHistory = {
+                    method:'',
+                    userId:'',
+                    aiDetectionHistory: []
+                }
+                newState.plagrismHistory = {
+                    method:'',
+                    userId:'',
+                    plagrismDetectionHistory: []
+                }
+                newState.compareHistory = {
+                    method:'',
+                    userId:'',
+                    compareHistory: []
+                }
+                return newState;
+            });
         }
         
     }
-));
+),{ name: 'content-detector'  , getStorage: () => localStorage }));

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import _ from 'lodash';
+import { persist } from 'zustand/middleware';
 
 interface IDocumnet{
     role: 'user' | 'ai'; 
@@ -26,7 +27,7 @@ interface Actions{
     deleteDocumentFromHistory:(documentId:string, storeId:string)=>void;
 }
 
-export const useAIWritingStore = create<States & Actions>((set) => ({
+export const useAIWritingStore = create<States & Actions>()(persist((set) => ({
     history: [],
     
     addDocumentToHistory: (document, storeId , userId) => {
@@ -83,4 +84,4 @@ export const useAIWritingStore = create<States & Actions>((set) => ({
             return newState;
         });
     },
-}));
+}),{ name :"aiWritingStore", getStorage() { return localStorage; },} ));
