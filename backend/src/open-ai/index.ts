@@ -60,14 +60,28 @@ export const getRewriteOpenAiRes= async ({prompt,model}:gptResponseInterface) =>
 
 export const getSummarizeOpenAiRes = async ({prompt,model}:gptResponseInterface) => {
   try {
-    const summarizeResponse = await openAIClient.completions.create({
-      model: model || CONFIG.OPENAI_GPT_MODEL,
-      prompt: prompt,
-      max_tokens: 100,
-      n: 1,
-      stop: ['###'],
+    const contentDetection = await openAIClient.chat.completions.create({
+      messages: [{ role:'user' , content: prompt }],
+      model:  model || "gpt-3.5-turbo-0125",
+      stream: false,
+      temperature: 0.1,
     });
-    return summarizeResponse.choices[0].text;
+    return contentDetection.choices[0].message.content;
+  } catch (error) {
+    console.log('getSummarizeOpenAiRes ', error);
+    return 'Error generating AI response';
+  }
+}
+
+export const getSummarizeChatHistoryOpenAiRes = async (messages:any, model:"gpt-3.5-turbo-0125"|"gpt-4o") => {
+  try {
+    const contentDetection = await openAIClient.chat.completions.create({
+      messages: [...messages, { role:'assistant' , content: "Summarize the following conversation." }],
+      model:  model || "gpt-3.5-turbo-0125",
+      stream: false,
+      temperature: 0.1,
+    });
+    return contentDetection.choices[0].message.content;
   } catch (error) {
     console.log('getSummarizeOpenAiRes ', error);
     return 'Error generating AI response';
