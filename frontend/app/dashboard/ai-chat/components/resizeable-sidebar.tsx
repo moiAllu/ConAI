@@ -110,7 +110,10 @@ const ResizeableSidebar = ({
             />
           </div>
           {filterChatHistory.map((grp, index) => (
-            <div className="w-full overflow-y-auto" key={index}>
+            <div
+              className="w-full overflow-y-auto min-h-[150px] h-fulls"
+              key={index}
+            >
               <h3 className="text-sm font-semibold">{grp.category}</h3>
               <Separator className="my-1" />
               {grp.chats.map((message, index) => (

@@ -30,7 +30,6 @@ const AIChatForm = (props: Props) => {
       return;
     }
     setInput("");
-
     addMessageToChat(
       {
         id: Math.random().toString(),

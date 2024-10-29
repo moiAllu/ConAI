@@ -54,7 +54,7 @@ const Message = ({
         <div
           className={`flex items-start space-x-2 cursor-pointer text-gray-500 ${
             !isEditing && "max-w-[90%]"
-          } w-full mt-5 mb-5`}
+          }  ${isEditing && "w-full"} mt-5 mb-5 `}
           onMouseEnter={() => !isEditing && setMouseEnter(true)}
           onMouseLeave={() => !isEditing && setMouseEnter(false)}
         >

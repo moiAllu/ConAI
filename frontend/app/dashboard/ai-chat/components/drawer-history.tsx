@@ -68,7 +68,10 @@ const DrawerChatHistory = () => {
             <DrawerTitle className="text-left">History</DrawerTitle>
             <DrawerDescription className="text-left h-full ">
               {filterChatHistory.map((grp, index) => (
-                <div className="w-full overflow-y-auto" key={index}>
+                <div
+                  className="w-full overflow-y-auto h-full min-h-[150px]"
+                  key={index}
+                >
                   <h3 className="text-sm font-semibold">{grp.category}</h3>
                   <Separator className="my-1" />
                   {grp.chats.map((message, index) => (
