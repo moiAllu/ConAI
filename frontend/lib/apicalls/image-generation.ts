@@ -1,12 +1,19 @@
-export const createImage = async (prompt:string,userId:string) => {
-    return fetch(`http://localhost:8000/api//generate-image`,{
+interface Data {
+    prompt:string,
+    aspect:string, 
+    style:string, 
+    background:string,
+    color:string, 
+}
+export const createImage = async (data:Data,userId:string) => {
+    return fetch(`http://localhost:8000/api/generate-image`,{
         method:"POST",
         credentials:"include",
         headers:{
             "Content-Type":"application/json",
             Authorization: localStorage.getItem("accessToken") || "",
         },
-        body: JSON.stringify({prompt,userId}),
+        body: JSON.stringify({data,userId}),
     }).then(res=>{
         return res.json();
     }
