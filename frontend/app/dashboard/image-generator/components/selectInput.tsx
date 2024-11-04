@@ -13,12 +13,19 @@ interface SelectInputProps {
   defaultValue: string;
   options: string[];
   index: number;
+  onValueChange: any;
+  required: boolean;
 }
 const SelectInput = (props: SelectInputProps) => {
+  console.log(props.required);
   return (
     <div className="grid gap-3" key={props.index}>
       <Label htmlFor="role">{props.label}</Label>
-      <Select defaultValue={props.defaultValue}>
+      <Select
+        defaultValue={props.defaultValue}
+        onValueChange={props.onValueChange}
+        required
+      >
         <SelectTrigger>
           <SelectValue placeholder={props.defaultValue} />
         </SelectTrigger>
