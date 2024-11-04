@@ -1,6 +1,6 @@
 import { getGeneratedImage } from "../open-ai";
 import { Request, Response } from "express";
-import { getUserImageHistory, storeGeneratedImageInHistory, getGeneratedImageByUserId } from "../services/imageGenerationHistory";
+import { getUserImageHistory, storeGeneratedImageInHistory, deleteGeneratedImageByUserId, getDownloadableImage, getGeneratedImageByUserId} from "../services/imageGenerationHistory";
 
 export const imageGenerationController = async (req: Request, res: Response) => {
     const { data, userId } = req.body;
@@ -77,13 +77,35 @@ export const getGeneratedImageById = async (req: Request, res: Response) => {
 }
 export const deleteGeneratedImageById = async (req: Request, res: Response) => {
     const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({
+            message: "Missing required fields",
+            status: 400,
+        });
+    }
     try {
-        const imageGeneration = ""
+        const imageGeneration = await deleteGeneratedImageByUserId(id);
         return res.status(200).json({
             message: "Image deleted successfully",
             status: 200,
             data: imageGeneration,
         });
+    } catch (e) {
+        return res.status(500).json({
+            message: "Internal server error",
+            status: 500,
+        });
+    }
+}
+
+export const downloadGeneratedImageById = async (req: Request, res: Response) => {
+    const { imageId, resolution } = req.params;
+    try {
+        const image_buffer= await getDownloadableImage(imageId, resolution);
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', 'attachment; filename=download.png');
+        res.setHeader('Content-Length', image_buffer.length);
+        res.end(image_buffer);
     } catch (e) {
         return res.status(500).json({
             message: "Internal server error",
