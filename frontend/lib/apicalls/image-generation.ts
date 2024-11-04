@@ -58,3 +58,16 @@ export const deleteImage = async (id:string,userId:string) => {
     }
     )
 }
+export const downloadImageEndPoint = async (imageId:string,resolution:string) => {
+    return fetch(`http://localhost:8000/api/image/download/${imageId}/${resolution}`,{
+        method:"GET",
+        credentials:"include",
+        headers:{
+            "Content-Type":"application/json",
+            Authorization: localStorage.getItem("accessToken") || "",
+        },
+    }).then(res=>{
+        return res.json();
+    }
+    )
+}

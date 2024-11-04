@@ -1,4 +1,5 @@
 import { ImageGeneration } from "../mongodb/models";
+import sharp from 'sharp';
 
 export const storeGeneratedImageInHistory = async (userId :string, prompt:string, image_b64:String, revised_prompt:string ) => {
     try{
@@ -74,6 +75,63 @@ export const getGeneratedImageByUserId = async (imageId:string, userId:string) =
             status: 200,
             data: imageGeneration
         }
+    }catch(e){
+        return e;
+    }
+}
+export const deleteGeneratedImageByUserId = async (id:string) => {
+    try{
+        if(!id){
+            return {
+                message: 'Please provide all the required fields',
+                status: 400
+            }
+        }
+        const imageGeneration = await ImageGeneration.findByIdAndDelete(id);
+        if(!imageGeneration){
+            return {
+                message: 'Failed to delete image',
+                status: 500
+            }
+        }
+        return {
+            message: 'Image deleted successfully',
+            status: 200
+        }
+    }catch(e){
+        return e;
+    }
+}
+export const getDownloadableImage = async (imageId:string, resolution:string) => {
+    try{
+        if(!imageId || !resolution){
+            return {
+                message: 'Please provide all the required fields',
+                status: 400
+            }
+        }
+        const imageGeneration = await ImageGeneration.findOne({_id:imageId});
+        if(!imageGeneration){
+            return {
+                message: 'Failed to fetch image',
+                status: 500
+            }
+        }
+        const imgBuffer = Buffer.from(imageGeneration.image, 'base64');
+        let resizedBuffer;
+        if (resolution === '720') {
+        resizedBuffer = await sharp(imgBuffer)
+            .resize({ width: 1280 }) // Adjust width for 720p
+            .toBuffer();
+        } else if (resolution === '1080') {
+        resizedBuffer = await sharp(imgBuffer)
+            .resize({ width: 1920 }) // Adjust width for 1080p
+            .toBuffer();
+        } else {
+        // Original size
+        resizedBuffer = imgBuffer;
+        }
+        return resizedBuffer;
     }catch(e){
         return e;
     }
