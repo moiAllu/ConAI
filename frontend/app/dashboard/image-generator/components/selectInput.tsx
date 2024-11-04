@@ -15,13 +15,14 @@ interface SelectInputProps {
   index: number;
   onValueChange: any;
   required: boolean;
+  value: string | null;
 }
 const SelectInput = (props: SelectInputProps) => {
-  console.log(props.required);
   return (
     <div className="grid gap-3" key={props.index}>
       <Label htmlFor="role">{props.label}</Label>
       <Select
+        value={props.value || props.defaultValue}
         defaultValue={props.defaultValue}
         onValueChange={props.onValueChange}
         required

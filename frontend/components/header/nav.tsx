@@ -82,7 +82,9 @@ const Nav = (props: NavProps) => {
                             }
                           >
                             <p className="text-xs dark:text-gray-400">
-                              {img?.revised_prompt.slice(0, 40)}...
+                              {img.prompt.lenght === 40
+                                ? img?.prompt.slice(0, 40) + "..."
+                                : img?.prompt}
                             </p>
                           </Button>
                           {mouseEnter === img?._id && (

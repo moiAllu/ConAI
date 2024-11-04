@@ -1,8 +1,14 @@
+"use client";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/registry/new-york/ui/textarea";
 import React from "react";
 import SelectInput from "./selectInput";
 import { Button } from "@/components/ui/button";
+import { createImage } from "@/lib/apicalls/image-generation";
+import { useMeStore } from "../../store";
+import { useImageStore } from "../store";
+import { useRouter } from "next/navigation";
+
 const differentInputs = [
   {
     label: "Wide Aspect",
@@ -51,20 +57,49 @@ const differentInputs = [
 ];
 
 const InputCard = () => {
-  const [aspect, onAspectChange] = React.useState("Wide Aspect");
-  const [style, onStyleChange] = React.useState();
+  const userId = useMeStore((state) => state._id);
+  const [aspect, onAspectChange] = React.useState("square");
+  const [style, onStyleChange] = React.useState("");
   const [background, onBackgroundChange] = React.useState("random");
-  const [color, onColorChange] = React.useState();
-  const [content, onContentChange] = React.useState("");
-
-  const formSubmitHandler = (e: any) => {
+  const [color, onColorChange] = React.useState("");
+  const [prompt, onPromptChange] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState({ status: 0, message: "" });
+  const { addImage } = useImageStore();
+  const router = useRouter();
+  const formSubmitHandler = async (e: any) => {
     e.preventDefault();
-    console.log("Form Submitted");
-    console.log(aspect, style, background, color, content);
+    setIsLoading(true);
+    setIsError({ status: 0, message: "" });
+
+    const createdImage = await createImage(
+      {
+        aspect,
+        style,
+        background,
+        color,
+        prompt,
+      },
+      userId
+    );
+    console.log(createdImage);
+    if (createdImage.status === 200) {
+      setIsLoading(false);
+      addImage(createdImage.data.data);
+      router.push(
+        `/dashboard/image-generator?imageId=${createdImage.data.data._id}`
+      );
+      return;
+    }
+    setIsLoading(false);
+    setIsError({
+      status: createdImage.status,
+      message: createdImage.message,
+    });
   };
   return (
     <form
-      className="grid h-full w-full items-start gap-6 overflow-auto max-w-md p-2 sm:p-0"
+      className="grid h-full w-full items-start gap-6 overflow-auto max-w-xs p-2 sm:p-0 "
       onSubmit={formSubmitHandler}
     >
       <fieldset className="grid gap-6 rounded-lg border p-4 w-full max-h-screen">
@@ -83,6 +118,17 @@ const InputCard = () => {
                   ? onColorChange
                   : null
               }
+              value={
+                input.label === "Wide Aspect"
+                  ? aspect
+                  : input.label === "Style"
+                  ? style
+                  : input.label === "Background"
+                  ? background
+                  : input.label === "Color"
+                  ? color
+                  : null
+              }
               label={input.label}
               defaultValue={input.defaultValue}
               options={input.options}
@@ -95,15 +141,16 @@ const InputCard = () => {
         <div className="grid gap-3 w-full h-full">
           <Label htmlFor="content">Description prompt</Label>
           <Textarea
+            value={prompt}
             id="content"
             placeholder="You are a..."
             className="h-full resize-none bg-muted/50 border-0 p-1 shadow-none focus-visible:ring-0 sm:min-h-[150px]"
-            onChange={(e) => onContentChange(e.target.value)}
+            onChange={(e) => onPromptChange(e.target.value)}
           />
         </div>
       </fieldset>
-      <Button type="submit" className="w-full">
-        Generate Image
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? "Generating Image..." : "Generate Image"}
       </Button>
     </form>
   );

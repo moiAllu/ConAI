@@ -8,6 +8,13 @@ import { useImageStore } from "../store";
 import Image from "next/image";
 import { fileTypeFromBuffer } from "file-type";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 const OutputCard = () => {
   const userId = useMeStore((state) => state._id);
@@ -35,28 +42,43 @@ const OutputCard = () => {
           Output
         </Badge>
       )}
-      <div className="w-full h-full overflow-y-auto">
+      <div className="w-full h-full sm:overflow-y-auto">
         {base64Image && (
           <div className="gap-2  flex flex-col w-full mt-2 h-full">
-            <h1 className="font-semibold w-full text-center">
+            <h1 className="md:hidden font-semibold w-full text-center">
               {selectedImage?.prompt}
             </h1>
-            <div className="flex flex-col w-full gap-2 h-full items-center">
-              <Image
-                src={`data:image/png;base64,${base64Image}`}
-                width={600}
-                height={500}
-                alt="Base64 Example"
-                className="rounded-lg 2xl:w-[800px] lg:max-w-[1080px] lg:max-h-[900px] max-w-[320px] max-h-[500px] sm:max-w-[500px] sm:max-h-[700px] "
-              />
-              {/* <p className=" flex text-sm justify-center text-justify h-full items-center ">
-                {selectedImage?.revised_prompt}
-              </p> */}
-            </div>
-            <div className="h-full flex flex-col sm:flex-row gap-2 justify-center mt-2">
-              <Button variant="default"> Download 720p </Button>
-              <Button variant="default"> Download 1080p </Button>
-              <Button variant="default"> Download Original</Button>
+            <div className="flex w-full gap-2 justify-evenly h-full items-center">
+              <div>
+                <h1 className="md:flex justify-center hidden font-semibold w-full">
+                  {selectedImage?.prompt}
+                </h1>
+                <Image
+                  src={`data:image/png;base64,${base64Image}`}
+                  width={500}
+                  height={500}
+                  alt="Base64 Example"
+                  className="rounded-lg 2xl:w-[800px] lg:max-w-[1080px] max-w-[320px] sm:max-w-[400px] md:max-w-[400px] "
+                />
+                <div className="h-full flex flex-col md:flex-row gap-2 justify-center mt-2">
+                  <Button variant="default"> Download 720p </Button>
+                  <Button variant="default"> Download 1080p </Button>
+                  <Button variant="default"> Download Original</Button>
+                </div>
+              </div>
+              <div className="md:flex hidden">
+                <Card className="border-none bg-inherit md:visible">
+                  <CardHeader className="p-0">
+                    <CardTitle className="text-lg">Revised Prompt</CardTitle>
+                  </CardHeader>
+                  <Separator className="my-1" />
+                  <CardDescription>
+                    <p className=" flex text-sm justify-center text-justify h-full items-center max-w-xs">
+                      {selectedImage?.revised_prompt}
+                    </p>
+                  </CardDescription>
+                </Card>
+              </div>
             </div>
           </div>
         )}
