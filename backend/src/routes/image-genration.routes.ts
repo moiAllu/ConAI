@@ -1,13 +1,13 @@
-import { imageGenerationController, getGeneratedImageHistory , deleteGeneratedImageById, getGeneratedImageById } from '../controllers';
+import { imageGenerationController, getGeneratedImageHistory , deleteGeneratedImageById, getGeneratedImageById } from '../controllers/image-generation.controller';
 import { validateRoute } from '../helpers/auth';
 import express from 'express';
 
 
 const router = express.Router();
 
-router.get('/image-generation',validateRoute, getGeneratedImageHistory);
-router.get('/image-generation/:id',validateRoute, getGeneratedImageById);
-router.post('/generate-image', validateRoute, imageGenerationController);
-router.delete('/image-generation/:id',validateRoute, deleteGeneratedImageById);
+router.get('/image-generation/images/:userId',validateRoute, getGeneratedImageHistory);
+router.get('/image/:imageId/:userId',validateRoute, getGeneratedImageById);
+router.post('/generate-image',validateRoute,  imageGenerationController);
+router.delete('/image/:id',validateRoute, deleteGeneratedImageById);
 
 export default router;

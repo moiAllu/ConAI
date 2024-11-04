@@ -6,7 +6,6 @@ import contentDetectionRouter from './content-detection.routes';
 import imageGenerationRouter from './image-genration.routes';
 
 const router = Router();
-
 router.use('/api', userRouter);
 router.use('/api', chatAssistantRouter);
 router.use("/api", aiWritingRouter);
