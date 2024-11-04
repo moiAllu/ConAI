@@ -7,6 +7,7 @@ interface IImageGeneration extends Document {
   prompt: string;
   image: string;
   createdAt?: Date;
+  revised_prompt: string;
 }
 
 const imageGenerationSchema = new Schema<IImageGeneration>({
@@ -19,6 +20,10 @@ const imageGenerationSchema = new Schema<IImageGeneration>({
     required: true,
   },
   image: {
+    type: String,
+    required: true,
+  } ,
+  revised_prompt: {
     type: String,
     required: true,
   },

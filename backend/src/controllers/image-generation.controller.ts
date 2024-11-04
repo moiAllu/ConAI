@@ -1,19 +1,19 @@
 import { getGeneratedImage } from "../open-ai";
 import { Request, Response } from "express";
-import { storeGeneratedImageInHistory } from "../services/imageGenerationHistory";
+import { getUserImageHistory, storeGeneratedImageInHistory, getGeneratedImageByUserId } from "../services/imageGenerationHistory";
 
 export const imageGenerationController = async (req: Request, res: Response) => {
     const { prompt, userId } = req.body;
     try {
-        const imageGeneration = await getGeneratedImage(prompt);
-        if (!imageGeneration) {
+        const imageGeneration:any  = await getGeneratedImage(prompt);
+        if (!imageGeneration.b64_json) {
             return res.status(404).json({
                 message: "Image not found",
                 status: 404,
             });
         }
-        const storedImage= await storeGeneratedImageInHistory(userId, prompt, imageGeneration);
-        if(!storedImage){
+        const storedImage= await storeGeneratedImageInHistory(userId, prompt, imageGeneration.b64_json, imageGeneration.revised_prompt);
+        if(storedImage.status !== 200){
             return res.status(500).json({
                 message: "Failed to store image in history",
                 status: 500,
@@ -32,12 +32,14 @@ export const imageGenerationController = async (req: Request, res: Response) => 
     }
 }
 export const getGeneratedImageHistory = async (req: Request, res: Response) => {   
+    const {userId} = req.params;
+    console.log(userId);
     try {
-        const imageGeneration = ""
+        const images= await getUserImageHistory(userId);
         return res.status(200).json({
             message: "Image generated successfully",
             status: 200,
-            data: imageGeneration,
+            data: images,
         });
     } catch (e) {
         return res.status(500).json({
@@ -47,11 +49,11 @@ export const getGeneratedImageHistory = async (req: Request, res: Response) => {
     }
 }
 export const getGeneratedImageById = async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { imageId , userId } = req.params;
     try {
-        const imageGeneration = ""
+        const imageGeneration = await getGeneratedImageByUserId(imageId, userId);
         return res.status(200).json({
-            message: "Image generated successfully",
+            message: "Image fetched successfully",
             status: 200,
             data: imageGeneration,
         });

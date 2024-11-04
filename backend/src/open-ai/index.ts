@@ -89,17 +89,15 @@ export const getSummarizeChatHistoryOpenAiRes = async (messages:any, model:"gpt-
 }
 
 export const getGeneratedImage = async (prompt:string) => {
-  console.log('prompt', prompt);
   try {
     const generatedImage = await openAIClient.images.generate({
       prompt,
       model: 'dall-e-3',
       n: 1,
+      response_format: "b64_json"
     });
-    
-    return generatedImage.data[0].url;
+    return generatedImage.data[0];
   } catch (error) {
-    // console.log('getGeneratedImage ', error);
     return {'Error generating AI response' : error};
   }
 }
