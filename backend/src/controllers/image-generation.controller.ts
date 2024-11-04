@@ -3,9 +3,21 @@ import { Request, Response } from "express";
 import { getUserImageHistory, storeGeneratedImageInHistory, getGeneratedImageByUserId } from "../services/imageGenerationHistory";
 
 export const imageGenerationController = async (req: Request, res: Response) => {
-    const { prompt, userId } = req.body;
+    const { data, userId } = req.body;
+    const { aspect,
+        style,
+        background,
+        color,
+        prompt, } = data;
+        if (!aspect || !style || !background || !color || !prompt) {
+            return res.status(400).json({
+                message: "Missing required fields",
+                status: 400,
+            });
+        }
+        const tunePrompt = `create a ${aspect} image, ${style} style with ${background} background and ${color} color. ${prompt}`;
     try {
-        const imageGeneration:any  = await getGeneratedImage(prompt);
+        const imageGeneration:any  = await getGeneratedImage(tunePrompt);
         if (!imageGeneration.b64_json) {
             return res.status(404).json({
                 message: "Image not found",
@@ -22,7 +34,7 @@ export const imageGenerationController = async (req: Request, res: Response) => 
         return res.status(200).json({
             message: "Image generated successfully",
             status: 200,
-            data: imageGeneration,
+            data: storedImage,
         });
     } catch (e) {
         return res.status(500).json({
@@ -33,7 +45,6 @@ export const imageGenerationController = async (req: Request, res: Response) => 
 }
 export const getGeneratedImageHistory = async (req: Request, res: Response) => {   
     const {userId} = req.params;
-    console.log(userId);
     try {
         const images= await getUserImageHistory(userId);
         return res.status(200).json({
