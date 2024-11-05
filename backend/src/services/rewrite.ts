@@ -1,21 +1,16 @@
 import { Rewrite } from '../mongodb/models';
-export const storeAiGeneratedRewrite= async (intensity:string, mode:string , inputLanguage:string, content:string, userId:string , model:string , output:string) => {
+export const storeAiGeneratedRewrite= async (input:string,output:string, userId:string, intensity:string, mode:string,inputLanguage:string) => {
     try{
-        if(!content|| !output || !userId){
+        if(!input || !output || !userId){
             throw new Error("Missing required fields");
         }
-        const rewrite = await Rewrite.findOne({
-            userId
-            });
-    
+        const rewrite = await Rewrite.findOneAndUpdate({userId}, {$push: {rewrites: {userId, input, output, created_at: new Date(), intensity, mode, inputLanguage}}});
         if(rewrite){
-            rewrite.rewrites.push({input:content, output, created_at: new Date(), intensity, mode, inputLanguage});
-            await rewrite.save();
             return rewrite.rewrites.at(-1);
         }
-        const newRewrite = new Rewrite({userId:userId, rewrites: [{input:content, output, created_at: new Date(), intensity, mode, inputLanguage}]});
+        const newRewrite = new Rewrite({userId, rewrites:[{userId, input, output, created_at: new Date(), intensity, mode, inputLanguage}]});
         await newRewrite.save();
-        return newRewrite.rewrites.at(-1); 
+        return newRewrite.rewrites.at(-1);
     }
     catch(e){
         throw e;
