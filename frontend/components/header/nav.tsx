@@ -19,6 +19,8 @@ import { useRouter } from "next/navigation";
 import { orderBy } from "lodash";
 import { Ellipsis } from "lucide-react";
 import { useState } from "react";
+import { useRewriteStore } from "../../app/dashboard/rewrite/store";
+import { getUserRewritesHistory } from "@/lib/apicalls/rewrite";
 
 interface NavProps {
   children: React.ReactNode;
@@ -29,6 +31,7 @@ interface NavProps {
 
 const Nav = (props: NavProps) => {
   const router = useRouter();
+  const { setRewrites, rewrites } = useRewriteStore();
   const [mouseEnter, setMouseEnter] = useState("");
   const { setImagesIds, images } = useImageStore();
   const userId = useMeStore((state) => state._id);
@@ -39,8 +42,17 @@ const Nav = (props: NavProps) => {
         setImagesIds(response.data.data);
       }
     };
+    const fetchRewrites = async () => {
+      const response = await getUserRewritesHistory(userId);
+      if (response.status === 200) {
+        setRewrites(response.data[0].rewrites);
+      }
+    };
+
     if (props.title === "Image-Generator") {
       fetchImages();
+    } else if (props.title === "Rewrite") {
+      fetchRewrites();
     }
   }, []);
 
@@ -62,43 +74,80 @@ const Nav = (props: NavProps) => {
                 <DrawerTitle>History</DrawerTitle>
                 <div className="overflow-y-auto overflow-x-hidden p-2">
                   <DrawerDescription className="text-left">
-                    {orderBy(images, ["createdAt"], ["desc"]).map(
-                      (img: any) => (
-                        <div
-                          className="flex items-center w-full  my-1 rounded-md"
-                          key={img?._id}
-                          onMouseEnter={() => setMouseEnter(img?._id)}
-                        >
-                          <Button
-                            className="py-1 w-full justify-start rounded-r-none"
-                            size="sm"
-                            variant="secondary"
+                    {props.title === "Image-Generator" &&
+                      orderBy(images, ["createdAt"], ["desc"]).map(
+                        (img: any) => (
+                          <div
+                            className="flex items-center w-full  my-1 rounded-md"
                             key={img?._id}
-                            // onClick={() => setDocumentId(doc?._id)}
-                            onClick={() =>
-                              router.push(
-                                `/dashboard/image-generator?imageId=${img?._id}`
-                              )
-                            }
+                            onMouseEnter={() => setMouseEnter(img?._id)}
                           >
-                            <p className="text-xs dark:text-gray-400">
-                              {img?.prompt?.lenght === 40
-                                ? img?.prompt.slice(0, 40) + "..."
-                                : img?.prompt}
-                            </p>
-                          </Button>
-                          {mouseEnter === img?._id && (
                             <Button
-                              className="py-1 justify-start rounded-l-none"
+                              className="py-1 w-full justify-start rounded-r-none"
                               size="sm"
                               variant="secondary"
+                              key={img?._id}
+                              // onClick={() => setDocumentId(doc?._id)}
+                              onClick={() =>
+                                router.push(
+                                  `/dashboard/image-generator?imageId=${img?._id}`
+                                )
+                              }
                             >
-                              <Ellipsis />
+                              <span className="text-xs dark:text-gray-400">
+                                {img?.prompt?.lenght === 40
+                                  ? img?.prompt.slice(0, 40) + "..."
+                                  : img?.prompt}
+                              </span>
                             </Button>
-                          )}
-                        </div>
-                      )
-                    )}
+                            {mouseEnter === img?._id && (
+                              <Button
+                                className="py-1 justify-start rounded-l-none"
+                                size="sm"
+                                variant="secondary"
+                              >
+                                <Ellipsis />
+                              </Button>
+                            )}
+                          </div>
+                        )
+                      )}
+                    {props.title === "Rewrite" &&
+                      orderBy(rewrites, ["createdAt"], ["desc"]).map(
+                        (rewrite: any) => (
+                          <div
+                            className="flex items-center w-full  my-1 rounded-md"
+                            key={rewrite?._id}
+                            onMouseEnter={() => setMouseEnter(rewrite?._id)}
+                          >
+                            <Button
+                              className="py-1 w-full justify-start rounded-r-none"
+                              size="sm"
+                              variant="secondary"
+                              key={rewrite?._id}
+                              // onClick={() => setDocumentId(doc?._id)}
+                              onClick={() =>
+                                router.push(
+                                  `/dashboard/rewrite?rewriteId=${rewrite?._id}`
+                                )
+                              }
+                            >
+                              <span className="text-xs dark:text-gray-400">
+                                {rewrite?.input.slice(0, 40) + "..."}
+                              </span>
+                            </Button>
+                            {mouseEnter === rewrite?._id && (
+                              <Button
+                                className="py-1 justify-start rounded-l-none"
+                                size="sm"
+                                variant="secondary"
+                              >
+                                <Ellipsis />
+                              </Button>
+                            )}
+                          </div>
+                        )
+                      )}
                   </DrawerDescription>
                 </div>
               </DrawerHeader>
