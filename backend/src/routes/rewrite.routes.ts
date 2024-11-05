@@ -5,7 +5,7 @@ import { rewriteController , getUserRewriteHistory, getUserRewriteById, deleteUs
 
 const router = express.Router();
 
-router.post('/rewrite/new',validateRoute, rewriteController);
+router.post('/rewrite/create',validateRoute, rewriteController);
 router.get('/rewrite/rewrites/:userId',validateRoute, getUserRewriteHistory);
 router.get('/rewrite/:userId/:rewriteId',validateRoute, getUserRewriteById);
 router.delete('/rewrite/:userId/:rewriteId',validateRoute, deleteUserRewriteById);
