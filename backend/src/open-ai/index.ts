@@ -46,8 +46,8 @@ export const getRewriteOpenAiRes= async ({prompt,model}:gptResponseInterface, tu
   const systemPrompt = "Respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. Include headings."
   try {
     const contentDetection = await openAIClient.chat.completions.create({
-      messages: [{ role:'user' , content: prompt }, { role: 'system', content: systemPrompt },{role:"assistant",content:tunePrompt , name:"tunePrompt"}],
-      model:  model ||'gpt-4o',
+      messages: [{ role:'user' , content: prompt },{role:"assistant",content:tunePrompt , name:"tunePrompt"}],
+      model:  "gpt-3.5-turbo-0125",
       stream: false,
       temperature: 0.1,
     });

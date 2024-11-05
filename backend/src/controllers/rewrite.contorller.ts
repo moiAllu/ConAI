@@ -21,7 +21,6 @@ export const getUserRewriteHistory = async (req:Request,res:Response) => {
 }
 export const getUserRewriteById = async (req:Request,res:Response) => {
     const {userId, rewriteId} = req.params;
-    console.log(userId, rewriteId);
     try{
         const userRewrite = await getAiGeneratedRewriteById(rewriteId, userId);
         if (!userRewrite) {
@@ -72,21 +71,21 @@ interface PromptTuning {
     mode: string;
 }
 const PromptTuning = ({intensity,mode}:PromptTuning) => {
-    if(mode === "recreate"){
+    if(mode === "Recreate"){
         return "Retain only the context from user input, Recreate it from scratch. It should be unique and not plagiarized";
     }
-    if(intensity === "low" && mode === "rewrite"){
+    if(intensity === "Low" && mode === "Rewrite"){
         return "Rewrite the content with a low intensity, write in such a way that the content is not plagiarized";
     }
-    if(intensity === "medium" && mode === "rewrite"){
+    if(intensity === "Medium" && mode === "Rewrite"){
         return "Rewrite the content with a medium intensity, write in such a way that the content is not plagiarized";
     }
-    if(intensity === "high" && mode === "rewrite"){
+    if(intensity === "High" && mode === "Rewrite"){
         return "Rewrite the content with a high intensity, write in such a way that the content is not plagiarized";
     }
 }
 export const rewriteController = async (req:Request,res:Response) => {
-    const {intensity, mode , inputLanguage, content, userId , model} = req.body;
+    const {intensity, mode, inputLanguage, content, userId , model} = req.body;
     try{
         const tunedPrompt = PromptTuning({intensity, mode});
         const response = await getRewriteOpenAiRes({prompt: content, model}, `Your serve here as a rewriter. ${tunedPrompt}`);
@@ -96,7 +95,7 @@ export const rewriteController = async (req:Request,res:Response) => {
                 status: 404,
             });
         }
-       const rewrite = await storeAiGeneratedRewrite(content,response, userId, intensity,mode,inputLanguage);
+       const rewrite = await storeAiGeneratedRewrite(intensity, mode, inputLanguage, content, userId , model, response);
         return res.status(200).json({
             message: 'Rewrite created successfully',
             status: 200,
