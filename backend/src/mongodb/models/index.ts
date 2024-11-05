@@ -6,3 +6,4 @@ export { AiDetection } from './aiDetection';
 export { Rewrite } from './rewrite';
 export {Summarize} from './summarize';
 export { PlagrismDetection } from './plagrismDetection';
+export { ImageGeneration } from './imageGeneration';

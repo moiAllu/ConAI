@@ -1,6 +1,6 @@
 import { CONFIG } from '../config';
 import openAIClient from '../config/open-ai';
-import { pipeline } from "node:stream/promises";
+
 
 interface gptResponseInterface {
   model?: string;
@@ -85,5 +85,19 @@ export const getSummarizeChatHistoryOpenAiRes = async (messages:any, model:"gpt-
   } catch (error) {
     console.log('getSummarizeOpenAiRes ', error);
     return 'Error generating AI response';
+  }
+}
+
+export const getGeneratedImage = async (prompt:string) => {
+  try {
+    const generatedImage = await openAIClient.images.generate({
+      prompt,
+      model: 'dall-e-3',
+      n: 1,
+      response_format: "b64_json"
+    });
+    return generatedImage.data[0];
+  } catch (error) {
+    return {'Error generating AI response' : error};
   }
 }
