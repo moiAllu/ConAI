@@ -58,7 +58,6 @@ const DynamicCard = () => {
       </fieldset>
       <fieldset className="flex flex-col gap-6 rounded-lg border p-4 w-full h-full">
         <legend className="-ml-1 px-1 text-sm font-medium">Input</legend>
-
         {inputs.map((input, index) => (
           <SelectInput
             label={input.label}
