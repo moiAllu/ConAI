@@ -116,6 +116,7 @@ const OutputCard = () => {
                 <h1 className="md:flex justify-center hidden font-semibold w-full">
                   {selectedImage?.prompt}
                 </h1>
+                <Separator className="my-1" />
                 {selectedImage ? (
                   <Image
                     src={`data:image/png;base64,${selectedImage?.image}`}
@@ -127,20 +128,16 @@ const OutputCard = () => {
                 ) : (
                   <></>
                 )}
-                <div className="h-full flex flex-col md:flex-row gap-2 justify-center mt-2">
-                  <Button variant="default"> Download 720p </Button>
-                  <Button variant="default" onClick={downloadImage}>
-                    {" "}
-                    Download 1080p{" "}
-                  </Button>
+                <Separator className="my-1" />
+                <div className=" md:hidden h-full flex flex-col md:flex-row gap-2 justify-center mt-2">
                   <Button variant="default" onClick={handleDownload}>
                     {" "}
                     Download Original
                   </Button>
                 </div>
               </div>
-              <div className="md:flex hidden">
-                <Card className="border-none bg-inherit md:visible">
+              <div className="md:flex md:flex-col hidden gap-1 items-start">
+                <Card className="border-none bg-inherit md:visible shadow-none">
                   <CardHeader className="p-0">
                     <CardTitle className="text-lg">Revised Prompt</CardTitle>
                   </CardHeader>
@@ -151,6 +148,13 @@ const OutputCard = () => {
                     </p>
                   </CardDescription>
                 </Card>
+                <Separator className="my-1" />
+                <div className="h-full flex flex-col md:flex-row gap-2 justify-center mt-1">
+                  <Button variant="default" onClick={handleDownload}>
+                    {" "}
+                    Download Original
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

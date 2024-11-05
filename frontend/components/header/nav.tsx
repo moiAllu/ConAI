@@ -49,7 +49,7 @@ const Nav = (props: NavProps) => {
       <div className="flex items-center justify-between px-4">
         <div className=" flex space-x-2 items-center">
           <ReceiptText className="font-bold " />
-          <h1 className="sm:text-2xl font-bold text-xl">{props.title}</h1>
+          <h1 className="sm:text-2xl font-bold text-lg">{props.title}</h1>
           <Drawer direction="left">
             <DrawerTrigger asChild>
               <Button variant="ghost" size="icon" className="">
