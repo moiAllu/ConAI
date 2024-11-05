@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { useWindowSize } from "@/lib/hooks";
 import DynamicCard from "./components/dynamicCard";
 import OutputCard from "./components/outputCard";
@@ -14,7 +14,9 @@ const AIWriting = () => {
       </Nav>
       <div className="px-2 sm:p-5 h-full w-full flex  items-center  sm:space-x-4">
         {!isPhone && <DynamicCard />}
-        <OutputCard />
+        <Suspense fallback={<div>Loading...</div>}>
+          <OutputCard />
+        </Suspense>
       </div>
     </div>
   );
