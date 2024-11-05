@@ -16,7 +16,6 @@ const OutputCard = () => {
   const { addRewrite, rewrites } = useRewriteStore();
   const userId = useMeStore((state) => state._id);
   const rewriteId = searchParams.get("rewriteId") || "";
-  console.log(rewrites);
   const selectedRewrite = rewrites.find((rewrite) => rewrite._id === rewriteId);
 
   useEffect(() => {

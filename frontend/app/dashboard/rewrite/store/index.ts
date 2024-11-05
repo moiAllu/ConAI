@@ -12,7 +12,6 @@ export interface Rewrite {
     inputLanguage?: string;
 }
 export interface RewriteHistory {
-    userId: string;
     rewrites: Rewrite[];
 }
 export interface Action {
@@ -20,8 +19,8 @@ export interface Action {
     addRewrite: (rewrite: Rewrite) => void;
     deleteRewrite: (id: string) => void;
 }
-export const useRewriteStore = create<RewriteHistory & Action>(((set) => ({
-    userId: '',
+export const useRewriteStore = create<RewriteHistory & Action>()(persist((set) => ({
+
     rewrites: [],
     setRewrites: (rewrites) => {
         set({rewrites});
@@ -42,4 +41,6 @@ export const useRewriteStore = create<RewriteHistory & Action>(((set) => ({
             rewrites: state.rewrites.filter((rewrite) => rewrite._id !== id),
         }));
     },
-}) ));
+}),{ name :"rewriteStore", getStorage() {
+    return localStorage;
+},} ));

@@ -45,7 +45,7 @@ const Nav = (props: NavProps) => {
     const fetchRewrites = async () => {
       const response = await getUserRewritesHistory(userId);
       if (response.status === 200) {
-        setRewrites(response.data[0].rewrites);
+        setRewrites(response.data[0].rewrites.reverse());
       }
     };
 
@@ -54,8 +54,7 @@ const Nav = (props: NavProps) => {
     } else if (props.title === "Rewrite") {
       fetchRewrites();
     }
-  }, []);
-
+  }, [userId]);
   return (
     <div className="w-full">
       <div className="flex items-center justify-between px-4">

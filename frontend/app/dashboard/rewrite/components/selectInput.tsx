@@ -14,6 +14,8 @@ interface SelectInputProps {
   index: number;
   textAreaLabel?: string;
   textAreaPlaceholder?: string;
+  onValueChange: any;
+  onTextAreaChange?: any;
 }
 import { Textarea } from "@/components/ui/textarea";
 const SelectInput = (props: SelectInputProps) => {
@@ -21,7 +23,10 @@ const SelectInput = (props: SelectInputProps) => {
     return (
       <div className="flex flex-col w-full h-full gap-3" key={props.index}>
         <Label htmlFor="role">{props.label}</Label>
-        <Select defaultValue={props.defaultValue}>
+        <Select
+          defaultValue={props.defaultValue}
+          onValueChange={props.onValueChange}
+        >
           <SelectTrigger>
             <SelectValue placeholder={props.defaultValue} />
           </SelectTrigger>
@@ -39,6 +44,7 @@ const SelectInput = (props: SelectInputProps) => {
             id="content"
             placeholder={props.textAreaPlaceholder}
             className="sm:h-[90%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
+            onChange={(e) => props.onTextAreaChange(e.target.value)}
           />
         </div>
       </div>
@@ -47,7 +53,10 @@ const SelectInput = (props: SelectInputProps) => {
     return (
       <div className="grid gap-3" key={props.index}>
         <Label htmlFor="role">{props.label}</Label>
-        <Select defaultValue={props.defaultValue}>
+        <Select
+          defaultValue={props.defaultValue}
+          onValueChange={props.onValueChange}
+        >
           <SelectTrigger>
             <SelectValue placeholder={props.defaultValue} />
           </SelectTrigger>
