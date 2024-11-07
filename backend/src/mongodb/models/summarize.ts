@@ -1,14 +1,15 @@
 import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 interface ISummarize {
-    userId: string;
+    _id?: string;
     input: string;
     output: string;
+    intensity: string;
     created_at: Date;
 }
 interface ISummarizeHistory extends Document {
     userId: string;
-    rewrites: ISummarize[];
+    summarizes: ISummarize[];
 }
 
 const summarizeSchema = new Schema<ISummarizeHistory>({
@@ -16,7 +17,11 @@ const summarizeSchema = new Schema<ISummarizeHistory>({
         type: String,
         required: true
     },
-    rewrites: [{
+    summarizes : [{
+        intensity: {
+            type: String,
+            required: true
+        },
         input: {
             type: String,
             required: true
