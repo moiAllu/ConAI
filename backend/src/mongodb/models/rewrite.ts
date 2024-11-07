@@ -1,10 +1,13 @@
 import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 interface IRewrite {
-    userId: string;
+    _id?: string;
     input: string;
     output: string;
     created_at: Date;
+    intensity?: string;
+    mode?: string;
+    inputLanguage?: string;
 }
 interface IRewriteHistory extends Document {
     userId: string;
@@ -17,10 +20,6 @@ const rewriteSchema = new Schema<IRewriteHistory>({
         required: true
     },
     rewrites: [{
-        userId: {
-            type: String,
-            required: true
-        },
         input: {
             type: String,
             required: true
@@ -32,7 +31,17 @@ const rewriteSchema = new Schema<IRewriteHistory>({
         created_at: {
             type: Date,
             default: Date.now
+        },
+        intensity: {
+            type: String,
+        },
+        mode: {
+            type: String,
+        },
+        inputLanguage: {
+            type: String,
         }
+
     }]
 });
 
