@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import { Bird, Rabbit, Turtle, UploadIcon } from "lucide-react";
 import {
   Select,
@@ -11,15 +11,49 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { createSummarize } from "@/lib/apicalls/summarize";
+import { useMeStore } from "../../store";
+import { Toaster, toast } from "sonner";
+import { useSummarizerStore } from "../store";
+import { useRouter } from "next/navigation";
 
 const DrawerCard = () => {
+  const [intensity, setIntensity] = React.useState("Medium");
+  const [content, setContent] = React.useState("");
+  const userId = useMeStore((state) => state._id);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState({ status: false, message: "" });
+  const { addSummarizer } = useSummarizerStore();
+  const router = useRouter();
+  const formSubmitHandler = async (e: any) => {
+    e.preventDefault();
+    if (content === "") {
+      setIsError({ status: true, message: "Content cannot be empty" });
+      return;
+    }
+    setIsError({ status: false, message: "" });
+    setIsLoading(true);
+    const response = await createSummarize(intensity, content, userId);
+    setIsLoading(false);
+    if (response.status === 200) {
+      toast.success("Summarized successfully");
+      addSummarizer(response.data);
+      router.push(`/dashboard/summarizer?summarizeId=${response.data._id}`);
+      return;
+    }
+    setIsError({ status: true, message: "Failed to summarize" });
+  };
   return (
-    <form className="flex flex-col h-full w-full items-start gap-6 overflow-auto max-w-md sm:p-0 p-2">
+    <form
+      className="flex flex-col h-full w-full items-start gap-6 overflow-auto max-w-md sm:p-0 p-2"
+      onSubmit={formSubmitHandler}
+    >
+      {isError.status && <Toaster richColors />}
       <fieldset className="flex flex-col rounded-lg border p-4 w-full  h-full rela">
         <legend className="px-1 text-sm font-medium">Settings</legend>
         <div className="w-full ">
-          <Label htmlFor="role">Level</Label>
-          <Select defaultValue="Medium">
+          <Label htmlFor="role">Intensity</Label>
+          <Select defaultValue="Medium" onValueChange={setIntensity}>
             <SelectTrigger>
               <SelectValue placeholder="Select a role" />
             </SelectTrigger>
@@ -30,16 +64,18 @@ const DrawerCard = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="w-full h-full">
+        <div className="w-full h-full mt-2 flex flex-col gap-2">
           <Label htmlFor="content">Content</Label>
           <Textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             id="content"
             placeholder="You are a..."
             className="sm:h-[95%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
           />
         </div>
       </fieldset>
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full" disabled={isLoading}>
         Summarize
       </Button>
     </form>

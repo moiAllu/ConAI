@@ -12,7 +12,6 @@ export const getUserRewriteHistory = async (req:Request,res:Response) => {
             data: userRewriteHistory,
         });
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
@@ -36,7 +35,6 @@ export const getUserRewriteById = async (req:Request,res:Response) => {
         });
 
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
@@ -59,7 +57,6 @@ export const deleteUserRewriteById = async (req:Request,res:Response) => {
         });
 
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
@@ -102,7 +99,6 @@ export const rewriteController = async (req:Request,res:Response) => {
             data: rewrite,
         });
     }catch (e){
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,

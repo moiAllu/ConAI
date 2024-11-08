@@ -45,30 +45,30 @@ export const getContentDetectionOpenAiRes =  async (prompt: string) => {
 export const getRewriteOpenAiRes= async ({prompt,model}:gptResponseInterface, tunePrompt:string) => {
   const systemPrompt = "Respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. Include headings."
   try {
-    const contentDetection = await openAIClient.chat.completions.create({
+    const rewrite = await openAIClient.chat.completions.create({
       messages: [{ role:'user' , content: prompt },{role:"assistant",content:tunePrompt , name:"tunePrompt"}],
       model:  "gpt-3.5-turbo-0125",
       stream: false,
       temperature: 0.1,
     });
-    return contentDetection.choices[0].message.content;
+    return rewrite.choices[0].message.content;
   } catch (error) {
     console.log('getRewriteOpenAiRes ', error);
     return 'Error generating AI response';
   }
 }
 
-export const getSummarizeOpenAiRes = async ({prompt,model}:gptResponseInterface) => {
+export const getSummarizeOpenAiRes = async ({prompt,model}:gptResponseInterface, tunePrompt:string) => {
   try {
-    const contentDetection = await openAIClient.chat.completions.create({
-      messages: [{ role:'user' , content: prompt }],
-      model:  model || "gpt-3.5-turbo-0125",
+    const rewrite = await openAIClient.chat.completions.create({
+      messages: [{ role:'user' , content: prompt },{role:"assistant",content:tunePrompt , name:"tunePrompt"}],
+      model:  "gpt-3.5-turbo-0125",
       stream: false,
       temperature: 0.1,
     });
-    return contentDetection.choices[0].message.content;
+    return rewrite.choices[0].message.content;
   } catch (error) {
-    console.log('getSummarizeOpenAiRes ', error);
+    console.log('getRewriteOpenAiRes ', error);
     return 'Error generating AI response';
   }
 }
