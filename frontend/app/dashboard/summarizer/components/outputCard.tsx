@@ -7,6 +7,7 @@ import { useMeStore } from "../../store";
 import { getUserRewriteById } from "../../../../lib/apicalls/rewrite";
 import { useSearchParams } from "next/navigation";
 import { useSummarizerStore } from "../store";
+import { getUserSummarizeById } from "@/lib/apicalls/summarize";
 
 const OutputCard = () => {
   const searchParams = useSearchParams();
@@ -20,19 +21,32 @@ const OutputCard = () => {
   useEffect(() => {
     if (!summarizeId) return;
     const fetchImageById = async () => {
-      // const response = await getUserRewriteById(userId, summarizeId);
-      // if (response.status === 200) {
-      //   const rewriteData = response.data;
-      //   addSummarizer(rewriteData.rewrites[0]);
-      // }
+      const response = await getUserSummarizeById(summarizeId, userId);
+      if (response.status === 200) {
+        const summarizeData = response.data;
+        addSummarizer(summarizeData.summarizers[0]);
+      }
     };
     fetchImageById();
   }, [summarizeId]);
   return (
-    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
-      <Badge variant="outline" className="absolute right-3 top-3">
-        Output
-      </Badge>
+    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-y-auto mb-10">
+      {!selectedSummarize && (
+        <Badge variant="outline" className="absolute right-3 top-3">
+          Output
+        </Badge>
+      )}
+      {selectedSummarize && (
+        <div className="flex flex-col gap-4 space-y-3">
+          <div>
+            <Badge variant="outline" className=" space-x-2 absolute right-0">
+              <span>Intensity:</span>
+              <span>{selectedSummarize.intensity}</span>
+            </Badge>
+          </div>
+          <ReactMarkdown>{selectedSummarize.output}</ReactMarkdown>
+        </div>
+      )}
     </div>
   );
 };

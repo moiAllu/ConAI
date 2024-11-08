@@ -21,6 +21,8 @@ import { Ellipsis } from "lucide-react";
 import { useState } from "react";
 import { useRewriteStore } from "../../app/dashboard/rewrite/store";
 import { getUserRewritesHistory } from "@/lib/apicalls/rewrite";
+import { getUserSummarizesHistory } from "@/lib/apicalls/summarize";
+import { useSummarizerStore } from "@/app/dashboard/summarizer/store";
 
 interface NavProps {
   children: React.ReactNode;
@@ -32,8 +34,9 @@ interface NavProps {
 const Nav = (props: NavProps) => {
   const router = useRouter();
   const { setRewrites, rewrites } = useRewriteStore();
-  const [mouseEnter, setMouseEnter] = useState("");
+  const { setSummarizers, summarizers } = useSummarizerStore();
   const { setImagesIds, images } = useImageStore();
+  const [mouseEnter, setMouseEnter] = useState("");
   const userId = useMeStore((state) => state._id);
   React.useEffect(() => {
     const fetchImages = async () => {
@@ -48,11 +51,20 @@ const Nav = (props: NavProps) => {
         setRewrites(response.data[0].rewrites.reverse());
       }
     };
+    const fetchSummarizes = async () => {
+      console.log("fetching", summarizers);
+      const response = await getUserSummarizesHistory(userId);
+      if (response.status === 200) {
+        setSummarizers(response.data[0].summarizes.reverse());
+      }
+    };
 
     if (props.title === "Image-Generator") {
       fetchImages();
     } else if (props.title === "Rewrite") {
       fetchRewrites();
+    } else if (props.title === "Summarizer") {
+      fetchSummarizes();
     }
   }, [userId]);
   return (
@@ -136,6 +148,42 @@ const Nav = (props: NavProps) => {
                               </span>
                             </Button>
                             {mouseEnter === rewrite?._id && (
+                              <Button
+                                className="py-1 justify-start rounded-l-none"
+                                size="sm"
+                                variant="secondary"
+                              >
+                                <Ellipsis />
+                              </Button>
+                            )}
+                          </div>
+                        )
+                      )}
+                    {props.title === "Summarizer" &&
+                      orderBy(summarizers, ["createdAt"], ["desc"]).map(
+                        (summarizer: any) => (
+                          <div
+                            className="flex items-center w-full  my-1 rounded-md"
+                            key={summarizer?._id}
+                            onMouseEnter={() => setMouseEnter(summarizer?._id)}
+                          >
+                            <Button
+                              className="py-1 w-full justify-start rounded-r-none"
+                              size="sm"
+                              variant="secondary"
+                              key={summarizer?._id}
+                              // onClick={() => setDocumentId(doc?._id)}
+                              onClick={() =>
+                                router.push(
+                                  `/dashboard/summarizer?summarizeId=${summarizer?._id}`
+                                )
+                              }
+                            >
+                              <span className="text-xs dark:text-gray-400">
+                                {summarizer?.input.slice(0, 40) + "..."}
+                              </span>
+                            </Button>
+                            {mouseEnter === summarizer?._id && (
                               <Button
                                 className="py-1 justify-start rounded-l-none"
                                 size="sm"
