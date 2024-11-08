@@ -5,9 +5,9 @@ import {createSummarizer,getSummarizerByUserIdController, getSummarizerHistoryCo
 
 const router = express.Router();
 
-router.post('/summarize/create',validateRoute,createSummarizer );
-router.get('/summarize/summarizes/:userId',validateRoute, getSummarizerHistoryContorller);
-router.get('/summarize/:userId/:summarizeId',validateRoute, getSummarizerByUserIdController);
-router.delete('/summarize/:userId/:summarizeId',validateRoute, deleteSummarizerByIdController);
+router.post('/summarizer/create',validateRoute,createSummarizer );
+router.get('/summarizer/summarizes/:userId',validateRoute, getSummarizerHistoryContorller);
+router.get('/summarizer/:userId/:summarizeId',validateRoute, getSummarizerByUserIdController);
+router.delete('/summarizer/:userId/:summarizeId',validateRoute, deleteSummarizerByIdController);
 
 export default router;

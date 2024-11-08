@@ -17,7 +17,6 @@ export const getSummarizerHistoryContorller = async (req: Request, res: Response
             data: userSummarizerHistory,
         });
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
@@ -27,7 +26,7 @@ export const getSummarizerHistoryContorller = async (req: Request, res: Response
 export const getSummarizerByUserIdController = async (req: Request, res: Response) => {
     const { userId, summarizeId } = req.params;
     try {
-        const userSummarizer = await getSummarizerByUserId(summarizeId, userId);
+        const userSummarizer = await getSummarizerByUserId( userId,summarizeId);
         if (!userSummarizer) {
             return res.status(404).json({
                 message: 'Document not found',
@@ -40,7 +39,6 @@ export const getSummarizerByUserIdController = async (req: Request, res: Respons
             data: userSummarizer,
         });
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
@@ -62,7 +60,6 @@ export const deleteSummarizerByIdController = async (req: Request, res: Response
             status: 200,
         });
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
@@ -75,9 +72,12 @@ export const createSummarizer = async (req: Request, res: Response) => {
     try {
         const output= await getSummarizeOpenAiRes({prompt:content,model:"gpt-3.5-turbo-0125"}, "Summarize the following content.");
         const userSummarizer = await storeAiGeneratedSummarize(intensity, content, userId, output);
-        return res.status(200).json(userSummarizer);
+        return res.status(200).json({
+            message: 'Summarizer created successfully',
+            status: 200,
+            data: userSummarizer,
+            });
     } catch (e) {
-        console.log(e);
         return res.status(500).json({
             message: 'Internal server error',
             status: 500,
