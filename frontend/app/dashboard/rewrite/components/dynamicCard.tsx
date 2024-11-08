@@ -73,7 +73,7 @@ const DynamicCard = () => {
       "gpt-4o"
     );
     if (response.status === 200) {
-      console.log(response.data);
+      toast.success("Rewrite successful");
       addRewrite(response.data);
       router.push(`/dashboard/rewrite?rewriteId=${response.data._id}`);
       setIsLoading(false);

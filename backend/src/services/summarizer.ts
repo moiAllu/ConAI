@@ -2,8 +2,7 @@ import { Summarize } from "../mongodb/models";
 
 export const getSummarizerByUserId = async (summarizeId: string, userId: string) => {
     try{
-
-        const userSummarizer= await Summarize.findOne({ _id: summarizeId, userId });
+        const userSummarizer= await Summarize.findOne({ userId}, {summarizes: {$elemMatch: {_id: summarizeId}}});
         if(!userSummarizer){
             return new Error('Document not found');
         }

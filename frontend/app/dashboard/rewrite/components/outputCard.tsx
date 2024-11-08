@@ -42,44 +42,45 @@ const OutputCard = () => {
           Output
         </Badge>
       )}
+      {selectedRewrite && (
+        <div className="h-full w-full prose prose-base  overflow-y-auto p-4 ">
+          <Card className="border-none bg-inherit shadow-none">
+            <CardTitle className="text-md">Selected Inputs Setting</CardTitle>
 
-      <div className="h-full w-full prose prose-base  overflow-y-auto p-4 ">
-        <Card className="border-none bg-inherit shadow-none">
-          <CardTitle className="text-md">Selected Inputs Setting</CardTitle>
+            <CardDescription className="text-md">
+              <div className="flex gap-1">
+                <Badge variant="outline" className="">
+                  {selectedRewrite?.mode}
+                </Badge>
+                <Badge variant="outline" className="">
+                  {selectedRewrite?.intensity}
+                </Badge>
+              </div>
+            </CardDescription>
+          </Card>
 
-          <CardDescription className="text-md">
-            <div className="flex gap-1">
-              <Badge variant="outline" className="">
-                {selectedRewrite?.mode}
-              </Badge>
-              <Badge variant="outline" className="">
-                {selectedRewrite?.intensity}
-              </Badge>
-            </div>
-          </CardDescription>
-        </Card>
-
-        <Card className="border-none bg-inherit shadow-none">
-          <CardHeader className="p-0">
-            <CardTitle className="text-lg">Input</CardTitle>
-          </CardHeader>
-          <CardDescription className="text-md">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {selectedRewrite?.input || "See the output here"}
-            </ReactMarkdown>
-          </CardDescription>
-        </Card>
-        <Card className="border-none bg-inherit shadow-none">
-          <CardHeader className="p-0">
-            <CardTitle className="text-lg">Output</CardTitle>
-          </CardHeader>
-          <CardDescription className="text-md text-black dark:text-white">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {selectedRewrite?.output || "See the output here"}
-            </ReactMarkdown>
-          </CardDescription>
-        </Card>
-      </div>
+          <Card className="border-none bg-inherit shadow-none">
+            <CardHeader className="p-0">
+              <CardTitle className="text-lg">Input</CardTitle>
+            </CardHeader>
+            <CardDescription className="text-md">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {selectedRewrite?.input || "See the output here"}
+              </ReactMarkdown>
+            </CardDescription>
+          </Card>
+          <Card className="border-none bg-inherit shadow-none">
+            <CardHeader className="p-0">
+              <CardTitle className="text-lg">Output</CardTitle>
+            </CardHeader>
+            <CardDescription className="text-md text-black dark:text-white">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {selectedRewrite?.output || "See the output here"}
+              </ReactMarkdown>
+            </CardDescription>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
