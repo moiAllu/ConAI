@@ -38,3 +38,15 @@ export const resetPassword = async (password:string,verifyPassword:string,token:
     }
 }
 
+export const logOutUser = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/api/logout", {
+            method: "GET",
+            credentials: "include",
+        });
+        const data = await response.json();
+        return data;
+    } catch (e) {
+        return { status: 500, message: "Internal server error" };
+    }
+}

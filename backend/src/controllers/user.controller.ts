@@ -203,8 +203,9 @@ export const delete_user = async(req: Request, res: Response) => {
 };
 
 export const logout = async(req: Request, res: Response) => {
-    res.clearCookie('token');
+    res.clearCookie('CONAI');
     return res.status(200).json({
+        status : 200,
         message: "Logout successful"
     });
 }
