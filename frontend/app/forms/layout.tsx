@@ -30,6 +30,7 @@ const sidebarNavItems = [
     title: "Subscription",
     href: "/forms/subscription",
   },
+  { title: "Plans", href: "/forms/plans" },
 ];
 
 interface SettingsLayoutProps {
