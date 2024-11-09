@@ -11,7 +11,7 @@ interface IUser extends Document {
     updated_at: Date;
     loginAttempts: number;
     activeSession: true;
-    newPassword: string;
+    resetToken?: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -55,6 +55,10 @@ const userSchema = new Schema<IUser>({
     },
     activeSession: {
         type: Boolean,
+        required: false
+    },
+    resetToken: {
+        type: String,
         required: false
     }
 });

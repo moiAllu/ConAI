@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/loading-spinner";
 import { useWindowSize } from "@/lib/hooks";
+import { Toaster, toast } from "sonner";
+import { forgotPassowrd } from "@/lib/apicalls/user";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -22,42 +24,43 @@ export default function ForgotPasswordForm() {
   const [success, setSuccess] = useState("");
   const isPhone = useWindowSize().width < 640;
   const formSubmitHandler = async (e: any) => {
-    e.preventDefault;
+    e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/forgot-password",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-          method: "POST",
-        }
-      );
-      const data = await response.json();
+      const data = await forgotPassowrd(email);
       if (data.status === 200) {
-        console.log("Email sent");
+        toast.success(data.message);
         setSuccess(data.message);
       } else {
+        toast.error(data.message);
         setError(data.message);
       }
       setLoading(false);
     } catch (e) {
+      toast.error("Internal server error");
       console.log(e);
       setError("Internal server error");
     }
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setError("");
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, [error]);
+
   if (isPhone) {
     return (
       <div className="h-screen w-full flex justify-center items-center">
+        <Toaster richColors />
         {!success ? (
           <Card className="max-w-sm">
             <CardHeader>
               <CardTitle className="text-2xl">Forgot Password</CardTitle>
               <CardDescription>
-                Enter your email below, A verification link will be sent to your
+                Enter your email below, A verification link will be send to your
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -116,6 +119,7 @@ export default function ForgotPasswordForm() {
 
   return (
     <div className="h-screen w-full flex justify-center items-center space-x-4">
+      <Toaster richColors />
       <Card className="max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Forgot Password</CardTitle>
@@ -124,7 +128,7 @@ export default function ForgotPasswordForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
+          <form className="grid gap-4" onSubmit={formSubmitHandler}>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
 
@@ -144,11 +148,15 @@ export default function ForgotPasswordForm() {
                 login
               </Link>
             </div>
-            <Button type="submit" className="w-full flex items-center">
+            <Button
+              type="submit"
+              className="w-full flex items-center"
+              disabled={loading}
+            >
               <span>Submit</span>
               {loading && <LoadingSpinner />}
             </Button>
-          </div>
+          </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="underline">

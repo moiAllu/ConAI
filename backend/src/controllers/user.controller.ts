@@ -13,7 +13,6 @@ const cookieConfig = {
 };
 // Login controller
 export const login = async(req: Request, res: Response) => {
-    // TODO: Implement login logic
     const { email, password } = req.body;
     try{
         // Check if user exists
@@ -212,7 +211,6 @@ export const logout = async(req: Request, res: Response) => {
 
 export const forgotPassword = async(req: Request, res: Response) => {
     const { email } = req.body;
-    const PasswordResetLink = process.env.PASSWORD_RESET_LINK;
     try{ 
         // Check if user exists
         const user = await UserModel.findOne({
@@ -220,39 +218,64 @@ export const forgotPassword = async(req: Request, res: Response) => {
         });
         if(!user){
             return res.status(400).json({
-                message: "User not found"
+                status : 400,
+                message: "The email you entered does not exist"
             });
         }
-        // Generate OTP
-        const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink);
-
-        if(resetLinkGenerated){
+        // generate password reset token
+        const token = jwt.sign({email}, process.env.JWT_SECRET, {
+            expiresIn: "1h"
+        });
+        user.resetToken = token;
+        await user.save();
+        const PasswordResetLink = `${process.env.PASSWORD_RESET_LINK}?token=${token}`;
+        console.log(PasswordResetLink);
+        // const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink);
+        if(PasswordResetLink !== "" && token !== ""){
             return res.status(200).json({
-                message: "Email sent"
+                status: 200,
+                message: "A password reset link has been sent to your email"
             });
         }
+        // if(resetLinkGenerated){
+        //     return res.status(200).json({
+        //         message: "Email sent"
+        //     });
+        // }
         return res.status(400).json({
+            status : 400,
             message: "Email sending failed"
         });
     }catch(e){
-        console.log(e);
         return res.status(500).json({
+            status: 500,
             message: "Internal server error"
         });
     }
 }
 
 export const resetPassword = async(req: Request, res: Response) => {
-    const { email, password, verifyPassword } = req.body;
+    const { password, verifyPassword } = req.body;
+    const {token} = req.params;
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
+    if(!verifyToken){
+        return res.status(400).json({
+            status: 400,
+            message: "Invalid token"
+        });
+    }
     try{
+        const email = verifyToken.email;
         // Check if user exists
         if(!email || !password || !verifyPassword){
             return res.status(400).json({
+                status: 400,
                 message: "All fields are required"
             });
         }
         if(password !== verifyPassword){
             return res.status(400).json({
+                status: 400,
                 message: "Passwords do not match"
             });
         }
@@ -262,25 +285,37 @@ export const resetPassword = async(req: Request, res: Response) => {
         });
         if(!user){
             return res.status(400).json({
+                status: 400,
                 message: "User not found"
             });
         }
-
+        if(!user.resetToken){
+            return res.status(400).json({
+                status: 400,
+                message: "Invalid token"
+            });
+        }
+        if(user.resetToken !== token){
+            return res.status(400).json({
+                status: 400,
+                message: "Invalid token"
+            });
+        }
         // Hash password
         const hashedPassword = await utils.genSalt(10,password);
         // Update password
-        await UserModel.updateOne({
-            email: email
-        }, {
-            password: hashedPassword
-        });
+        user.password = hashedPassword.toString();
+        user.resetToken = undefined;
+        await user.save();
         // Send response
         return res.status(200).json({
+            status: 200,
             message: "Password reset successful"
         });
     }catch(e){
         console.log(e);
         return res.status(500).json({
+            status: 500,
             message: "Internal server error"
         });
     }

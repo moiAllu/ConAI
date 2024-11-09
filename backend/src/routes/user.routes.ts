@@ -30,7 +30,7 @@ router.post("/user/otp-verification", otpVerification);
 router.post("/user/forgot-password", forgotPassword);
 
 //User reset password router request route
-router.post("/user/reset-password", resetPassword);
+router.post("/user/reset-password/:token", resetPassword);
 
 //get user details
 router.get("/me",validateRoute, getUser);
