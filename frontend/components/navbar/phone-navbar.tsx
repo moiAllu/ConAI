@@ -22,11 +22,10 @@ import { Nav } from "@/app/dashboard/components/nav";
 import { ThemeToggle } from "../theme-toggle";
 import { usePathname } from "next/navigation";
 import { redirect } from "next/navigation";
-import { LucideIcon } from "lucide-react";
-import { Avatar } from "../ui/avatar";
-import { AvatarFallback, AvatarImage } from "../ui/avatar";
+import { LucideIcon, Settings } from "lucide-react";
+
 import { useMeStore } from "@/app/dashboard/store";
-import { title } from "process";
+import { logOutUser } from "@/lib/apicalls/user";
 type typeLink = {
   title: string;
   icon: LucideIcon;
@@ -97,6 +96,21 @@ const toolsLinks = [
 const PhoneNavbar = () => {
   const pathname = usePathname();
   const { name, avatar } = useMeStore();
+  const logOutHandler = async () => {
+    const response = await logOutUser();
+    if (response.status === 200) {
+      window.location.href = "/login";
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("aiChatStore");
+      localStorage.removeItem("aiWritingStore");
+      localStorage.removeItem("rewriteStore");
+      localStorage.removeItem("summarizerStore");
+      localStorage.removeItem("imageStore");
+      localStorage.removeItem("content-detector");
+      localStorage.removeItem("meStore");
+      return;
+    }
+  };
   return (
     <div className="sm:hidden flex items-center justify-between w-full h-full px-2 ">
       <Drawer direction="left">
@@ -111,7 +125,7 @@ const PhoneNavbar = () => {
             </DrawerTrigger>
           </div>
           <Separator className="my-2" />
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-1 mt-2">
             {topLinks.map((link, itx) => (
               <Link
                 key={itx}
@@ -181,27 +195,21 @@ const PhoneNavbar = () => {
             </Link>
           )}
           {name && (
-            <DrawerTrigger>
-              <div className="flex w-full flex-col justify-end h-full p-2 space-y-1">
-                <Link href="/forms" className="flex text-sm p-2 ml-4">
-                  <span>Settings</span>
-                </Link>
-                <Link
-                  className=" w-full flex items-center gap-2 p-2 border rounded-lg mb-5"
-                  href="/forms/account"
-                >
-                  <Avatar className="border border-violet-800">
-                    <AvatarImage src={avatar} alt="Avatar" />
-                    <AvatarFallback>
-                      {!avatar && name.charAt(0) + name.charAt(1)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold ">{name}</span>
-                    <span className="text-xs text-gray-500">Admin</span>
-                  </div>
-                </Link>
-              </div>
+            <DrawerTrigger className="flex w-full flex-col justify-between h-full p-2 space-y-1">
+              <Link
+                href="/forms"
+                className="flex text-sm p-2 ml-4 items-center space-x-1"
+              >
+                <Settings size={17} />
+                <span>Settings</span>
+              </Link>
+              <Button
+                className=" w-full flex items-center gap-2 p-2 border rounded-lg mb-5"
+                variant="destructive"
+                onClick={logOutHandler}
+              >
+                {"Logout"}
+              </Button>
             </DrawerTrigger>
           )}
         </DrawerContent>

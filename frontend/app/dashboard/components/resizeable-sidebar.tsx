@@ -16,6 +16,19 @@ import Link from "next/link";
 import { useWindowSize } from "@/lib/hooks";
 import { usePathname } from "next/navigation";
 import { useMeStore } from "../store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { logOutUser } from "@/lib/apicalls/user";
+
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -23,10 +36,6 @@ interface ResizeableSidebarProps {
   children: React.ReactNode;
 }
 
-const UserData = {
-  title: "Jane Cooper",
-  image: "https://images.unsplash.com/photo-1550525811-e5869dd03032",
-};
 const ResizeableSidebar = ({
   defaultLayout = [5, 440, 655],
   defaultCollapsed = true,
@@ -45,6 +54,21 @@ const ResizeableSidebar = ({
   const pathname = usePathname();
   const isPhone = useWindowSize().width < 640;
 
+  const logOutHandler = async () => {
+    const response = await logOutUser();
+    if (response.status === 200) {
+      window.location.href = "/login";
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("aiChatStore");
+      localStorage.removeItem("aiWritingStore");
+      localStorage.removeItem("rewriteStore");
+      localStorage.removeItem("summarizerStore");
+      localStorage.removeItem("imageStore");
+      localStorage.removeItem("content-detector");
+      localStorage.removeItem("meStore");
+      return;
+    }
+  };
   return (
     <div className="w-full h-full ">
       <ResizablePanelGroup
@@ -162,35 +186,83 @@ const ResizeableSidebar = ({
                 ]}
               />
             </div>
-            {isCollapsed ? (
-              <Link
-                className=" w-full flex items-center justify-center mb-5"
-                href="/forms"
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={`w-full flex   ${
+                    !isCollapsed ? "border gap-2 p-2 rounded-lg" : "lg:ml-2"
+                  }  mb-5`}
+                >
+                  <Avatar className="border border-violet-800">
+                    <AvatarImage src={avatar} alt="Avatar" />
+                    <AvatarFallback>
+                      {!avatar && name.charAt(0) + name.charAt(1)}
+                    </AvatarFallback>
+                  </Avatar>
+                  {!isCollapsed && (
+                    <div className="flex flex-col w-full text-start ">
+                      <span className="text-sm font-semibold ">{name}</span>
+                      <span className="text-xs text-gray-500">Admin</span>
+                    </div>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                side="bottom"
+                align="end"
+                sideOffset={4}
               >
-                <Avatar className="border border-violet-800">
-                  <AvatarImage src={avatar} alt="Avatar" />
-                  <AvatarFallback>
-                    {!avatar && name.charAt(0) + name.charAt(1)}
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
-            ) : (
-              <Link
-                className=" w-full flex items-center gap-2 p-2 border rounded-lg mb-5"
-                href="/forms"
-              >
-                <Avatar className="border border-violet-800">
-                  <AvatarImage src={avatar} alt="Avatar" />
-                  <AvatarFallback>
-                    {!avatar && name.charAt(0) + name.charAt(1)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold ">{name}</span>
-                  <span className="text-xs text-gray-500">Admin</span>
-                </div>
-              </Link>
-            )}
+                <DropdownMenuLabel className="p-0 font-normal"></DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/forms/subscription"
+                      className="flex items-center space-x-1"
+                    >
+                      <Sparkles />
+                      <span>Upgrade to Pro</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/forms/account"
+                      className="flex items-center space-x-1"
+                    >
+                      <BadgeCheck />
+                      <span>Account</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/forms/subscription"
+                      className="flex items-center space-x-1"
+                    >
+                      <CreditCard />
+                      <span>Billing</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link
+                      href="/forms/notifications"
+                      className="flex items-center space-x-1"
+                    >
+                      <Bell />
+                      <span>Notifications</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logOutHandler}>
+                  <LogOut />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
