@@ -1,10 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
 import PasswordResetForm from "./components/form";
 
 const PasswordReset = () => {
   return (
     <div className="w-screen h-screen">
-      <PasswordResetForm />
+      <Suspense fallback={<div>Loading...</div>}>
+        <PasswordResetForm />
+      </Suspense>
     </div>
   );
 };
