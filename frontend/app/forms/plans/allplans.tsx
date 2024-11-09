@@ -91,7 +91,7 @@ const AllPlans = () => {
       </div>
       <Card>
         {allPlans.map((plan) => (
-          <div>
+          <div key={plan.id}>
             <CardHeader className="bg-muted" key={plan.id}>
               <CardTitle>{plan.title}</CardTitle>
               <CardDescription>
