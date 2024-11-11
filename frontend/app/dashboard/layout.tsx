@@ -3,9 +3,11 @@ import { Metadata } from "next";
 // import { cookies } from "next/headers";
 import React, { use, useEffect } from "react";
 import ResizeableSidebar from "./components/resizeable-sidebar";
-import { useMeStore } from "@/app/dashboard/store";
+import { useMeStore, useSubscriptionStore } from "@/app/dashboard/store";
 import { useWindowSize } from "@/lib/hooks";
 import { Navbar } from "@/components/navbar/NavBar";
+import { getMe } from "@/lib/apicalls/user";
+import { getUserSubscriptionDetails } from "@/lib/apicalls/subcriptionPlans";
 
 // export const metadata: Metadata = {
 //   title: "Forms",
@@ -37,29 +39,27 @@ interface SettingsLayoutProps {
 
 export default function DashboardLayout({ children }: SettingsLayoutProps) {
   const isPhone = useWindowSize().width < 640;
-  // const layout = cookies().get("react-resizable-panels:layout");
-  // const collapsed = cookies().get("react-resizable-panels:collapsed");
-
-  // const defaultLayout = layout ? JSON?.parse(layout.value) : undefined;
-  // const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : false;
+  const { _id } = useMeStore();
+  const { setUserSubscription } = useSubscriptionStore();
   const { setUser } = useMeStore();
   useEffect(() => {
     const setUserToState = async () => {
-      const user = await fetch("http://localhost:8000/api/me", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${localStorage.getItem("accessToken")}`,
-        },
-        method: "GET",
-        credentials: "include",
-      });
-      const data = await user.json();
-      if (data.status === 200) {
-        setUser(data.user);
+      const user = await getMe();
+      if (user.status === 200) {
+        setUser(user.user);
       }
     };
     setUserToState();
   }, []);
+  useEffect(() => {
+    const userSubscriptionDetail = async () => {
+      const userSubscriptionDetail = await getUserSubscriptionDetails(_id);
+      if (userSubscriptionDetail.status === 200) {
+        setUserSubscription(userSubscriptionDetail.data);
+      }
+    };
+    userSubscriptionDetail();
+  }, [_id]);
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (

@@ -5,3 +5,6 @@ export * from './content-detection.controller';
 export * from './image-generation.controller';
 export * from './rewrite.controller';
 export * from './summarizer.controller';
+export * from './subscription-plan.controller';
+export * from './checkout-session.controller'
+export * from './user-subscription-detail.controller'

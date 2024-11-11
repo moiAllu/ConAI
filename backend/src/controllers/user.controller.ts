@@ -4,6 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import {sendPasswordResetLink, sendVerificationCode, utils} from "../helpers/utils";
 import * as cookie from 'cookie';
 import * as bcrypt from 'bcrypt';
+const postmark = require("postmark");
+import { cat } from '@huggingface/transformers';
 
 const cookieConfig = {
     httpOnly: true, // to disable accessing cookie via client side js
@@ -338,3 +340,26 @@ export const getUser = async(req: any, res: Response) => {
     }
 
 }
+export const sendSmtpPostMark = async(req: Request, res: Response) => {
+    try{
+        const   client = new postmark.ServerClient("c5959f65-7559-4878-801e-9a20db52fb22");
+        const sent=  await  client.sendEmail({
+            "From": "fofalo2247@anypng.com",
+            "To": "fofalo2247@anypng.com",
+            "Subject": "Hello from Postmark",
+            "HtmlBody": "<strong>Hello</strong> dear Postmark user.",
+            "TextBody": "Hello from Postmark!",
+            "MessageStream": "outbound"
+        });
+        return res.status(200).json({
+            message: "Email sent"
+            ,
+            sent});
+        }catch(e){
+        console.log(e);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+        
