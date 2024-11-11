@@ -12,6 +12,7 @@ interface IUser extends Document {
     loginAttempts: number;
     activeSession: true;
     resetToken?: string;
+    isSuscritpionActive?: boolean;
 }
 
 const userSchema = new Schema<IUser>({
@@ -60,6 +61,11 @@ const userSchema = new Schema<IUser>({
     resetToken: {
         type: String,
         required: false
+    },
+    isSuscritpionActive: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
