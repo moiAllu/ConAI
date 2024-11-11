@@ -5,7 +5,7 @@ import CreateAccount from "./components/create-account";
 import { InputOTPForm } from "./components/opt-verification";
 
 const SignUp = () => {
-  const [otpRequestGen, setOtpRequestGen] = React.useState(true);
+  const [otpRequestGen, setOtpRequestGen] = React.useState(false);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
