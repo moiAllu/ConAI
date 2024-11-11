@@ -38,6 +38,7 @@ const AllPlans = () => {
         <h1 className="text-xl md:text-3xl font-semibold">All Plans</h1>
       </div>
       <Card>
+
         {plans.map((plan) => (
           <div key={plan._id}>
             <CardHeader className="bg-muted" key={plan._id}>
