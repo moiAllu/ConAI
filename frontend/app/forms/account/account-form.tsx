@@ -165,7 +165,7 @@ export function AccountForm() {
                 <FormLabel>Profile Picture</FormLabel>
                 <FormControl>
                   <Card className=" flex flex-col items-center space-y-2 p-2 ">
-                    <Card className="flex flex-col relative h-[320px] w-[270px]">
+                    <Card className="flex flex-col relative h-[220px] w-[180px]">
                       <Image
                         src="/profile.jpg"
                         alt="Profile picture"
@@ -181,7 +181,7 @@ export function AccountForm() {
             )}
           />
         </div>
-        <FormField
+        {/* <FormField
           control={form.control}
           name="language"
           render={({ field }) => (
@@ -241,7 +241,7 @@ export function AccountForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <Button type="submit">Update account</Button>
       </form>
     </Form>

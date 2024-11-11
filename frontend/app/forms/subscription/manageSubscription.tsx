@@ -9,8 +9,21 @@ import { Separator } from "@/components/ui/separator";
 import React from "react";
 import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+interface Props {
+  name: string;
+  description: string;
+  price: number;
+  nextBill: any;
+  last4CardNums: string;
+}
 
-const ManageSubscription = () => {
+const ManageSubscription = ({
+  name,
+  description,
+  price,
+  nextBill,
+  last4CardNums,
+}: Props) => {
   return (
     <div className="w-full h-full">
       <div className="flex flex-col justify-start space-y-2 py-2">
@@ -26,11 +39,10 @@ const ManageSubscription = () => {
         <CardHeader className="bg-muted">
           <CardTitle>Premium Memeber</CardTitle>
           <CardDescription>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto odit
-            et
+            {description}
             <div className="text-sm font-semibold space-y-1 flex flex-col mt-2 ">
-              <h2>Pro Plan</h2>
-              <p>Price: 20$</p>
+              <h2>{name}</h2>
+              <p>{price}</p>
             </div>
           </CardDescription>
         </CardHeader>
@@ -44,10 +56,12 @@ const ManageSubscription = () => {
             <div className="flex flex-col space-y-4">
               <h1 className="font-semibold text-xl">Payment</h1>
               <div className="ml-2 text-sm space-y-2">
-                <p>Your next bill is for Rs 349.00 on 22/07/2024.</p>
+                <p>
+                  Your next bill is for Rs {price} on {nextBill}.
+                </p>
                 <div className="flex items-center space-x-1">
                   <CreditCard />
-                  <span>Mastercard endings are</span>
+                  <span>Mastercard endings are {last4CardNums}</span>
                 </div>
               </div>
             </div>
