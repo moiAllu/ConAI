@@ -1,5 +1,5 @@
-import React, { use } from "react";
-import { Bird, Rabbit, Turtle, UploadIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -7,15 +7,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { createSummarize } from "@/lib/apicalls/summarize";
-import { useMeStore } from "../../store";
-import { Toaster, toast } from "sonner";
-import { useSummarizerStore } from "../store";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { Toaster, toast } from "sonner";
+import { useMeStore } from "../../store";
+import { useSummarizerStore } from "../store";
+
+const MAX_CHARS_COUNT = 9000;
+const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
 
 const DrawerCard = () => {
   const [intensity, setIntensity] = React.useState("Medium");
@@ -68,12 +69,18 @@ const DrawerCard = () => {
           <Label htmlFor="content">Content</Label>
           <Textarea
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > MAX_CHARS_COUNT) return;
+              setContent(e.target.value);
+            }}
             id="content"
             placeholder="You are a..."
             className="resize-none h-full min-h-[150px]"
             // className="sm:h-[95%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
           />
+          <div className=" text-sm text-gray-600 w-full text-end">
+            <span>{countWords(content)}</span>
+          </div>
         </div>
       </fieldset>
       <Button type="submit" className="w-full" disabled={isLoading}>

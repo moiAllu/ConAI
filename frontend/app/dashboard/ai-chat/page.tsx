@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import ReactivateSubscription from "../components/reactivate-subscription";
 import { Separator } from "@/components/ui/separator";
 import { SelectModel } from "./components/select-model";
 
@@ -15,7 +14,6 @@ const AIWritingPage = () => {
           <SelectModel />
           <DrawerChatHistory />
         </div>
-        <ReactivateSubscription />
       </div>
       <Separator className="my-2" />
       <div className="w-full h-full justify-between flex-col flex overflow-y-auto">

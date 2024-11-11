@@ -15,17 +15,16 @@ import React from "react";
 import { useMeStore } from "../../store";
 import { useContentDetectorStore } from "../store";
 
+const MAX_CHARS_COUNT = 9000;
+const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
+
 const DrawerCard = () => {
   const router = useRouter();
   const [method, setMethod] = React.useState("Ai Detection");
   const [content, setContent] = React.useState("");
   const { _id: userId } = useMeStore();
-  const { aiHistory, addAiHistory, addPlagrismHistory } =
-    useContentDetectorStore();
-  const countWords = (str: string) => {
-    if (str.split(" ").length === 1) return "10 / 3000";
-    return str.split(" ").length;
-  };
+  const { addAiHistory, addPlagrismHistory } = useContentDetectorStore();
+
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log({ method, content });
@@ -74,7 +73,10 @@ const DrawerCard = () => {
         <div className="w-full h-full">
           <Label htmlFor="content">Content</Label>
           <Textarea
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > MAX_CHARS_COUNT) return;
+              setContent(e.target.value);
+            }}
             value={content}
             id="content"
             placeholder="You are a..."

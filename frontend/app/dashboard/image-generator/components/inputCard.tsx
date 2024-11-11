@@ -1,13 +1,13 @@
 "use client";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/registry/new-york/ui/textarea";
-import React from "react";
-import SelectInput from "./selectInput";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { createImage } from "@/lib/apicalls/image-generation";
+import { Textarea } from "@/registry/new-york/ui/textarea";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { useMeStore } from "../../store";
 import { useImageStore } from "../store";
-import { useRouter } from "next/navigation";
+import SelectInput from "./selectInput";
 
 const differentInputs = [
   {
@@ -55,6 +55,9 @@ const differentInputs = [
     required: true,
   },
 ];
+
+const MAX_CHARS_COUNT = 500;
+const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
 
 const InputCard = () => {
   const userId = useMeStore((state) => state._id);
@@ -146,8 +149,14 @@ const InputCard = () => {
             placeholder="You are a..."
             // className="h-full resize-none bg-muted/50 border-0 p-1 shadow-none focus-visible:ring-0 sm:min-h-[150px]"
             className="resize-none h-full min-h-[150px]"
-            onChange={(e) => onPromptChange(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > MAX_CHARS_COUNT) return;
+              onPromptChange(e.target.value);
+            }}
           />
+          <div className=" text-sm text-gray-600 w-full text-end">
+            <span>{countWords(prompt)}</span>
+          </div>
         </div>
       </fieldset>
       <Button type="submit" className="w-full" disabled={isLoading}>

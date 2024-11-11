@@ -91,6 +91,7 @@ const DynamicCard = () => {
                 ? setMode
                 : null
             }
+            value={input.defaultValue}
             label={input.label}
             defaultValue={input.defaultValue}
             options={input.options}
@@ -114,6 +115,7 @@ const DynamicCard = () => {
             index={index}
             key={index}
             textAreaLabel={input.textAreaLabel}
+            value={content}
             textAreaPlaceholder={input.textAreaPlaceholder}
           />
         ))}

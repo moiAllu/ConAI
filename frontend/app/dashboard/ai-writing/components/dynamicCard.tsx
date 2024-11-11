@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { generateAiResponse } from "@/lib/apicalls/auth";
-import { UploadIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useMeStore } from "../../store";
@@ -175,6 +174,9 @@ const formatOptions = [
     description: "An outline.",
   },
 ];
+
+const MAX_CHARS_COUNT = 500;
+const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
 
 const DynamicCard = () => {
   const [inputFormat, setInputFormat] = React.useState("");
@@ -404,10 +406,16 @@ const DynamicCard = () => {
           <Textarea
             id="content"
             placeholder="What is in your mind..."
-            onChange={(e) => setInputContent(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length > MAX_CHARS_COUNT) return;
+              setInputContent(e.target.value);
+            }}
             value={inputContent}
             className="resize-none h-full min-h-[150px]"
           />
+          <div className=" text-sm text-gray-600 w-full text-end">
+            <span>{countWords(inputContent)}</span>
+          </div>
         </div>
         <Button
           className="w-full flex items-center justify-center gap-2"
@@ -420,10 +428,7 @@ const DynamicCard = () => {
               Generating...
             </>
           ) : (
-            <>
-              <UploadIcon />
-              Generate
-            </>
+            <span>Generate</span>
           )}
         </Button>
       </fieldset>
