@@ -1,13 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
-import ReactMarkdown from "react-markdown";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useMeStore } from "../../store";
-import { getUserRewriteById } from "../../../../lib/apicalls/rewrite";
-import { useSearchParams } from "next/navigation";
-import { useSummarizerStore } from "../store";
 import { getUserSummarizeById } from "@/lib/apicalls/summarize";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import { useMeStore } from "../../store";
+import { useSummarizerStore } from "../store";
 
 const OutputCard = () => {
   const searchParams = useSearchParams();
@@ -22,15 +20,14 @@ const OutputCard = () => {
     if (!summarizeId) return;
     const fetchImageById = async () => {
       const response = await getUserSummarizeById(summarizeId, userId);
-      if (response.status === 200) {
-        const summarizeData = response.data;
-        addSummarizer(summarizeData.summarizers[0]);
-      }
+      if (response?.status === 200)
+        addSummarizer(response?.data?.summarizers[0]);
     };
     fetchImageById();
   }, [summarizeId]);
+
   return (
-    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-y-auto mb-10">
+    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-y-auto">
       {!selectedSummarize && (
         <Badge variant="outline" className="absolute right-3 top-3">
           Output

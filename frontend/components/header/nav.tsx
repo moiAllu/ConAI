@@ -219,13 +219,6 @@ const Nav = (props: NavProps) => {
             </DrawerContent>
           </Drawer>
         </div>
-        <Button
-          className="flex justify-start space-x-1 items-center"
-          variant="ghost"
-        >
-          <UploadIcon />
-          <span className="hidden sm:flex">Share</span>
-        </Button>
       </div>
       <Separator className="my-2" />
     </div>

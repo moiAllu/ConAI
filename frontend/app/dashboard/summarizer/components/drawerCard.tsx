@@ -49,7 +49,7 @@ const DrawerCard = () => {
       onSubmit={formSubmitHandler}
     >
       {isError.status && <Toaster richColors />}
-      <fieldset className="flex flex-col rounded-lg border p-4 w-full  h-full rela">
+      <fieldset className="flex flex-col rounded-lg border p-4 w-full h-full gap-4">
         <legend className="px-1 text-sm font-medium">Settings</legend>
         <div className="w-full ">
           <Label htmlFor="role">Intensity</Label>
@@ -71,7 +71,8 @@ const DrawerCard = () => {
             onChange={(e) => setContent(e.target.value)}
             id="content"
             placeholder="You are a..."
-            className="sm:h-[95%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
+            className="resize-none h-full min-h-[150px]"
+            // className="sm:h-[95%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
           />
         </div>
       </fieldset>

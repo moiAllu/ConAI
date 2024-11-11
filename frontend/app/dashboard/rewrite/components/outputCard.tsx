@@ -1,21 +1,18 @@
 "use client";
-import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CornerDownLeft, Mic, Paperclip } from "lucide-react";
-import { useEffect } from "react";
-import { useMeStore } from "../../store";
-import { getUserRewriteById } from "../../../../lib/apicalls/rewrite";
-import { useSearchParams } from "next/navigation";
-import { useRewriteStore } from "../store";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { getUserRewriteById } from "../../../../lib/apicalls/rewrite";
+import { useMeStore } from "../../store";
+import { useRewriteStore } from "../store";
 
 const OutputCard = () => {
   const searchParams = useSearchParams();

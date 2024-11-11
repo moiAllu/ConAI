@@ -38,12 +38,13 @@ const SelectInput = (props: SelectInputProps) => {
             ))}
           </SelectContent>
         </Select>
-        <div className="h-full">
+        <div className="h-full flex flex-col gap-2">
           <Label htmlFor="content">{props.textAreaLabel}</Label>
           <Textarea
             id="content"
             placeholder={props.textAreaPlaceholder}
-            className="sm:h-[90%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
+            // className="sm:h-[90%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
+            className="resize-none sm:h-[90%] min-h-[150px]"
             onChange={(e) => props.onTextAreaChange(e.target.value)}
           />
         </div>
