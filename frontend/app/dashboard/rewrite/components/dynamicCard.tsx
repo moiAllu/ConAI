@@ -1,22 +1,11 @@
-import React from "react";
-import { Bird, Rabbit, Turtle, UploadIcon } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import SelectInput from "./selectInput";
 import { Button } from "@/components/ui/button";
 import { createRewrite } from "@/lib/apicalls/rewrite";
-import { useMeStore } from "../../store";
 import { useRouter } from "next/navigation";
-import { useRewriteStore } from "../store";
+import React from "react";
 import { Toaster, toast } from "sonner";
+import { useMeStore } from "../../store";
+import { useRewriteStore } from "../store";
+import SelectInput from "./selectInput";
 
 const differentInputs = [
   {
@@ -34,7 +23,7 @@ const inputs = [
   {
     label: "Language",
     defaultValue: "Automatic",
-    options: ["Automatic", "English", "Spanish"],
+    options: ["Automatic", "English"],
     textAreaLabel: "Content",
     textAreaPlaceholder: "You are a...",
   },
@@ -88,7 +77,10 @@ const DynamicCard = () => {
       onSubmit={formSubmitHandler}
     >
       {isError.status && <Toaster richColors />}
-      <fieldset className="grid gap-6 rounded-lg border p-4 w-full ">
+      <fieldset
+        className="grid gap-6 rounded-lg border p-4 w-full"
+        disabled={isLoading}
+      >
         <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
         {differentInputs.map((input, index) => (
           <SelectInput
@@ -107,7 +99,10 @@ const DynamicCard = () => {
           />
         ))}
       </fieldset>
-      <fieldset className="flex flex-col gap-6 rounded-lg border p-4 w-full h-full">
+      <fieldset
+        className="flex flex-col gap-6 rounded-lg border p-4 w-full h-full"
+        disabled={isLoading}
+      >
         <legend className="-ml-1 px-1 text-sm font-medium">Input</legend>
         {inputs.map((input, index) => (
           <SelectInput
@@ -124,7 +119,7 @@ const DynamicCard = () => {
         ))}
       </fieldset>
       <Button type="submit" className="w-full" disabled={isLoading}>
-        Rewrite
+        {isLoading ? "Processing..." : "Rewrite"}
       </Button>
     </form>
   );

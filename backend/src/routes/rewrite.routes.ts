@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { validateRoute } from '../helpers';
-import { rewriter } from '../rewriter';
 import { rewriteController , getUserRewriteHistory, getUserRewriteById, deleteUserRewriteById} from '../controllers';
 
 const router = express.Router();

@@ -105,7 +105,7 @@ const OutputCard = () => {
           Output
         </Badge>
       )}
-      <div className="w-full h-full sm:overflow-y-auto">
+      <div className="w-full min-h-full overflow-y-auto">
         {base64Image && (
           <div className="gap-2  flex flex-col w-full mt-2 h-full">
             <h1 className="md:hidden font-semibold w-full text-center">
@@ -120,10 +120,10 @@ const OutputCard = () => {
                 {selectedImage ? (
                   <Image
                     src={`data:image/png;base64,${selectedImage?.image}`}
-                    width={500}
-                    height={500}
+                    width={400}
+                    height={400}
                     alt="Base64 Example"
-                    className="rounded-lg 2xl:w-[800px] lg:max-w-[1080px] max-w-[320px] sm:max-w-[400px] md:max-w-[400px] "
+                    className="rounded-lg 2xl:w-[700px] max-w-[320px] sm:max-w-[400px] md:max-w-[400px]"
                   />
                 ) : (
                   <></>

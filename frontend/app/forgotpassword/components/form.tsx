@@ -80,7 +80,7 @@ export default function ForgotPasswordForm() {
                     href="/login"
                     className="ml-auto inline-block text-sm underline"
                   >
-                    login
+                    Back to Login
                   </Link>
                 </div>
                 <Button type="submit" className="w-full flex items-center">
@@ -145,7 +145,7 @@ export default function ForgotPasswordForm() {
                 href="/login"
                 className="ml-auto inline-block text-sm underline"
               >
-                login
+                Back to Login
               </Link>
             </div>
             <Button

@@ -144,7 +144,8 @@ const InputCard = () => {
             value={prompt}
             id="content"
             placeholder="You are a..."
-            className="h-full resize-none bg-muted/50 border-0 p-1 shadow-none focus-visible:ring-0 sm:min-h-[150px]"
+            // className="h-full resize-none bg-muted/50 border-0 p-1 shadow-none focus-visible:ring-0 sm:min-h-[150px]"
+            className="resize-none h-full min-h-[150px]"
             onChange={(e) => onPromptChange(e.target.value)}
           />
         </div>

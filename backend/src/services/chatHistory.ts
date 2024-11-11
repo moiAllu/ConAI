@@ -1,17 +1,17 @@
-import { ChatHistory } from '../mongodb/models';
+import { ChatHistory } from "../mongodb/models";
 
 export const storeMessageInChatHistory = async (
   id: string,
   title: string,
   userId: string,
-  role: 'user' | 'assistant',
+  role: "user" | "assistant",
   message: string
 ) => {
   if (id) {
     const chatHistory = await ChatHistory.findOne({ _id: id });
     chatHistory.messages.push({ role, message });
     await chatHistory.save();
-    return null;  
+    return null;
   }
 
   const newChatHistory = new ChatHistory({
@@ -38,13 +38,14 @@ export const getChatHistory = async (id: string, userId: string) => {
 
 export const getUserChats = async (userId: string) => {
   const userChats = await ChatHistory.find({ userId });
-  // return userChats;
-  return userChats.map((chat) => {
-    return {
-      chatId: chat._id,
-      title: chat.messages[0].message,
-      createdAt: chat.createdAt,
-    };
-  }
-  );
+  return userChats.map((chat) => ({
+    chatId: chat._id,
+    title:
+      chat.messages
+        .at(-1)
+        .message.replace(/[*_`#>]/g, "")
+        .substring(0, 50)
+        .trim() + (chat.messages.at(-1).message.length > 50 ? "..." : ""),
+    createdAt: chat.createdAt,
+  }));
 };

@@ -37,47 +37,89 @@ export default function CreateAccount({
   setPassword,
   setEmail,
 }: CreateAccountProps) {
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    general: "",
+  });
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
   const [success, setSuccess] = useState("");
   const [loadingOtp, setLoadingOtp] = useState(false);
 
+  const validatePassword = (password: string) => {
+    const errors = [];
+    if (password.length < 8) {
+      errors.push("At least 8 characters");
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push("One uppercase letter");
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push("One lowercase letter");
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push("One number");
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push("One special character");
+    }
+    return errors;
+  };
+
+  const getPasswordRequirementStatus = (password: string) => {
+    return {
+      minLength: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+  };
+
   const formSubmitHandler = async (e: any) => {
     e.preventDefault();
     setOtpRequestGen(null);
     setSuccess("");
-    setError("");
+    setErrors({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      general: "",
+    });
     setLoading(true);
-    if (!firstName || !lastName || !email || !password) {
-      setError("Please fill all the fields");
-      setLoading(false);
-      setOtpRequestGen(null);
-      return;
-    }
 
+    const newErrors = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      general: "",
+    };
+
+    if (!firstName || firstName.length < 3) {
+      newErrors.firstName = "First name must be at least 3 characters long";
+    }
+    if (!lastName || lastName.length < 3) {
+      newErrors.lastName = "Last name must be at least 3 characters long";
+    }
     if (firstName === lastName) {
-      setError("First name and last name cannot be the same");
-      setLoading(false);
-      setOtpRequestGen(null);
-
-      return;
+      newErrors.general = "First name and last name cannot be the same";
     }
-    if (password.length < 8) {
-      setError("Password must be atleast 8 characters long");
-      setLoading(false);
-      setOtpRequestGen(null);
-      return;
+    if (!email || !email.includes("@") || !email.includes(".")) {
+      newErrors.email = "Invalid email address";
     }
 
-    if (firstName.length < 3 || lastName.length < 3) {
-      setError("First name and last name must be atleast 3 characters long");
-      setLoading(false);
-      setOtpRequestGen(null);
-      return;
+    const passwordErrors = validatePassword(password);
+    if (passwordErrors.length > 0) {
+      newErrors.password = passwordErrors.join(", ");
     }
-    if (!email.includes("@") || !email.includes(".")) {
-      setError("Invalid email address");
+
+    if (Object.values(newErrors).some((error) => error !== "")) {
+      setErrors(newErrors);
       setLoading(false);
       setOtpRequestGen(null);
       return;
@@ -113,10 +155,11 @@ export default function CreateAccount({
           setLoadingOtp(false);
         }
       } else {
-        setError(data.message);
+        setErrors({ ...errors, general: data.message });
       }
       setLoading(false);
     } catch (e) {
+      setErrors({ ...errors, general: "An error occurred during signup" });
       console.log(e);
     }
   };
@@ -141,15 +184,24 @@ export default function CreateAccount({
                   required
                   value={firstName}
                   onChange={(e) => {
-                    setError("");
+                    setErrors({ ...errors, firstName: "", general: "" });
                     if (/\d/.test(e.target.value)) {
-                      return setError("Invalid cannot enter number");
+                      setErrors({
+                        ...errors,
+                        firstName: "Cannot contain numbers",
+                      });
+                      return;
                     }
-                    return setFirstName(e.target.value);
+                    setFirstName(e.target.value);
                   }}
-                  className={`${error && " border-red-700"}`}
+                  className={`${errors.firstName && "border-red-700"}`}
                   disabled={loading}
                 />
+                {errors.firstName && (
+                  <span className="text-sm text-red-700">
+                    {errors.firstName}
+                  </span>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="last-name">Last name</Label>
@@ -159,15 +211,24 @@ export default function CreateAccount({
                   required
                   value={lastName}
                   onChange={(e) => {
-                    setError("");
+                    setErrors({ ...errors, lastName: "", general: "" });
                     if (/\d/.test(e.target.value)) {
-                      return setError("Invalid cannot enter number");
+                      setErrors({
+                        ...errors,
+                        lastName: "Cannot contain numbers",
+                      });
+                      return;
                     }
-                    return setLastName(e.target.value);
+                    setLastName(e.target.value);
                   }}
-                  className={`${error && " border-red-700"}`}
+                  className={`${errors.lastName && "border-red-700"}`}
                   disabled={loading}
                 />
+                {errors.lastName && (
+                  <span className="text-sm text-red-700">
+                    {errors.lastName}
+                  </span>
+                )}
               </div>
             </div>
             <div className="grid gap-2">
@@ -178,10 +239,23 @@ export default function CreateAccount({
                 placeholder="m@example.com"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`${error && " border-red-700"}`}
+                onChange={(e) => {
+                  setErrors({ ...errors, email: "", general: "" });
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (!emailRegex.test(e.target.value)) {
+                    setErrors({
+                      ...errors,
+                      email: "Please enter a valid email address",
+                    });
+                  }
+                  setEmail(e.target.value);
+                }}
+                className={`${errors.email && "border-red-700"}`}
                 disabled={loading}
               />
+              {errors.email && (
+                <span className="text-sm text-red-700">{errors.email}</span>
+              )}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
@@ -189,14 +263,65 @@ export default function CreateAccount({
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`${error && " border-red-700"}`}
+                onChange={(e) => {
+                  setErrors({ ...errors, password: "" });
+                  setPassword(e.target.value);
+                }}
+                className={`${errors.password && "border-red-700"}`}
                 disabled={loading}
               />
+              <div className="text-xs space-y-1">
+                <p className="text-muted-foreground">Password requirements:</p>
+                {Object.entries(getPasswordRequirementStatus(password)).map(
+                  ([requirement, isMet]) => (
+                    <div key={requirement} className="flex items-center gap-2">
+                      {isMet ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-green-500"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-gray-300"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                      <span
+                        className={isMet ? "text-green-500" : "text-gray-500"}
+                      >
+                        {requirement === "minLength" && "At least 8 characters"}
+                        {requirement === "uppercase" && "One uppercase letter"}
+                        {requirement === "lowercase" && "One lowercase letter"}
+                        {requirement === "number" && "One number"}
+                        {requirement === "special" &&
+                          'One special character (!@#$%^&*(),.?":{}|<>)'}
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
-            {error && (
+            {errors.general && (
               <div className="flex w-full justify-center text-red-700 p-2 rounded bg-muted">
-                <Label className="font-semibold text-md">{error}</Label>
+                <Label className="font-semibold text-md">
+                  {errors.general}
+                </Label>
               </div>
             )}
             {success && (
@@ -213,9 +338,6 @@ export default function CreateAccount({
               {loading && <LoadingSpinner />}
             </Button>
           </form>
-          <Button variant="outline" className="w-full" disabled={loading}>
-            Sign up with Google
-          </Button>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
             <Link href="/login" className="underline">

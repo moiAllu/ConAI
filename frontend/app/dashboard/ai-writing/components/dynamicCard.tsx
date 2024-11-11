@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
-import { Bird, Rabbit, Turtle, UploadIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -9,13 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { generateAiResponse } from "@/lib/apicalls/auth";
+import { UploadIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { useMeStore } from "../../store";
 import { useAIWritingStore } from "../store";
-import { useRouter } from "next/navigation";
 const lengthData = [
   {
     value: "Short (500 words)",
@@ -184,7 +183,7 @@ const DynamicCard = () => {
   const [inputAgeGroup, setInputAgeGroup] = React.useState("");
   const [inputLength, setInputLength] = React.useState("");
   const [inputContent, setInputContent] = React.useState("");
-  const [isloading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
 
   const { _id } = useMeStore();
@@ -246,7 +245,10 @@ const DynamicCard = () => {
       className="grid h-full w-full items-start gap-6 overflow-auto max-w-md"
       onSubmit={submitHandler}
     >
-      <fieldset className="grid gap-6 rounded-lg border p-4">
+      <fieldset
+        className="grid gap-6 rounded-lg border p-4"
+        disabled={isLoading}
+      >
         <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
         <div className="grid gap-3">
           <Label htmlFor="format">Format</Label>
@@ -365,8 +367,11 @@ const DynamicCard = () => {
           </Select>
         </div>
       </fieldset>
-      <fieldset className="grid gap-6 rounded-lg border p-4">
-        <legend className="-ml-1 px-1 text-sm font-medium">Messages</legend>
+      <fieldset
+        className="grid gap-6 rounded-lg border p-4"
+        disabled={isLoading}
+      >
+        <legend className="-ml-1 px-1 text-sm font-medium">Content</legend>
         <div className="grid gap-3">
           <Label htmlFor="length">Length</Label>
           <Select
@@ -395,20 +400,31 @@ const DynamicCard = () => {
           </Select>
         </div>
         <div className="grid gap-3">
-          <Label htmlFor="content">Content</Label>
+          <Label htmlFor="content">Prompt</Label>
           <Textarea
             id="content"
             placeholder="What is in your mind..."
             onChange={(e) => setInputContent(e.target.value)}
             value={inputContent}
+            className="resize-none h-full min-h-[150px]"
           />
         </div>
         <Button
           className="w-full flex items-center justify-center gap-2"
           type="submit"
+          disabled={isLoading}
         >
-          <UploadIcon />
-          Generate
+          {isLoading ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <UploadIcon />
+              Generate
+            </>
+          )}
         </Button>
       </fieldset>
     </form>
