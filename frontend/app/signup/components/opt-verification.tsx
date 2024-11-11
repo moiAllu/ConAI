@@ -1,8 +1,4 @@
 "use client";
-import React, { useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
-import { z } from "zod";
 import LoadingSpinner from "@/components/loading-spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,55 +15,80 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { ToastAction } from "@/components/ui/toast";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const FormSchema = z.object({
-  pin: z.string().min(6, {
-    message: "Your one-time password must be 6 characters.",
-  }),
+  pin: z
+    .string()
+    .min(6, { message: "Your one-time password must be 6 characters." }),
 });
 
 interface InputOTPFormProps {
-  otpRequestGen: any;
   email: string;
 }
-export function InputOTPForm({ otpRequestGen, email }: InputOTPFormProps) {
+
+const OTP_TIMER_INTERVAL = 60;
+
+export function InputOTPForm({ email }: InputOTPFormProps) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const [success, setSuccess] = React.useState("");
+  const [timer, setTimer] = React.useState(OTP_TIMER_INTERVAL);
+  const [canResend, setCanResend] = React.useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      pin: "",
-    },
+    defaultValues: { pin: "" },
   });
 
-  useEffect(() => {
-    const otpRequestGen = async () => {
+  const handleOtpRequest = async () => {
+    try {
       const otpResponse = await fetch(
         "http://localhost:8000/api/user/otp-request",
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
           method: "POST",
         }
       );
       const otpRequest = await otpResponse.json();
-      console.log(otpRequest);
+      toast({ title: "Success", description: otpRequest.message });
+      setTimer(OTP_TIMER_INTERVAL);
+      setCanResend(false);
+    } catch (error) {
       toast({
-        title: "success",
-        description: otpRequest.message,
+        title: "Error",
+        description: "Failed to send OTP",
+        variant: "destructive",
       });
-    };
-    otpRequestGen();
+    }
+  };
+
+  useEffect(() => {
+    handleOtpRequest();
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer <= 1) {
+          setCanResend(true);
+          clearInterval(intervalId);
+          return 0;
+        }
+        return prevTimer - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timer]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>, e: any) {
     e.preventDefault();
@@ -81,21 +102,15 @@ export function InputOTPForm({ otpRequestGen, email }: InputOTPFormProps) {
         "http://localhost:8000/api/user/otp-verification",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ otp, email }),
           credentials: "include",
         }
       );
       const result = await response.json();
-      console.log(result);
       if (result.status === 200) {
         setSuccess(result.message);
-        toast({
-          title: "success",
-          description: result.message,
-        });
+        toast({ title: "success", description: result.message });
         router.push("/dashboard");
       } else {
         setError(result.message);
@@ -135,6 +150,16 @@ export function InputOTPForm({ otpRequestGen, email }: InputOTPFormProps) {
             </FormItem>
           )}
         />
+
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          disabled={!canResend}
+          onClick={handleOtpRequest}
+        >
+          {canResend ? "Resend OTP" : `Resend OTP in ${timer}s`}
+        </Button>
 
         {error && <FormMessage className="w-full">{error}</FormMessage>}
         {success && (

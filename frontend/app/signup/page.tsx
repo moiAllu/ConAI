@@ -1,18 +1,17 @@
 "use client";
+import { useWindowSize } from "@/lib/hooks";
 import React from "react";
 import CreateAccount from "./components/create-account";
 import { InputOTPForm } from "./components/opt-verification";
-import { useWindowSize } from "@/lib/hooks";
 
 const SignUp = () => {
-  const [otpRequestGen, setOtpRequestGen] = React.useState();
+  const [otpRequestGen, setOtpRequestGen] = React.useState(true);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const isPhone = useWindowSize().width < 768;
 
-  console.log(otpRequestGen);
   if (isPhone) {
     return (
       <div className="w-full h-screen flex justify-center">
@@ -24,7 +23,7 @@ const SignUp = () => {
                 Enter the OTP sent to your email to verify your account
               </p>
             </div>
-            <InputOTPForm email={email} otpRequestGen={otpRequestGen} />
+            <InputOTPForm email={email} />
           </div>
         ) : (
           <CreateAccount
@@ -63,7 +62,7 @@ const SignUp = () => {
                 Enter the OTP sent to your email to verify your account
               </p>
             </div>
-            <InputOTPForm email={email} otpRequestGen={otpRequestGen} />
+            <InputOTPForm email={email} />
           </div>
         )}
       </div>
