@@ -1,4 +1,4 @@
-import CheckoutSession from "./CheckoutSession";
+import CheckoutSession from "./checkoutSession";
 const SuccessPage = () => {
   return (
     <div>
