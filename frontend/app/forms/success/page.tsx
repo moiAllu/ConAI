@@ -1,8 +1,11 @@
+import { Suspense } from "react";
 import CheckoutSession from "./checkoutSession";
 const SuccessPage = () => {
   return (
     <div>
-      <CheckoutSession />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CheckoutSession />
+      </Suspense>
     </div>
   );
 };
