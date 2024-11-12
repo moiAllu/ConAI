@@ -30,6 +30,7 @@ const FormSchema = z.object({
 
 interface InputOTPFormProps {
   email: string;
+  otpRequestGen?: boolean;
 }
 
 const OTP_TIMER_INTERVAL = 60;
