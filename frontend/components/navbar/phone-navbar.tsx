@@ -108,6 +108,9 @@ const PhoneNavbar = () => {
       localStorage.removeItem("imageStore");
       localStorage.removeItem("content-detector");
       localStorage.removeItem("meStore");
+      localStorage.removeItem("subscriptionStore");
+      localStorage.removeItem("chatStore");
+      localStorage.removeItem("planStore");
       return;
     }
   };

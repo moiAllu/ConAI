@@ -157,7 +157,7 @@ export function AccountForm() {
               )}
             />
           </div>
-          <FormField
+          {/* <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
@@ -179,7 +179,7 @@ export function AccountForm() {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
         </div>
         {/* <FormField
           control={form.control}

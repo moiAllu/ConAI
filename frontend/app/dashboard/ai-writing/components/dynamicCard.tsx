@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useMeStore } from "../../store";
 import { useAIWritingStore } from "../store";
+import { toast, Toaster } from "sonner";
 const lengthData = [
   {
     value: "Short (500 words)",
@@ -196,6 +197,18 @@ const DynamicCard = () => {
   const submitHandler = async (e: any) => {
     setIsLoading(true);
     e.preventDefault();
+    if (
+      !inputFormat ||
+      !inputType ||
+      !inputTone ||
+      !inputAgeGroup ||
+      !inputLength ||
+      !inputContent
+    ) {
+      setIsLoading(false);
+      toast.error("Please fill all feilds");
+      return;
+    }
     const promptMods = {
       inputFormat,
       inputType,
@@ -251,8 +264,8 @@ const DynamicCard = () => {
         className="grid gap-6 rounded-lg border p-4"
         disabled={isLoading}
       >
-        <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
-        <div className="grid gap-3">
+        <legend className=" px-1 text-sm font-medium">Settings</legend>
+        <div className="grid gap-2">
           <Label htmlFor="format">Format</Label>
           <Select
             name="format"
@@ -282,7 +295,7 @@ const DynamicCard = () => {
           </Select>
         </div>
         {inputFormat === "Eassy" && (
-          <div className="grid gap-3">
+          <div className="grid gap-2">
             <Label htmlFor="type">Type</Label>
             <Select
               name="type"
@@ -314,7 +327,7 @@ const DynamicCard = () => {
             </Select>
           </div>
         )}
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <Label htmlFor="tone">Tone</Label>
           <Select
             name="tone"
@@ -341,7 +354,7 @@ const DynamicCard = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <Label htmlFor="age group">Age Group</Label>
           <Select
             required
@@ -374,7 +387,7 @@ const DynamicCard = () => {
         disabled={isLoading}
       >
         <legend className="-ml-1 px-1 text-sm font-medium">Content</legend>
-        <div className="grid gap-3">
+        <div className="grid gap-1">
           <Label htmlFor="length">Length</Label>
           <Select
             name="length"
@@ -401,7 +414,7 @@ const DynamicCard = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           <Label htmlFor="content">Prompt</Label>
           <Textarea
             id="content"
@@ -431,6 +444,7 @@ const DynamicCard = () => {
             <span>Generate</span>
           )}
         </Button>
+        <Toaster richColors />
       </fieldset>
     </form>
   );

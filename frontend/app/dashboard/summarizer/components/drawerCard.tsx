@@ -30,6 +30,7 @@ const DrawerCard = () => {
     e.preventDefault();
     if (content === "") {
       setIsError({ status: true, message: "Content cannot be empty" });
+      toast.error("Content cannot be empty");
       return;
     }
     setIsError({ status: false, message: "" });
@@ -43,13 +44,13 @@ const DrawerCard = () => {
       return;
     }
     setIsError({ status: true, message: "Failed to summarize" });
+    toast.error("Failed to summarize");
   };
   return (
     <form
       className="flex flex-col h-full w-full items-start gap-6 overflow-auto max-w-md sm:p-0 p-2"
       onSubmit={formSubmitHandler}
     >
-      {isError.status && <Toaster richColors />}
       <fieldset className="flex flex-col rounded-lg border p-4 w-full h-full gap-4">
         <legend className="px-1 text-sm font-medium">Settings</legend>
         <div className="w-full ">
@@ -86,6 +87,7 @@ const DrawerCard = () => {
       <Button type="submit" className="w-full" disabled={isLoading}>
         Summarize
       </Button>
+      <Toaster richColors />
     </form>
   );
 };

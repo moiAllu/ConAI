@@ -8,7 +8,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSubscriptionStore } from "@/app/dashboard/store";
 import { createCustomerBillingPortalSession } from "@/lib/apicalls/subcriptionPlans";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import LoadingSpinner from "@/components/loading-spinner";
 const CurrentBilling = () => {
   const { userSubscription } = useSubscriptionStore();
@@ -41,6 +41,7 @@ const CurrentBilling = () => {
 
   return (
     <div className="">
+      <Toaster />
       <div className="m-4 hover:cursor-pointer justify-center flex">
         <Button
           className="w-full hover:cursor-pointer max-w-md"

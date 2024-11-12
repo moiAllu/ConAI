@@ -66,6 +66,9 @@ const ResizeableSidebar = ({
       localStorage.removeItem("imageStore");
       localStorage.removeItem("content-detector");
       localStorage.removeItem("meStore");
+      localStorage.removeItem("subscriptionStore");
+      localStorage.removeItem("chatStore");
+      localStorage.removeItem("planStore");
       return;
     }
   };
@@ -239,7 +242,7 @@ const ResizeableSidebar = ({
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href="/forms/subscription"
+                      href="/forms/billing"
                       className="flex items-center space-x-1"
                     >
                       <CreditCard />

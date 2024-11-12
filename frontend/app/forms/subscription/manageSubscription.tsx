@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -9,6 +10,11 @@ import { Separator } from "@/components/ui/separator";
 import React from "react";
 import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSubscriptionStore } from "@/app/dashboard/store";
+import { createCustomerBillingPortalSession } from "@/lib/apicalls/subcriptionPlans";
+import { toast, Toaster } from "sonner";
+import LoadingSpinner from "@/components/loading-spinner";
+
 interface Props {
   name: string;
   description: string;
@@ -24,8 +30,36 @@ const ManageSubscription = ({
   nextBill,
   last4CardNums,
 }: Props) => {
+  const { userSubscription } = useSubscriptionStore();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState({ status: false, message: "" });
+  const editUserSubscriptionHandler = async () => {
+    setIsError({
+      status: false,
+      message: "",
+    });
+    setIsLoading(true);
+    const createUserEditBillingSession =
+      await createCustomerBillingPortalSession(
+        userSubscription.stripe_customer_id
+      );
+    if (createUserEditBillingSession.status === 200) {
+      setIsLoading(false);
+      toast.success("Redirecting to billing portal");
+      window.location.href = createUserEditBillingSession.data.url;
+    }
+    if (createUserEditBillingSession.status === 400) {
+      toast.error(createUserEditBillingSession.message);
+      setIsError({
+        status: true,
+        message: createUserEditBillingSession.message,
+      });
+    }
+    setIsLoading(false);
+  };
   return (
     <div className="w-full h-full">
+      <Toaster />
       <div className="flex flex-col justify-start space-y-2 py-2">
         <h1 className="text-xl md:text-3xl font-semibold">
           Manage Your Subscription
@@ -57,7 +91,7 @@ const ManageSubscription = ({
               <h1 className="font-semibold text-xl">Payment</h1>
               <div className="ml-2 text-sm space-y-2">
                 <p>
-                  Your next bill is for Rs {price} on {nextBill}.
+                  Your next bill is for ${price} on {nextBill}.
                 </p>
                 <div className="flex items-center space-x-1">
                   <CreditCard />
@@ -66,8 +100,16 @@ const ManageSubscription = ({
               </div>
             </div>
           </div>
-          <Button className="w-full" variant="outline">
-            Change Plan
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={editUserSubscriptionHandler}
+            disabled={isLoading}
+          >
+            <div className="flex items-center gap-1">
+              {isLoading && <LoadingSpinner />}
+              <span> Change Plan</span>
+            </div>
           </Button>
         </CardContent>
       </Card>

@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useMeStore } from "../../store";
 import { useContentDetectorStore } from "../store";
+import { toast, Toaster } from "sonner";
+import LoadingSpinner from "@/components/loading-spinner";
 
 const MAX_CHARS_COUNT = 9000;
 const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
@@ -24,10 +26,16 @@ const DrawerCard = () => {
   const [content, setContent] = React.useState("");
   const { _id: userId } = useMeStore();
   const { addAiHistory, addPlagrismHistory } = useContentDetectorStore();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState({ status: false, message: "" });
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ method, content });
+    if (!content || content.length === 0) {
+      setIsError({ status: true, message: "Content is required" }),
+        toast.error("Content is required");
+      return;
+    }
     const contentDetection = await createContentDetection(
       userId,
       method,
@@ -44,6 +52,9 @@ const DrawerCard = () => {
       router.push(
         `/dashboard/content-detector?documentId=${contentDetection.data?._id}`
       );
+      setIsLoading(false);
+      toast.success(contentDetection.message);
+      return;
     }
   };
   return (
@@ -89,9 +100,17 @@ const DrawerCard = () => {
         </div>
         <br className="hidden sm:flex" />
       </fieldset>
-      <Button type="submit" className="w-full sm:mb-5">
-        Detect Content
+      <Button type="submit" className="w-full sm:mb-5" disabled={isLoading}>
+        {isLoading ? (
+          <div>
+            <LoadingSpinner />
+            <span>Processing</span>
+          </div>
+        ) : (
+          "Detect"
+        )}
       </Button>
+      <Toaster richColors />
     </form>
   );
 };

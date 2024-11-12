@@ -8,6 +8,7 @@ import React from "react";
 import { useMeStore } from "../../store";
 import { useImageStore } from "../store";
 import SelectInput from "./selectInput";
+import { toast, Toaster } from "sonner";
 
 const differentInputs = [
   {
@@ -68,13 +69,31 @@ const InputCard = () => {
   const [prompt, onPromptChange] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState({ status: 0, message: "" });
+
   const { addImage } = useImageStore();
   const router = useRouter();
   const formSubmitHandler = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
     setIsError({ status: 0, message: "" });
-
+    if (!style || !color) {
+      setIsLoading(false);
+      setIsError({
+        status: 400,
+        message: "Style and Color are required",
+      });
+      toast.error("Please fill all feilds");
+      return;
+    }
+    if (!prompt || prompt.length === 0) {
+      setIsLoading(false);
+      setIsError({
+        status: 400,
+        message: "Missing prompt value",
+      });
+      toast.error("Invalid prompt");
+      return;
+    }
     const createdImage = await createImage(
       {
         aspect,
@@ -85,13 +104,13 @@ const InputCard = () => {
       },
       userId
     );
-    console.log(createdImage);
     if (createdImage.status === 200) {
       setIsLoading(false);
       addImage(createdImage.data.data);
       router.push(
         `/dashboard/image-generator?imageId=${createdImage.data.data._id}`
       );
+      toast.success(createdImage.message);
       return;
     }
     setIsLoading(false);
@@ -99,6 +118,7 @@ const InputCard = () => {
       status: createdImage.status,
       message: createdImage.message,
     });
+    toast.error(createdImage.message);
   };
   return (
     <form
@@ -162,6 +182,7 @@ const InputCard = () => {
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Generating Image..." : "Generate Image"}
       </Button>
+      <Toaster richColors />
     </form>
   );
 };
