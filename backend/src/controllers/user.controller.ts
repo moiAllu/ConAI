@@ -2,7 +2,7 @@ import * as bcrypt from "bcrypt";
 import * as cookie from "cookie";
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import { utils } from "../helpers/utils";
+import { sendPasswordResetLink, utils } from "../helpers/utils";
 import { UserModel } from "../mongodb/models";
 const postmark = require("postmark");
 
@@ -128,7 +128,7 @@ export const signup = async (req: Request, res: Response) => {
 // Update user controller
 export const update_user = async (req: Request, res: Response) => {
   // TODO: Implement update user logic
-  const { name, email, password, newPassword, phone_number, profile } =
+  const { name, email, bio } =
     req.body;
   try {
     // Check if user exists
@@ -137,37 +137,23 @@ export const update_user = async (req: Request, res: Response) => {
     });
     if (!user) {
       return res.status(400).json({
+        status: 400,
         message: "User not found",
       });
     }
-    const checkPass = utils.compareHash(user.password, password);
-    // Hash password
-    if (checkPass && user && newPassword) {
-      const hashedPassword = await utils.genSalt(10, newPassword);
+      user.name= name;
+      user.bio=bio;
 
-      // Update user
-      await UserModel.updateOne(
-        {
-          email: email,
-        },
-        {
-          name: name,
-          password: hashedPassword,
-          phone_number: phone_number,
-          profile: profile,
-        }
-      );
-      // Send response
+      await user.save();
       return res.status(200).json({
+        status:200,
         message: "User updated successfully",
+        user
       });
-    }
-    return res.status(400).json({
-      message: "Password incorrect",
-    });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
+      status:500,
       message: "Internal server error",
     });
   }
@@ -239,18 +225,13 @@ export const forgotPassword = async (req: Request, res: Response) => {
     await user.save();
     const PasswordResetLink = `${process.env.PASSWORD_RESET_LINK}?token=${token}`;
     console.log(PasswordResetLink);
-    // const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink);
-    if (PasswordResetLink !== "" && token !== "") {
+    const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink);
+    if(resetLinkGenerated.status===200 && PasswordResetLink !== "" && token !== ""){
       return res.status(200).json({
         status: 200,
         message: "A password reset link has been sent to your email",
       });
     }
-    // if(resetLinkGenerated){
-    //     return res.status(200).json({
-    //         message: "Email sent"
-    //     });
-    // }
     return res.status(400).json({
       status: 400,
       message: "Email sending failed",
@@ -349,12 +330,99 @@ export const sendSmtpPostMark = async (req: Request, res: Response) => {
       "c5959f65-7559-4878-801e-9a20db52fb22"
     );
     const sent = await client.sendEmail({
-      From: "fofalo2247@anypng.com",
-      To: "fofalo2247@anypng.com",
-      Subject: "Hello from Postmark",
-      HtmlBody: "<strong>Hello</strong> dear Postmark user.",
-      TextBody: "Hello from Postmark!",
-      MessageStream: "outbound",
+      From: "support@ConAi.com",
+      To: "vuboxa@polkaroad.net",
+      Subject: "OTP Verification",
+      HtmlBody: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>OTP Verification - YourApp</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f4f7fa;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  width: 100%;
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #ffffff;
+                  border-radius: 8px;
+                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              }
+              h1 {
+                  color: #333333;
+                  font-size: 24px;
+                  text-align: center;
+                  margin-bottom: 20px;
+              }
+              p {
+                  font-size: 16px;
+                  color: #555555;
+                  line-height: 1.5;
+              }
+              .otp {
+                  font-size: 18px;
+                  font-weight: bold;
+                  color: #2c97f3;
+                  text-align: center;
+                  margin-top: 15px;
+              }
+              .footer {
+                  font-size: 12px;
+                  color: #888888;
+                  text-align: center;
+                  margin-top: 30px;
+              }
+          </style>
+      </head>
+      <body>
+      
+          <div class="container">
+              <h1>ConAi - OTP Verification</h1>
+              
+              <p>Dear Valued User,</p>
+              <p>Thank you for using YourApp. To complete your request, please use the following One-Time Password (OTP):</p>
+              
+              <div class="otp">
+                
+              </div>
+              
+              <p>Please note that this code is valid for a limited time and should be entered promptly. If you did not request this OTP, please disregard this email.</p>
+              
+              <div class="footer">
+                  <p>For any assistance, feel free to contact our support team at <a href="mailto:support@yourapp.com">support@ConAi.com</a>.</p>
+                  <p>This is an automated message. Please do not reply.</p>
+              </div>
+          </div>
+      
+      </body>
+      </html>
+      `,
+      TextBody: `
+      Hello,
+      
+      Thank you for using YourApp. To complete your request, please use the following One-Time Password (OTP):
+      
+      This code is valid for a limited time. Please use it as soon as possible.
+      
+      If you did not request this OTP, kindly ignore this email.
+      
+      For assistance, contact our support team at support@yourapp.com.
+      
+      This is an automated message. Please do not reply.
+      
+      Best regards,
+      The YourApp Team
+      `,
+      MessageStream: "outbound"
+      
     });
     return res.status(200).json({
       message: "Email sent",

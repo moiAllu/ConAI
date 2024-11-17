@@ -11,7 +11,7 @@ export const generateCopyscapeResponse = async (text: string) => {
                 o: 'csearch',        // Operation: csearch for checking text
                 t: text,             // Text to be checked for plagiarism
                 f: 'json',           // Format of the response: json
-                x: '1',              // Optional parameter (x:1 for premium users)
+                // x: '1',              // Optional parameter (x:1 for premium users)
             }).toString(),
         });
 

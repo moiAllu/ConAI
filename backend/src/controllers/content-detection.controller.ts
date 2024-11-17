@@ -21,9 +21,9 @@ interface IPlagrismDetection{
 }
 export const getContentDetectionResponse = async (req:Request,res:Response) => {
     const {userId, method, content, compareTo} = req.body;
+ 
     try{
-        if(method === "Plagirism Detection"){
-
+        if(method === "Plagiarism Detection"){
             const responseFromCopyscape =  await generateCopyscapeResponse(content) as IPlagrismDetection;
             // const responseFromGoogle = await getGoogleResponse(text);
             // console.log('getContentDetectionResponse ', responseFromGoogle);

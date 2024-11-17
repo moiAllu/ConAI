@@ -69,7 +69,6 @@ export const otpVerification = async (req:Request, res:Response) => {
 export const requestForOtpVerificationCode = async (req:Request, res:Response) => {
     const {email} = req.body;
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(email,otp)
     try{
         const user = await UserModel.findOne({email});
         if(user.verified){
@@ -92,8 +91,7 @@ export const requestForOtpVerificationCode = async (req:Request, res:Response) =
         }
         }
         const verificationCodeToMail =await sendVerificationCode(email, otp);
-
-        if(verificationCodeToMail){
+        if(verificationCodeToMail.status === 200){
             return res.status(200).json({
                 message: "OTP sent successfully"
             });
