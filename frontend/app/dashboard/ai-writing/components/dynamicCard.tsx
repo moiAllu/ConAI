@@ -199,7 +199,6 @@ const DynamicCard = () => {
     e.preventDefault();
     if (
       !inputFormat ||
-      !inputType ||
       !inputTone ||
       !inputAgeGroup ||
       !inputLength ||
@@ -246,13 +245,14 @@ const DynamicCard = () => {
         _id
       );
       setIsLoading(false);
+      toast.success("Content generated successfully");
       setInputFormat("");
       setInputType("");
       router.push(`/dashboard/ai-writing?documentId=${response.storeId}`);
       return;
     }
-
     setIsLoading(false);
+    toast.error("Failed to generate content");
   };
 
   return (

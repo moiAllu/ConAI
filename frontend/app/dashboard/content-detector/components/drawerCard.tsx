@@ -31,9 +31,11 @@ const DrawerCard = () => {
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     if (!content || content.length === 0) {
       setIsError({ status: true, message: "Content is required" }),
         toast.error("Content is required");
+      setIsLoading(false);
       return;
     }
     const contentDetection = await createContentDetection(
@@ -56,6 +58,9 @@ const DrawerCard = () => {
       toast.success(contentDetection.message);
       return;
     }
+    setIsError({ status: true, message: contentDetection.message });
+    toast.error(contentDetection.message);
+    setIsLoading(false);
   };
   return (
     <form
@@ -102,7 +107,7 @@ const DrawerCard = () => {
       </fieldset>
       <Button type="submit" className="w-full sm:mb-5" disabled={isLoading}>
         {isLoading ? (
-          <div>
+          <div className="flex gap-1 items-center">
             <LoadingSpinner />
             <span>Processing</span>
           </div>

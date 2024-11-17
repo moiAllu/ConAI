@@ -47,7 +47,7 @@ export const getRewriteOpenAiRes= async ({prompt,model}:gptResponseInterface, tu
   try {
     const rewrite = await openAIClient.chat.completions.create({
       messages: [{ role:'user' , content: prompt },{role:"assistant",content:tunePrompt , name:"tunePrompt"}],
-      model:  "gpt-3.5-turbo-0125",
+      model:  'gpt-4o',
       stream: false,
       temperature: 0.1,
     });

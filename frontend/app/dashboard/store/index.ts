@@ -10,9 +10,11 @@ interface User {
     verified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    bio?: string;
 }
 interface Action {
     setUser: (user: User) => void;
+    updateUser: (user: User) => void;
 }
 
 export const useMeStore = create<User & Action>()(persist((set) => ({
@@ -25,6 +27,12 @@ export const useMeStore = create<User & Action>()(persist((set) => ({
 
     setUser : (user) => {
         set(user);
+    },
+    updateUser : (user) => {
+        set((state) => ({
+            ...state,
+            ...user,
+        }));
     }
     
 }),{ name :"meStore", getStorage() {

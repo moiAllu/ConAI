@@ -16,10 +16,10 @@ const sidebarNavItems = [
     title: "Profile",
     href: "/forms",
   },
-  {
-    title: "Account",
-    href: "/forms/account",
-  },
+  // {
+  //   title: "Account",
+  //   href: "/forms/account",
+  // },
   {
     title: "Billing",
     href: "/forms/billing",

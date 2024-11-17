@@ -15,10 +15,10 @@ router.get('/logout', logout);
 router.post('/signup', signup);
 
 // User update route with additional verification middleware
-router.put('/update', update_user);
+router.post('/user/update', validateRoute, update_user);
 
 // User delete route with additional verification middleware
-router.delete('/delete', delete_user);
+router.delete('/delete',validateRoute, delete_user);
 
 //User otp request router request route
 router.post("/user/otp-request", requestForOtpVerificationCode);

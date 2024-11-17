@@ -76,7 +76,6 @@ const DynamicCard = () => {
       className="flex flex-col h-full w-full items-start gap-6 overflow-auto max-w-md"
       onSubmit={formSubmitHandler}
     >
-      <Toaster richColors />
       <fieldset
         className="grid gap-6 rounded-lg border p-4 w-full"
         disabled={isLoading}
@@ -123,6 +122,7 @@ const DynamicCard = () => {
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "Processing..." : "Rewrite"}
       </Button>
+      <Toaster richColors />
     </form>
   );
 };

@@ -100,6 +100,21 @@ interface promptMods {
         }
         )
     }
+    export const updateUserApi = async (email:string, username:string, bio:string) => {
+        return fetch(`http://localhost:8000/api/user/update`,{
+            method:"POST",
+            credentials:"include",
+            headers:{
+                "Content-Type":"application/json",
+                Authorization: localStorage.getItem("accessToken") || "",
+            },
+            body: JSON.stringify({email, username, bio}),
+        }).then(res=>{
+            return res.json();
+        }
+        )
+    }
+
 
 
 

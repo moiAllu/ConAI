@@ -15,10 +15,13 @@ import { useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
 import { getContentDetectionById } from "@/lib/apicalls/auth";
 import { IAiDetection, IPlagrismDetection } from "@/types/contentDetection";
-
+import { useState } from "react";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 const OutputCard = () => {
   const { aiHistory, addAiHistory, addPlagrismHistory } =
     useContentDetectorStore();
+  let matchedWords = 0;
 
   const plagrimHistory = useContentDetectorStore(
     (state) => state.plagrismHistory
@@ -62,12 +65,21 @@ const OutputCard = () => {
     plagrimHistory.plagrismDetectionHistory.find(
       (doc) => doc._id === searchParams.get("documentId")
     );
+  if (plagDocument) {
+    plagDocument?.result.map((content) => {
+      matchedWords = matchedWords + content.minwordsmatched;
+      return content.minwordsmatched;
+    });
+  }
 
   return (
     <div className="relative flex h-full  w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto">
-      <Badge variant="outline" className="absolute right-3 top-3">
-        Output
-      </Badge>
+      {!aiDocument ||
+        (!plagDocument && (
+          <Badge variant="outline" className="absolute right-3 top-3">
+            Output
+          </Badge>
+        ))}
       {aiDocument && (
         <div className="flex flex-col gap-2 ">
           <div>{aiDocument?.prompt}</div>
@@ -98,23 +110,33 @@ const OutputCard = () => {
       <div className="">
         {plagDocument && (
           <div className="flex flex-col gap-2">
-            <div>{plagDocument?.prompt}</div>
+            {/* <div>{plagDocument?.prompt}</div> */}
             <div className="flex flex-col gap-2">
               <title>Result</title>
-              <div className="flex flex-col gap-1">
-                <span>Query Words: {plagDocument?.querywords}</span>
-                <span>Count: {plagDocument?.count}</span>
-                <div>
+              <div className=" flex flex-col p-2">
+                <span className="font-semibold">
+                  Words Matched: {matchedWords}
+                </span>
+                <span className="font-semibold">
+                  Query Words: {plagDocument?.querywords}
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-1 ">
+                {/* <span>Count: {plagDocument?.count}</span> */}
+                <div className="gap-2 flex flex-col">
                   {plagDocument?.result.map((content, idx) => (
-                    <div key={idx}>
-                      <span>URL: {content.url}</span>
-                      <span>Index: {content.index}</span>
-                      <span>Title: {content.title}</span>
-                      <span>Text Snippet: {content.textsnippet}</span>
-                      <span>HTML Snippet: {content.htmlsnippet}</span>
-                      <span>Min Words Matched: {content.minwordsmatched}</span>
-                      <span>View URL: {content.viewurl}</span>
-                    </div>
+                    <Card key={idx} className="flex flex-col p-2">
+                      <CardTitle className="text-md">
+                        <span>Source: {content.title}</span>
+                      </CardTitle>
+                      <CardDescription className=" flex flex-col">
+                        <span>Words matched: {content.minwordsmatched} </span>
+                        <Link href={content.viewurl} className="text-blue-600">
+                          url: {content.url}
+                        </Link>
+                      </CardDescription>
+                    </Card>
                   ))}
                 </div>
               </div>
