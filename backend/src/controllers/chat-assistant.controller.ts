@@ -10,7 +10,6 @@ import openAIClient from '../config/open-ai';
 import { countTokens } from '../helpers';
 import { ChatCompletionMessageParam } from 'openai/resources';
 
-
 export const getUserChatsController = async (req: Request, res: Response) => {
   const {userId} =req.params;
   try {
