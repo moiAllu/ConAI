@@ -2,7 +2,8 @@ export const forgotPassowrd = async (email:string) => {
     try{
 
         const response = await fetch(
-            "http://localhost:8000/api/user/forgot-password",
+            process.env.NEXT_PUBLIC_CONAI_BACKEND_URL +
+            "/api/user/forgot-password",
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -21,7 +22,8 @@ export const forgotPassowrd = async (email:string) => {
 export const resetPassword = async (password:string,verifyPassword:string,token:string) => {
     try{
         const response = await fetch(
-            `http://localhost:8000/api/user/reset-password/${token}`,
+            process.env.NEXT_PUBLIC_CONAI_BACKEND_URL +
+            `/api/user/reset-password/${token}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -40,7 +42,7 @@ export const resetPassword = async (password:string,verifyPassword:string,token:
 
 export const logOutUser = async () => {
     try {
-        const response = await fetch("http://localhost:8000/api/logout", {
+        const response = await fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL + "/api/logout", {
             method: "GET",
             credentials: "include",
         });
@@ -52,7 +54,7 @@ export const logOutUser = async () => {
 }
 export const getMe= async()=>{
     try{
-        const response = await fetch("http://localhost:8000/api/me", {
+        const response = await fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL + "/api/me", {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `${localStorage.getItem("accessToken")}`,

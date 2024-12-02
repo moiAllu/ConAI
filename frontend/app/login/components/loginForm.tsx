@@ -27,14 +27,17 @@ export default function LoginForm() {
     setError("");
     setLoading(true);
     try {
-      const user = await fetch("http://localhost:8000/api/login", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-        method: "POST",
-        credentials: "include",
-      });
+      const user = await fetch(
+        process.env.NEXT_PUBLIC_CONAI_BACKEND_URL + "/api/login",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+          method: "POST",
+          credentials: "include",
+        }
+      );
       const data = await user.json();
       if (data.message === "Login successful") {
         console.log("Login successful");

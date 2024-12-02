@@ -20,7 +20,7 @@ interface promptMods {
   };
 
     export const generateAiResponse = async (promptMods:promptMods,prompt:string,userId:string,chatId:string) => {
-        return fetch(`http://localhost:8000/api/ai-writing`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/ai-writing`,{
             method:"POST",
             credentials:"include",
             headers:{
@@ -33,7 +33,7 @@ interface promptMods {
         })
     }
     export const getUserAiWritings = async (userId:string) => {
-        return fetch(`http://localhost:8000/api/ai-writing/writings/${userId}`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/ai-writing/writings/${userId}`,{
             method:"GET",
             credentials:"include",
         
@@ -48,7 +48,7 @@ interface promptMods {
         )
     }
     export const  getAiWritingById = async (id:string,userId:string) => {
-        return fetch(`http://localhost:8000/api/ai-writing/${id}/${userId}`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/ai-writing/${id}/${userId}`,{
             method:"GET",
             credentials:"include",
             headers:{
@@ -61,7 +61,7 @@ interface promptMods {
         )
     }
     export  const getUserContentDetections = async (userId:string) => {
-        return fetch(`http://localhost:8000/api/content-detection/detections/${userId}`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/content-detection/detections/${userId}`,{
             method:"GET",
             credentials:"include",
             headers:{
@@ -74,7 +74,7 @@ interface promptMods {
         )
     }
     export const getContentDetectionById = async (userId:string, id:string) => {
-        return fetch(`http://localhost:8000/api/content-detection/detection/${userId}/${id}`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/content-detection/detection/${userId}/${id}`,{
             method:"GET",
             credentials:"include",
             headers:{
@@ -87,7 +87,7 @@ interface promptMods {
         )
     }
     export const createContentDetection = async (userId:string, method:string, content:string, compareTo?:string) => {
-        return fetch(`http://localhost:8000/api/content-detection/detection`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/content-detection/detection`,{
             method:"POST",
             credentials:"include",
             headers:{
@@ -101,7 +101,7 @@ interface promptMods {
         )
     }
     export const updateUserApi = async (email:string, username:string, bio:string) => {
-        return fetch(`http://localhost:8000/api/user/update`,{
+        return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/user/update`,{
             method:"POST",
             credentials:"include",
             headers:{

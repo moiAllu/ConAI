@@ -6,7 +6,7 @@ interface Data {
     color:string, 
 }
 export const createImage = async (data:Data,userId:string) => {
-    return fetch(`http://localhost:8000/api/generate-image`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/generate-image`,{
         method:"POST",
         credentials:"include",
         headers:{
@@ -20,7 +20,7 @@ export const createImage = async (data:Data,userId:string) => {
     )
 }
 export const getImageById = async (imageId:string,userId:string) => {
-    return fetch(`http://localhost:8000/api/image/${imageId}/${userId}`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+ `/api/image/${imageId}/${userId}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -33,7 +33,7 @@ export const getImageById = async (imageId:string,userId:string) => {
     )
 }
 export const getUserImages = async (userId:string) => {
-    return fetch(`http://localhost:8000/api/image-generation/images/${userId}`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/image-generation/images/${userId}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -46,7 +46,7 @@ export const getUserImages = async (userId:string) => {
     )
 }
 export const deleteImage = async (id:string,userId:string) => {
-    return fetch(`http://localhost:8000/api/image/${id}/${userId}`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/image/${id}/${userId}`,{
         method:"DELETE",
         credentials:"include",
         headers:{
@@ -59,7 +59,7 @@ export const deleteImage = async (id:string,userId:string) => {
     )
 }
 export const downloadImageEndPoint = async (imageId:string,resolution:string) => {
-    return fetch(`http://localhost:8000/api/image/download/${imageId}/${resolution}`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/image/download/${imageId}/${resolution}`,{
         method:"GET",
         credentials:"include",
         headers:{

@@ -1,6 +1,6 @@
 export const getUserRewritesHistory = async (userId:string) => {
     console.log("Ali",userId);
-    return fetch(`http://localhost:8000/api/rewrite/rewrites/${userId}`,{
+    return fetch( process.env.NEXT_PUBLIC_CONAI_BACKEND_URL +`/api/rewrite/rewrites/${userId}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -13,7 +13,7 @@ export const getUserRewritesHistory = async (userId:string) => {
     )
 }
 export const getUserRewriteById = async (rewriteId:string,userId:string) => {
-    return fetch(`http://localhost:8000/api/rewrite/${rewriteId}/${userId}`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/rewrite/${rewriteId}/${userId}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -31,7 +31,7 @@ export const createRewrite = async (intensity:string,
     content:string, 
     userId:string, 
     model:string) => {
-    return fetch(`http://localhost:8000/api/rewrite/create`,{
+    return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/rewrite/create`,{
         method:"POST",
         credentials:"include",
         headers:{

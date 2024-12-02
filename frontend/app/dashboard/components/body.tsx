@@ -43,7 +43,7 @@ const cardsData = [
     title: "AI Chat",
     description:
       "Create easy to understand summaries from websites and long texts.",
-    icon: <ImagePlus /> || "",
+    icon: <ImagePlus />,
     link: "/dashboard/ai-chat",
   },
   {
