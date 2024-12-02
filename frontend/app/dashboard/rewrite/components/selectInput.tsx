@@ -14,14 +14,24 @@ interface SelectInputProps {
   index: number;
   textAreaLabel?: string;
   textAreaPlaceholder?: string;
+  onValueChange: any;
+  onTextAreaChange?: any;
+  value: string;
 }
 import { Textarea } from "@/components/ui/textarea";
+
+const MAX_CHARS_COUNT = 6000;
+const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
+
 const SelectInput = (props: SelectInputProps) => {
   if (props.textAreaLabel && props.textAreaPlaceholder) {
     return (
       <div className="flex flex-col w-full h-full gap-3" key={props.index}>
         <Label htmlFor="role">{props.label}</Label>
-        <Select defaultValue={props.defaultValue}>
+        <Select
+          defaultValue={props.defaultValue}
+          onValueChange={props.onValueChange}
+        >
           <SelectTrigger>
             <SelectValue placeholder={props.defaultValue} />
           </SelectTrigger>
@@ -33,13 +43,22 @@ const SelectInput = (props: SelectInputProps) => {
             ))}
           </SelectContent>
         </Select>
-        <div className="h-full">
+        <div className="h-full flex flex-col gap-2">
           <Label htmlFor="content">{props.textAreaLabel}</Label>
           <Textarea
             id="content"
             placeholder={props.textAreaPlaceholder}
-            className="sm:h-[90%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
+            value={props.value}
+            // className="sm:h-[90%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
+            className="resize-none sm:h-[90%] min-h-[150px]"
+            onChange={(e) => {
+              if (e.target.value.length > MAX_CHARS_COUNT) return;
+              props.onTextAreaChange(e.target.value);
+            }}
           />
+          <div className=" text-sm text-gray-600 w-full text-end">
+            <span>{countWords(props.value)}</span>
+          </div>
         </div>
       </div>
     );
@@ -47,7 +66,10 @@ const SelectInput = (props: SelectInputProps) => {
     return (
       <div className="grid gap-3" key={props.index}>
         <Label htmlFor="role">{props.label}</Label>
-        <Select defaultValue={props.defaultValue}>
+        <Select
+          defaultValue={props.defaultValue}
+          onValueChange={props.onValueChange}
+        >
           <SelectTrigger>
             <SelectValue placeholder={props.defaultValue} />
           </SelectTrigger>

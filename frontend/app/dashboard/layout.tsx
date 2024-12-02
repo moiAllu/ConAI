@@ -1,8 +1,13 @@
 "use client";
 import { Metadata } from "next";
 // import { cookies } from "next/headers";
-import React, { use } from "react";
+import React, { use, useEffect } from "react";
 import ResizeableSidebar from "./components/resizeable-sidebar";
+import { useMeStore, useSubscriptionStore } from "@/app/dashboard/store";
+import { useWindowSize } from "@/lib/hooks";
+import { Navbar } from "@/components/navbar/NavBar";
+import { getMe } from "@/lib/apicalls/user";
+import { getUserSubscriptionDetails } from "@/lib/apicalls/subcriptionPlans";
 
 // export const metadata: Metadata = {
 //   title: "Forms",
@@ -33,22 +38,48 @@ interface SettingsLayoutProps {
 }
 
 export default function DashboardLayout({ children }: SettingsLayoutProps) {
-  // const layout = cookies().get("react-resizable-panels:layout");
-  // const collapsed = cookies().get("react-resizable-panels:collapsed");
-
-  // const defaultLayout = layout ? JSON?.parse(layout.value) : undefined;
-  // const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : false;
+  const isPhone = useWindowSize().width < 640;
+  const { _id } = useMeStore();
+  const { setUserSubscription } = useSubscriptionStore();
+  const { setUser } = useMeStore();
+  useEffect(() => {
+    const setUserToState = async () => {
+      const user = await getMe();
+      if (user.status === 200) {
+        setUser(user.user);
+      }
+    };
+    setUserToState();
+  }, []);
+  useEffect(() => {
+    const userSubscriptionDetail = async () => {
+      const userSubscriptionDetail = await getUserSubscriptionDetails(_id);
+      if (userSubscriptionDetail.status === 200) {
+        setUserSubscription(userSubscriptionDetail.data);
+      }
+    };
+    userSubscriptionDetail();
+  }, [_id]);
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (
-    <div className=" block w-screen h-screen  max-w-[2160px] max-h-[1440px]">
-      <ResizeableSidebar
-        defaultLayout={defaultLayout}
-        defaultCollapsed={defaultCollapsed}
-        navCollapsedSize={5}
-      >
-        {children}
-      </ResizeableSidebar>
+    <div className="w-full h-full">
+      {isPhone ? (
+        <>
+          <Navbar />
+          <div className="h-[calc(100vh-60px)] w-full">{children}</div>
+        </>
+      ) : (
+        <div className="block h-screen w-screen max-h-[1080px] max-w-[1920px]">
+          <ResizeableSidebar
+            defaultLayout={defaultLayout}
+            defaultCollapsed={defaultCollapsed}
+            navCollapsedSize={5}
+          >
+            {children}
+          </ResizeableSidebar>
+        </div>
+      )}
     </div>
   );
 }

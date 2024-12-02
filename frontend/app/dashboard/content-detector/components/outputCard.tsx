@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CornerDownLeft, Mic, Paperclip } from "lucide-react";
@@ -10,13 +10,164 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
+import { useContentDetectorStore } from "../store";
+import { useSearchParams } from "next/navigation";
+import { useMeStore } from "../../store";
+import { getContentDetectionById } from "@/lib/apicalls/auth";
+import { IAiDetection, IPlagrismDetection } from "@/types/contentDetection";
+import { useState } from "react";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 const OutputCard = () => {
+  const { aiHistory, addAiHistory, addPlagrismHistory } =
+    useContentDetectorStore();
+  let matchedWords = 0;
+
+  const plagrimHistory = useContentDetectorStore(
+    (state) => state.plagrismHistory
+  );
+  const compareHistory = useContentDetectorStore(
+    (state) => state.compareHistory
+  );
+  const searchParams = useSearchParams();
+  const { _id: userId } = useMeStore();
+  const documentId = searchParams.get("documentId") || "";
+  useEffect(() => {
+    if (!documentId) return;
+    const getUserContentDetections = async () => {
+      const response = await getContentDetectionById(userId, documentId);
+      if (response.data.method === "Ai detection") {
+        addAiHistory(response.data.aiDetection, userId, "ai detection");
+      }
+      if (response.data.method === "plagrism detection") {
+        addPlagrismHistory(
+          response.data.plagrismDetection,
+          userId,
+          "plagrism detection"
+        );
+      }
+      // useContentDetectorStore.setState({
+      //   aiHistory: response.data.aiDetection,
+      //   plagrismHistory: response.data.plagrismDetection,
+      //   compareHistory: response.data.compare,
+      // });
+    };
+    getUserContentDetections();
+  }, [documentId]);
+  // const document = aiHistory.aiDetectionHistory.find(
+  //   (doc) => doc._id === searchParams.get("documentId")
+  // );
+  const aiDocument: IAiDetection | undefined =
+    aiHistory.aiDetectionHistory.find(
+      (doc) => doc._id === searchParams.get("documentId")
+    );
+  const plagDocument: IPlagrismDetection | undefined =
+    plagrimHistory.plagrismDetectionHistory.find(
+      (doc) => doc._id === searchParams.get("documentId")
+    );
+  if (plagDocument) {
+    plagDocument?.result.map((content) => {
+      matchedWords = matchedWords + content.minwordsmatched;
+      return content.minwordsmatched;
+    });
+  }
+
   return (
-    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
-      <Badge variant="outline" className="absolute right-3 top-3">
-        Output
-      </Badge>
+    <div className="relative flex h-full  w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto">
+      {!aiDocument ||
+        (!plagDocument && (
+          <Badge variant="outline" className="absolute right-3 top-3">
+            Output
+          </Badge>
+        ))}
+      {aiDocument && (
+        <div className="flex flex-col gap-2 ">
+          <div>{aiDocument?.prompt}</div>
+          <div className="flex flex-col gap-2">
+            <title>Result</title>
+            <div className="flex flex-col gap-1">
+              <span>
+                {aiDocument?.response.aiDetected
+                  ? "AI detected "
+                  : "Not Detected"}
+              </span>
+              <span>
+                AI Deteted Percentage {aiDocument?.response.aiPercentage}%
+              </span>
+              <span>
+                {" "}
+                AI Model Confidence {aiDocument?.response.confidence}
+              </span>
+              <div>
+                {aiDocument?.response.aiContent.map((content, idx) => (
+                  <span key={idx}>{content}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="">
+        {plagDocument && (
+          <div className="flex flex-col gap-2">
+            {/* <div>{plagDocument?.prompt}</div> */}
+            <div className="flex flex-col gap-2">
+              <title>Result</title>
+              <div className=" flex flex-col p-2">
+                <span className="font-semibold">
+                  Words Matched: {matchedWords}
+                </span>
+                <span className="font-semibold">
+                  Query Words: {plagDocument?.querywords}
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-1 ">
+                {/* <span>Count: {plagDocument?.count}</span> */}
+                <div className="gap-2 flex flex-col">
+                  {plagDocument?.result.map((content, idx) => (
+                    <Card key={idx} className="flex flex-col p-2">
+                      <CardTitle className="text-md">
+                        <span>Source: {content.title}</span>
+                      </CardTitle>
+                      <CardDescription className=" flex flex-col">
+                        <span>Words matched: {content.minwordsmatched} </span>
+                        <Link href={content.viewurl} className="text-blue-600">
+                          url: {content.url}
+                        </Link>
+                      </CardDescription>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* {document && (
+        <div className="flex flex-col gap-2">
+          <div>{document?.prompt}</div>
+          <div className="flex flex-col gap-2">
+            <title>Result</title>
+            <div className="flex flex-col gap-1">
+              <span>
+                {document?.response.aiDetected
+                  ? "AI detected "
+                  : "Not Detected"}
+              </span>
+              <span>
+                AI Deteted Percentage {document?.response.aiPercentage}%
+              </span>
+              <span> AI Model Confidence {document?.response.confidence}</span>
+              <div>
+                {document?.response.aiContent.map((content) => (
+                  <span>{content}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )} */}
       {/* <div className="flex-1" /> */}
       {/* <form
         className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"

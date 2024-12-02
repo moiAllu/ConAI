@@ -1,6 +1,6 @@
 "use client";
 import Nav from "@/components/header/nav";
-import React from "react";
+import React, { Suspense } from "react";
 import { Image } from "lucide-react";
 import InputCard from "./components/inputCard";
 import OutputCard from "./components/outputCard";
@@ -15,7 +15,9 @@ const ImageGenerationPage = () => {
       </Nav>
       <div className=" sm:p-3 p-2 h-full w-full flex  items-center  space-x-4">
         {!isPhone && <InputCard />}
-        <OutputCard />
+        <Suspense fallback={<div>Loading...</div>}>
+          <OutputCard />
+        </Suspense>
       </div>
     </div>
   );

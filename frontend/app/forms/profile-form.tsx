@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -25,7 +24,10 @@ import {
   SelectValue,
 } from "@/registry/new-york/ui/select";
 import { Textarea } from "@/registry/new-york/ui/textarea";
-import { toast } from "@/registry/new-york/ui/use-toast";
+import { toast, Toaster } from "sonner";
+import { useMeStore } from "../dashboard/store";
+import { updateUserApi } from "@/lib/apicalls/auth";
+import { useState } from "react";
 
 const profileFormSchema = z.object({
   username: z
@@ -56,10 +58,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 // This can come from your database or API.
 const defaultValues: Partial<ProfileFormValues> = {
   bio: "Software Engineer",
-  urls: [
-    { value: "https://conAI.com" },
-    { value: "http://twitter.com/shadcn" },
-  ],
+  urls: [{ value: "https://conAI.com" }],
 };
 
 export function ProfileForm() {
@@ -68,25 +67,33 @@ export function ProfileForm() {
     defaultValues,
     mode: "onChange",
   });
+  const { name, email, _id, verified, updateUser } = useMeStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { fields, append } = useFieldArray({
     name: "urls",
     control: form.control,
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: ProfileFormValues) {
+    setIsLoading(true);
+    const updatedUser = await updateUserApi(email, data.username, data.bio);
+    if (updatedUser.status === 200) {
+      updateUser({
+        name: updatedUser.data.username,
+        bio: updatedUser.data.bio,
+      } as any);
+      toast.success("User updated successfully");
+      setIsLoading(false);
+      return;
+    }
+    toast.error("Failed to update user");
+    setIsLoading(false);
   }
 
   return (
     <Form {...form}>
+      <Toaster />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -95,7 +102,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Ali Abbasi" {...field} />
+                <Input placeholder={name} {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -105,32 +112,39 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={verified}
+              >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
+                    <SelectValue placeholder={email} />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
-                </SelectContent>
+                {!verified && (
+                  <Button type="reset" onClick={() => {}}>
+                    Verify
+                  </Button>
+                )}
               </Select>
               <FormDescription>
-                You can manage verified email addresses in your{" "}
-                <Link href="/examples/forms">email settings</Link>.
+                {verified ? (
+                  "Your email is verified."
+                ) : (
+                  <>Your email is not verified. Please verify your email.</>
+                )}
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="bio"
@@ -144,14 +158,15 @@ export function ProfileForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 You can <span>@mention</span> other users and organizations to
                 link to them.
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
         />
+        {/* 
         <div>
           {fields.map((field, index) => (
             <FormField
@@ -183,8 +198,10 @@ export function ProfileForm() {
           >
             Add URL
           </Button>
-        </div>
-        <Button type="submit">Update profile</Button>
+        </div> */}
+        <Button type="submit" disabled={isLoading}>
+          Update profile
+        </Button>
       </form>
     </Form>
   );

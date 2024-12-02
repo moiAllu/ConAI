@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/registry/new-york/ui/tooltip";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 
 interface NavProps {
   isCollapsed: boolean;
@@ -38,7 +39,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   <Link
                     href={link.href}
                     className={cn(
-                      buttonVariants({ variant: link.variant, size: "icon" }),
+                      buttonVariants({
+                        variant: link.variant,
+                        size: "icon",
+                      }),
 
                       link.variant === "default" &&
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"

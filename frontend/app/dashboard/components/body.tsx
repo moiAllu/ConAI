@@ -44,7 +44,7 @@ const cardsData = [
     description:
       "Create easy to understand summaries from websites and long texts.",
     icon: <ImagePlus /> || "",
-    link: "/dashboard/aichat",
+    link: "/dashboard/ai-chat",
   },
   {
     title: "Summarizer",
@@ -59,9 +59,9 @@ const Body = () => {
     <div className="grid md:grid-cols-2 sm:p-10 gap-4">
       {cardsData.map((card, index) => (
         <Link href={card.link} className="w-full h-full" key={index}>
-          <Card className=" shadow-sm cursor-pointer w-full h-full">
+          <Card className=" shadow-sm cursor-pointer w-full h-full hover:bg-muted transition-colors ">
             <CardHeader className="px-6 py-4">
-              <CardTitle className="text-xl">
+              <CardTitle className="sm:text-xl text-lg">
                 <div className="flex space-x-2 items-center">
                   {card.icon}
                   <p>{card.title}</p>
@@ -69,7 +69,7 @@ const Body = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-md">{card.description}</p>
+              <p className="sm:text-md text-sm">{card.description}</p>
             </CardContent>
           </Card>
         </Link>

@@ -1,62 +1,83 @@
-import React from "react";
+"use client";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CornerDownLeft, Mic, Paperclip } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { getUserRewriteById } from "../../../../lib/apicalls/rewrite";
+import { useMeStore } from "../../store";
+import { useRewriteStore } from "../store";
 
 const OutputCard = () => {
+  const searchParams = useSearchParams();
+  const { addRewrite, rewrites } = useRewriteStore();
+  const userId = useMeStore((state) => state._id);
+  const rewriteId = searchParams.get("rewriteId") || "";
+  const selectedRewrite = rewrites.find((rewrite) => rewrite._id === rewriteId);
+
+  useEffect(() => {
+    if (!rewriteId) return;
+    const fetchImageById = async () => {
+      const response = await getUserRewriteById(userId, rewriteId);
+      if (response.status === 200) {
+        const rewriteData = response.data;
+        addRewrite(rewriteData.rewrites[0]);
+      }
+    };
+    fetchImageById();
+  }, [rewriteId]);
   return (
-    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 m">
-      <Badge variant="outline" className="absolute right-3 top-3">
-        Output
-      </Badge>
-      <div className="flex-1" />
-      <form
-        className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
-        x-chunk="dashboard-03-chunk-1"
-      >
-        <Label htmlFor="message" className="sr-only">
-          Message
-        </Label>
-        <Textarea
-          id="message"
-          placeholder="Type your message here..."
-          className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
-        />
-        <div className="flex items-center p-3 pt-0">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Paperclip className="size-4" />
-                  <span className="sr-only">Attach file</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">Attach File</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Mic className="size-4" />
-                  <span className="sr-only">Use Microphone</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">Use Microphone</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <Button type="submit" size="sm" className="ml-auto gap-1.5">
-            Send Message
-            <CornerDownLeft className="size-3.5" />
-          </Button>
+    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-y-auto">
+      {!selectedRewrite && (
+        <Badge variant="outline" className="absolute right-3 top-3">
+          Output
+        </Badge>
+      )}
+      {selectedRewrite && (
+        <div className="h-full w-full prose prose-base  overflow-y-auto p-4 ">
+          <Card className="border-none bg-inherit shadow-none">
+            <CardTitle className="text-md">Selected Inputs Setting</CardTitle>
+
+            <CardDescription className="text-md">
+              <div className="flex gap-1">
+                <Badge variant="outline" className="">
+                  {selectedRewrite?.mode}
+                </Badge>
+                <Badge variant="outline" className="">
+                  {selectedRewrite?.intensity}
+                </Badge>
+              </div>
+            </CardDescription>
+          </Card>
+
+          <Card className="border-none bg-inherit shadow-none">
+            <CardHeader className="p-0">
+              <CardTitle className="text-lg">Input</CardTitle>
+            </CardHeader>
+            <CardDescription className="text-md">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {selectedRewrite?.input || "See the output here"}
+              </ReactMarkdown>
+            </CardDescription>
+          </Card>
+          <Card className="border-none bg-inherit shadow-none">
+            <CardHeader className="p-0">
+              <CardTitle className="text-lg">Output</CardTitle>
+            </CardHeader>
+            <CardDescription className="text-md text-black dark:text-white">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {selectedRewrite?.output || "See the output here"}
+              </ReactMarkdown>
+            </CardDescription>
+          </Card>
         </div>
-      </form>
+      )}
     </div>
   );
 };
