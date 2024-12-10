@@ -109,7 +109,7 @@ export const signup = async (req: Request, res: Response) => {
         secure: "true",
         overwrite: true,
         sameSite:"lax",
-        domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost'
+        domain: process.env.DEPLOYMENT === "production" ? "vercel.app": 'localhost'
       })
     );
     // Send token to client
