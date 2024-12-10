@@ -10,7 +10,7 @@ const app: Application = express();
 const port = process.env.PORT || 8000;
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://con-ai-be.vercel.app","https://con-didikc9yr-moiallus-projects.vercel.app"],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
