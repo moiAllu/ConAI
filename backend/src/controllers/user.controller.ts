@@ -43,6 +43,7 @@ export const login = async (req: Request, res: Response) => {
           path: "/",
           secure: "true",
           overwrite: true,
+          sameSite:"none"
         })
       );
       // Send token to client
@@ -106,6 +107,7 @@ export const signup = async (req: Request, res: Response) => {
         path: "/",
         secure: "true",
         overwrite: true,
+        sameSite:"none"
       })
     );
     // Send token to client
