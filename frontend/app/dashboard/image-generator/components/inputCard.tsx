@@ -22,6 +22,7 @@ const differentInputs = [
     defaultValue: "no style",
     options: [
       "no style",
+      "natural",
       "abstract",
       "art",
       "black and white",
@@ -47,6 +48,7 @@ const differentInputs = [
     label: "Color",
     defaultValue: "No Color",
     options: [
+      "natural",
       "Warm tone",
       "Cool tone",
       "Muted Color",

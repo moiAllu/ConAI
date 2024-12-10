@@ -11,7 +11,7 @@ export const getGPTResponse = async ({prompt, model}: gptResponseInterface) => {
   try {
     const chatCompletion = await openAIClient.chat.completions.create({
       messages: [{ role: 'user', content: prompt }, { role: 'system', content: systemPrompt }],
-      model: model || CONFIG.OPENAI_GPT_MODEL,
+      model:"gpt-4o",
       stream: true,
     },
   );
