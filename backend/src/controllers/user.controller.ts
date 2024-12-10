@@ -44,7 +44,7 @@ export const login = async (req: Request, res: Response) => {
           secure: process.env.DEPLOYMENT === 'production',
           overwrite: true,
           sameSite:"none",
-          domain: process.env.DEPLOYMENT === "production" ? ".vercel.app": 'localhost'
+          domain: process.env.DEPLOYMENT === "production" ? "con-ai-be.vercel.app": 'localhost'
         })
       );
       // Send token to client
@@ -109,7 +109,7 @@ export const signup = async (req: Request, res: Response) => {
         secure: process.env.DEPLOYMENT === 'production',
         overwrite: true,
         sameSite:"lax",
-        domain: process.env.DEPLOYMENT === "production" ? ".vercel.app": 'localhost'
+        domain: process.env.DEPLOYMENT === "production" ? "con-ai-be.vercel.app": 'localhost'
       })
     );
     // Send token to client
