@@ -41,10 +41,10 @@ export const login = async (req: Request, res: Response) => {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
           path: "/",
-          secure: process.env.DEPLOYMENT === 'production',
+          secure: "true",
           overwrite: true,
           sameSite:"none",
-          domain: process.env.DEPLOYMENT === "production" ? "con-ai-fe.vercel.app": 'localhost'
+          domain: "con-ai-fe.vercel.app"
         })
       );
       // Send token to client
