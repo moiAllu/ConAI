@@ -1,6 +1,6 @@
 export const fetchAllPlans = async () => {
     try {
-        const response = await fetch(`${"http://localhost:8000"}/api/all-plans`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/all-plans`, {
             credentials:"include",
             method: 'GET',
             headers:{
@@ -15,7 +15,7 @@ export const fetchAllPlans = async () => {
 }
 export const createCheckoutSession= async(priceId:string,email:string)=>{
     try {
-        const response = await fetch(`${"http://localhost:8000"}/api/checkout-session/${priceId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/checkout-session/${priceId}`, {
             credentials:"include",
             method: 'POST',
             headers:{
@@ -31,7 +31,7 @@ export const createCheckoutSession= async(priceId:string,email:string)=>{
 }
 export const fetchCheckoutSessionSuccess= async(sessionId:string,userId:string)=>{
     try {
-        const response = await fetch(`${"http://localhost:8000"}/api/retreive-checkout-session/${sessionId}/${userId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/retreive-checkout-session/${sessionId}/${userId}`, {
             credentials:"include",
             method: 'GET',
             headers:{
@@ -47,7 +47,7 @@ export const fetchCheckoutSessionSuccess= async(sessionId:string,userId:string)=
 }
 export const createCustomerBillingPortalSession = async(customerId:string)=>{
     try {
-        const response = await fetch(`${"http://localhost:8000"}/api/create-billing-portal-session/${customerId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/create-billing-portal-session/${customerId}`, {
             credentials:"include",
             method: 'GET',
             headers:{
@@ -62,7 +62,7 @@ export const createCustomerBillingPortalSession = async(customerId:string)=>{
 }
 export const getUserSubscriptionDetails= async(userId:string)=>{
     try {
-        const response = await fetch(`${"http://localhost:8000"}/api/user-subscription/${userId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/user-subscription/${userId}`, {
             credentials:"include",
             method: 'GET',
             headers:{

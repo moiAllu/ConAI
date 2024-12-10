@@ -41,7 +41,6 @@ export const login = async (req: Request, res: Response) => {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
           path: "/",
-          sameSite: "lax",
           secure: "true",
           overwrite: true,
         })
@@ -105,7 +104,6 @@ export const signup = async (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 8 * 60 * 60,
         path: "/",
-        sameSite: "lax",
         secure: "true",
         overwrite: true,
       })
