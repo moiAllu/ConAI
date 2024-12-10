@@ -43,7 +43,7 @@ export const login = async (req: Request, res: Response) => {
           path: "/",
           secure: "true",
           overwrite: true,
-          sameSite:"none",
+          sameSite:"lax",
           domain: process.env.DEPLOYMENT ==="production" ? "con-ai.vercel.app": 'localhost'
         })
       );
@@ -108,8 +108,8 @@ export const signup = async (req: Request, res: Response) => {
         path: "/",
         secure: "true",
         overwrite: true,
-        sameSite:"none",
-         domain: process.env.DEPLOYMENT ==="production" ? "con-ai.vercel.app": 'localhost'
+        sameSite:"lax",
+        domain: process.env.DEPLOYMENT ==="production" ? "con-ai.vercel.app": 'localhost'
       })
     );
     // Send token to client
