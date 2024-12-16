@@ -28,7 +28,7 @@ export default function LoginForm() {
     setLoading(true);
     try {
       const user = await fetch(
-        process.env.NEXT_PUBLIC_CONAI_FRONTEND_URL + "/api/login",
+        process.env.NEXT_PUBLIC_CONAI_FRONTEND_URL + "/api/auth/login",
         {
           headers: {
             "Content-Type": "application/json",
