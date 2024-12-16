@@ -11,6 +11,10 @@ export const tokenization=async ({user}:TokenizationProps)=>{
 }
 export const verifyToken =(token:string)=>{
      const secret = process.env.JWT_SECRET as string || ""
-     const verifedToken = jwt.verify(token, secret); 
-     return verifedToken
+        try {
+            const decoded = jwt.verify(token, secret);
+            return decoded;
+        } catch (error) {
+            throw new Error('Invalid token');
+        }
 }
