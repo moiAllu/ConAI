@@ -27,7 +27,7 @@ export default function LoginForm() {
     setError("");
     setLoading(true);
     try {
-      const user = await fetch("http://localhost:3000/api/auth/login", {
+      const user = await fetch("http://localhost:8000/api/login", {
         headers: {
           "Content-Type": "application/json",
         },
