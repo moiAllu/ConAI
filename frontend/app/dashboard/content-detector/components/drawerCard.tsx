@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createContentDetection } from "@/lib/apicalls/auth";
+import { createContentDetection } from "@/lib/apicalls/content-detection";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useMeStore } from "../../store";
