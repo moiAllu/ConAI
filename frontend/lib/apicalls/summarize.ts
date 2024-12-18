@@ -1,5 +1,6 @@
 export const getUserSummarizesHistory = async (userId: string) => {
-  return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/summarizer/summarizes/${userId}`, {
+
+  return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/summarizer/summarizes/${userId}`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -15,7 +16,7 @@ export const getUserSummarizeById = async (
   userId: string
 ) => {
   return fetch(
-    process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/summarizer/${summarizeId}/${userId}`,
+    `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/summarizer/${summarizeId}/${userId}`,
     {
       method: "GET",
       credentials: "include",
@@ -33,7 +34,7 @@ export const createSummarize = async (
   content: string,
   userId: string
 ) => {
-  return fetch(process.env.NEXT_PUBLIC_CONAI_BACKEND_URL+`/api/summarizer/create`, {
+  return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/summarizer/create`, {
     method: "POST",
     credentials: "include",
     headers: {

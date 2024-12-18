@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { useMeStore } from "../../store";
 import { Ellipsis } from "lucide-react";
 import { useAIChatStore } from "../store";
+import { getChatHistory } from "@/lib/apicalls/chat-assisstance";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -47,18 +48,7 @@ const ResizeableSidebar = ({
   React.useEffect(() => {
     // fetch Chat History
     async function fetchChatHistory(userId: string) {
-      const res = await fetch(
-        "http://localhost:8000/api/chat/ai-assistant/chats/" + userId,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-          },
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      const resp = await res.json();
+      const resp = await getChatHistory(userId);
       if (resp?.data?.length) {
         setChatHistory(() => categorizeChatMessages(resp.data.reverse()));
       }

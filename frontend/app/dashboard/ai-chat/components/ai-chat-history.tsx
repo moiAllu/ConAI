@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
 import Message from "./ai-message";
+import { getChatByID } from "@/lib/apicalls/chat-assisstance";
 
 type Props = {};
 
@@ -20,26 +21,13 @@ const AIChatHistory = (props: Props) => {
   useEffect(() => {
     // fetch from API and load messages
     async function fetchMessages(chatId: string) {
-      const res = await fetch(
-        "http://localhost:8000/api/chat/ai-assistant/" + chatId,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-          },
-        }
-      );
-
-      const resp = await res.json();
-
+      const resp = await getChatByID(chatId);
       if (resp?.data?.messages?.length) {
         useAIChatStore
           .getState()
           .setAllMessagesInChat(resp.data.messages, chatId, _id);
       }
     }
-
     // fetch chatId from query params
     const chatId = searchParams.get("chatId");
     if (chatId) {

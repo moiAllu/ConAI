@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useAIWritingStore } from "../store";
 import { useSearchParams } from "next/navigation";
-import { getAiWritingById } from "@/lib/apicalls/auth";
+import { getAiWritingById } from "@/lib/apicalls/ai-writing";
 import { useMeStore } from "../../store";
 import ReactMarkdown from "react-markdown";
 import styles from "./OutputCard.module.css";

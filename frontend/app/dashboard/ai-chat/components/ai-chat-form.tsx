@@ -9,6 +9,7 @@ import { useAIChatStore } from "../store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
 import { OctagonPause, ArrowUp, MoveUp } from "lucide-react";
+import { addMessageInChat } from "@/lib/apicalls/chat-assisstance";
 type Props = {};
 
 const AIChatForm = (props: Props) => {
@@ -41,19 +42,8 @@ const AIChatForm = (props: Props) => {
       _id
     );
 
-    const response = await fetch(
-      "http://localhost:8000/api/chat/ai-assistant/open-ai",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("accessToken") || "",
-        },
-        body: JSON.stringify({ prompt: input, chatId, _id }),
-        method: "POST",
-      }
-    );
+    const response = await addMessageInChat(input, chatId, _id);
     // const data = await response.json();
-
     const reader = response.body?.getReader() as any;
     const decoder = new TextDecoder();
 

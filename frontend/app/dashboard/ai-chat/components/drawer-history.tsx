@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { useMeStore } from "../../store";
 import { useRouter } from "next/navigation";
 import { Ellipsis } from "lucide-react";
+import { getChatHistory } from "@/lib/apicalls/chat-assisstance";
 
 const DrawerChatHistory = () => {
   const [filterChatHistory, setChatHistory] = React.useState(
@@ -34,24 +35,11 @@ const DrawerChatHistory = () => {
   React.useEffect(() => {
     // fetch Chat History
     async function fetchChatHistory(userId: string) {
-      const res = await fetch(
-        "http://localhost:8000/api/chat/ai-assistant/chats/" + userId,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-          },
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      const resp = await res.json();
-
+      const resp = await getChatHistory(userId);
       if (resp?.data?.length) {
         setChatHistory(() => categorizeChatMessages(resp.data.reverse()));
       }
     }
-
     fetchChatHistory(_id);
   }, [_id]);
   return (
