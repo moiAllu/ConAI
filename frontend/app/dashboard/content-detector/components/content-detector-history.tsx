@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { useMeStore } from "../../store";
-import { getUserContentDetections } from "@/lib/apicalls/auth";
+import { getUserContentDetections } from "@/lib/apicalls/content-detection";
 import { DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Ellipsis } from "lucide-react";

@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useMeStore } from "../../store";
 import { get, orderBy, sortBy } from "lodash";
-import { getUserAiWritings } from "@/lib/apicalls/auth";
+import { getUserAiWritings } from "@/lib/apicalls/ai-writing";
 import { DrawerDescription } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Ellipsis } from "lucide-react";

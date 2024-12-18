@@ -13,7 +13,7 @@ import {
 import { useContentDetectorStore } from "../store";
 import { useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
-import { getContentDetectionById } from "@/lib/apicalls/auth";
+import { getContentDetectionById } from "@/lib/apicalls/content-detection";
 import { IAiDetection, IPlagrismDetection } from "@/types/contentDetection";
 import { useState } from "react";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
