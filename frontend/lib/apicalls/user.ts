@@ -40,7 +40,7 @@ export const resetPassword = async (password:string,verifyPassword:string,token:
 
 export const logOutUser = async () => {
     try {
-        const response = await fetch("http://localhost:8000/api/logout", {
+        const response = await fetch("/api/auth/logout", {
             method: "GET",
             credentials: "include",
         });
