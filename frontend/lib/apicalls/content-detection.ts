@@ -1,5 +1,5 @@
-export const getUserRewritesHistory = async (userId:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/rewrite/rewrites/${userId}`,{
+export  const getUserContentDetections = async (userId:string) => {
+    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/content-detection/detections/${userId}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -11,8 +11,8 @@ export const getUserRewritesHistory = async (userId:string) => {
     }
     )
 }
-export const getUserRewriteById = async (rewriteId:string,userId:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/rewrite/${rewriteId}/${userId}`,{
+export const getContentDetectionById = async (userId:string, id:string) => {
+    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/content-detection/detection/${userId}/${id}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -24,27 +24,15 @@ export const getUserRewriteById = async (rewriteId:string,userId:string) => {
     }
     )
 }
-export const createRewrite = async (intensity:string, 
-    mode:string, 
-    inputLanguage:string, 
-    content:string, 
-    userId:string, 
-    model:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/rewrite/create`,{
+export const createContentDetection = async (userId:string, method:string, content:string, compareTo?:string) => {
+    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/content-detection/detection`,{
         method:"POST",
         credentials:"include",
         headers:{
             "Content-Type":"application/json",
             Authorization: localStorage.getItem("accessToken") || "",
         },
-        body: JSON.stringify({
-            intensity, 
-            mode, 
-            inputLanguage, 
-            content, 
-            userId, 
-            model
-        })
+        body: JSON.stringify({userId, method, content, compareTo}),
     }).then(res=>{
         return res.json();
     }

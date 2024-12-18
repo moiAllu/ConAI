@@ -2,7 +2,7 @@ export const forgotPassowrd = async (email:string) => {
     try{
 
         const response = await fetch(
-            "http://localhost:8000/api/user/forgot-password",
+            "/api/auth/user/forgot-password",
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const forgotPassowrd = async (email:string) => {
 export const resetPassword = async (password:string,verifyPassword:string,token:string) => {
     try{
         const response = await fetch(
-            `http://localhost:8000/api/user/reset-password/${token}`,
+            `/api/auth/user/reset-password/${token}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const logOutUser = async () => {
 }
 export const getMe= async()=>{
     try{
-        const response = await fetch("http://localhost:8000/api/me", {
+        const response = await fetch("/api/auth/me", {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `${localStorage.getItem("accessToken")}`,
