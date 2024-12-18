@@ -4,7 +4,13 @@ export async function GET(
 ) {
   try {
      cookies().delete("CONAI");
-     return Response.redirect("/login")
+     return Response.json({
+      status: 200,
+      message: "Logout successful",
+    },{
+      status: 200,
+      statusText:"Logout successful",
+    });
   } catch (error:any) {
     return Response.json({
             status:500,

@@ -113,7 +113,7 @@ const OutputCard = () => {
             </h1>
             <div className="flex w-full gap-2 justify-evenly h-full items-center">
               <div>
-                <h1 className="md:flex justify-center hidden font-semibold w-full">
+                <h1 className="md:flex justify-center hidden font-semibold w-full max-w-[400px] text-center">
                   {selectedImage?.prompt}
                 </h1>
                 <Separator className="my-1" />
