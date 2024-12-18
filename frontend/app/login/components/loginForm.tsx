@@ -36,11 +36,11 @@ export default function LoginForm() {
         credentials: "include",
       });
       const data = await user.json();
-      if (data.message === "Login successful") {
-        console.log("Login successful");
+      if (data.status === 200) {
         setUser(data.user);
         localStorage.setItem("accessToken", data.token);
         router.push("/dashboard");
+        window.location.href = "/dashboard";
       } else {
         setError(data.message);
       }
