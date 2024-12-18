@@ -34,16 +34,17 @@ export const login = async (req: Request, res: Response) => {
       const token = await jwt.sign({ user }, process.env.JWT_SECRET, {
         expiresIn: "8h",
       });
-
+    
       res.setHeader(
         "Set-Cookie",
-        cookie.serialize("CONAI", token, {
+         cookie.serialize("CONAI", token, {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
           path: "/",
-          sameSite: "lax",
-          secure: "true",
+          secure: process.env.DEPLOYMENT ? "true": "false",
           overwrite: true,
+          sameSite: process.env.DEPLOYMENT ? "none": "lax",
+          // domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost', 
         })
       );
       // Send token to client
@@ -105,9 +106,10 @@ export const signup = async (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 8 * 60 * 60,
         path: "/",
-        sameSite: "lax",
-        secure: "true",
+        secure: process.env.DEPLOYMENT ? "true": "false",
         overwrite: true,
+        sameSite: process.env.DEPLOYMENT ? "none": "lax",
+        // domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost', 
       })
     );
     // Send token to client

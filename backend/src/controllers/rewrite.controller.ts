@@ -68,18 +68,22 @@ interface PromptTuning {
     mode: string;
 }
 const PromptTuning = ({intensity,mode}:PromptTuning) => {
-    if(mode === "Recreate"){
-        return "Retain only the context from user input, Recreate it from scratch. It should be unique and not plagiarized";
+    if (mode === "Recreate") {
+        return "Your task is to retain only the relevant context from the user input and generate a completely original version from scratch. Ensure the output is unique and free from any form of plagiarism.";
     }
-    if(intensity === "Low" && mode === "Rewrite"){
-        return "Rewrite the content with a low intensity, write in such a way that the content is not plagiarized";
+    
+    if (intensity === "Low" && mode === "Rewrite") {
+        return "Your goal is to reduce any plagiarism by modifying the text. Keep the original meaning intact while altering some words and phrasing to make it sound more natural and unique. Avoid overusing conjunctions (e.g., is, and, the). If you're unable to make meaningful changes, return the original text as is.";
     }
-    if(intensity === "Medium" && mode === "Rewrite"){
-        return "Rewrite the content with a medium intensity, write in such a way that the content is not plagiarized";
+    
+    if (intensity === "Medium" && mode === "Rewrite") {
+        return "Rewrite the content with moderate changes. Ensure that the new version is not plagiarized and is rephrased adequately, maintaining the original meaning and tone. Aim for a balance between altering the text and keeping it coherent and natural.";
     }
-    if(intensity === "High" && mode === "Rewrite"){
-        return "Rewrite the content with a high intensity, write in such a way that the content is not plagiarized";
+    
+    if (intensity === "High" && mode === "Rewrite") {
+        return "Rewrite the content with significant changes to ensure it is completely original and free from plagiarism. The new text should be substantially different in structure and wording while still conveying the same message and tone. Strive for a high level of creativity and rewording to make it unique.";
     }
+    
 }
 export const rewriteController = async (req:Request,res:Response) => {
     const {intensity, mode, inputLanguage, content, userId , model} = req.body;

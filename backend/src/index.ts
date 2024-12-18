@@ -10,8 +10,9 @@ const app: Application = express();
 const port = process.env.PORT || 8000;
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://con-ai.vercel.app", "https://con-ai-fe.vercel.app", "https://conai.onrender.com"],
     credentials: true,
+    optionsSuccessStatus : 200,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
@@ -34,3 +35,5 @@ try {
 } catch (e) {
   console.log(e);
 }
+
+export default app;

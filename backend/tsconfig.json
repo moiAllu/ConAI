@@ -20,6 +20,7 @@
       }
   },
   "include": [
+    "./api/*.ts",
       "src/**/*.ts"
   ],
   "exclude": [

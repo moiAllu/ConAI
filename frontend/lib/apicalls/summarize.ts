@@ -1,4 +1,5 @@
 export const getUserSummarizesHistory = async (userId: string) => {
+
   return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/summarizer/summarizes/${userId}`, {
     method: "GET",
     credentials: "include",

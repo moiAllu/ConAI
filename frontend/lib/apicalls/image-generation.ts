@@ -6,6 +6,7 @@ interface Data {
     color:string, 
 }
 export const createImage = async (data:Data,userId:string) => {
+
     return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/generate-image`,{
         method:"POST",
         credentials:"include",
@@ -20,7 +21,9 @@ export const createImage = async (data:Data,userId:string) => {
     )
 }
 export const getImageById = async (imageId:string,userId:string) => {
+
     return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/${imageId}/${userId}`,{
+
         method:"GET",
         credentials:"include",
         headers:{
@@ -33,7 +36,9 @@ export const getImageById = async (imageId:string,userId:string) => {
     )
 }
 export const getUserImages = async (userId:string) => {
+
     return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image-generation/images/${userId}`,{
+
         method:"GET",
         credentials:"include",
         headers:{
