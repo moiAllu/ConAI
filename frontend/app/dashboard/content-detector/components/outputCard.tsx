@@ -1,28 +1,16 @@
 import React, { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { CornerDownLeft, Mic, Paperclip } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useContentDetectorStore } from "../store";
 import { useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
 import { getContentDetectionById } from "@/lib/apicalls/content-detection";
 import { IAiDetection, IPlagrismDetection } from "@/types/contentDetection";
 import { useState } from "react";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import PlagairismReport from "./plagiarismReport";
+import AIDetectionReport from "./aiDetectionReport";
 const OutputCard = () => {
   const { aiHistory, addAiHistory, addPlagrismHistory } =
     useContentDetectorStore();
-  let matchedWords = 0;
-
   const plagrimHistory = useContentDetectorStore(
     (state) => state.plagrismHistory
   );
@@ -32,6 +20,7 @@ const OutputCard = () => {
   const searchParams = useSearchParams();
   const { _id: userId } = useMeStore();
   const documentId = searchParams.get("documentId") || "";
+  const [selectedResult, setSelectedResult] = useState("matchedtext");
   useEffect(() => {
     if (!documentId) return;
     const getUserContentDetections = async () => {
@@ -65,15 +54,9 @@ const OutputCard = () => {
     plagrimHistory.plagrismDetectionHistory.find(
       (doc) => doc._id === searchParams.get("documentId")
     );
-  if (plagDocument) {
-    plagDocument?.result.map((content) => {
-      matchedWords = matchedWords + content.minwordsmatched;
-      return content.minwordsmatched;
-    });
-  }
 
   return (
-    <div className="relative flex h-full  w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-auto">
+    <div className="relative flex sm:h-full h-[calc(100vh-150px)] w-full flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
       {!aiDocument ||
         (!plagDocument && (
           <Badge variant="outline" className="absolute right-3 top-3">
@@ -81,133 +64,29 @@ const OutputCard = () => {
           </Badge>
         ))}
       {aiDocument && (
-        <div className="flex flex-col gap-2 ">
-          <div>{aiDocument?.prompt}</div>
-          <div className="flex flex-col gap-2">
-            <title>Result</title>
-            <div className="flex flex-col gap-1">
-              <span>
-                {aiDocument?.response.aiDetected
-                  ? "AI detected "
-                  : "Not Detected"}
-              </span>
-              <span>
-                AI Deteted Percentage {aiDocument?.response.aiPercentage}%
-              </span>
-              <span>
-                {" "}
-                AI Model Confidence {aiDocument?.response.confidence}
-              </span>
-              <div>
-                {aiDocument?.response.aiContent.map((content, idx) => (
-                  <span key={idx}>{content}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <AIDetectionReport
+          prompt={aiDocument.prompt}
+          response={aiDocument.response}
+          method={aiDocument.method}
+          createdAt={aiDocument.createdAt}
+        />
       )}
-      <div className="">
+      <div className="h-full w-full">
         {plagDocument && (
-          <div className="flex flex-col gap-2">
-            {/* <div>{plagDocument?.prompt}</div> */}
-            <div className="flex flex-col gap-2">
-              <title>Result</title>
-              <div className=" flex flex-col p-2">
-                <span className="font-semibold">
-                  Words Matched: {matchedWords}
-                </span>
-                <span className="font-semibold">
-                  Query Words: {plagDocument?.querywords}
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-1 ">
-                {/* <span>Count: {plagDocument?.count}</span> */}
-                <div className="gap-2 flex flex-col">
-                  {plagDocument?.result.map((content, idx) => (
-                    <Card key={idx} className="flex flex-col p-2">
-                      <CardTitle className="text-md">
-                        <span>Source: {content.title}</span>
-                      </CardTitle>
-                      <CardDescription className=" flex flex-col">
-                        <span>Words matched: {content.minwordsmatched} </span>
-                        <Link href={content.viewurl} className="text-blue-600">
-                          url: {content.url}
-                        </Link>
-                      </CardDescription>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <PlagairismReport
+            prompt={plagDocument.prompt}
+            querywords={plagDocument.querywords}
+            result={plagDocument.result}
+            count={plagDocument.count}
+            allpercentmatched={plagDocument.allpercentmatched}
+            alltextmatched={plagDocument.alltextmatched}
+            allwordsmatched={plagDocument.allwordsmatched}
+            cost={plagDocument.cost}
+            selectedResult={selectedResult}
+            setSelectedResult={setSelectedResult}
+          />
         )}
       </div>
-      {/* {document && (
-        <div className="flex flex-col gap-2">
-          <div>{document?.prompt}</div>
-          <div className="flex flex-col gap-2">
-            <title>Result</title>
-            <div className="flex flex-col gap-1">
-              <span>
-                {document?.response.aiDetected
-                  ? "AI detected "
-                  : "Not Detected"}
-              </span>
-              <span>
-                AI Deteted Percentage {document?.response.aiPercentage}%
-              </span>
-              <span> AI Model Confidence {document?.response.confidence}</span>
-              <div>
-                {document?.response.aiContent.map((content) => (
-                  <span>{content}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
-      {/* <div className="flex-1" /> */}
-      {/* <form
-        className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
-        x-chunk="dashboard-03-chunk-1"
-      >
-        <Label htmlFor="message" className="sr-only">
-          Message
-        </Label>
-        <Textarea
-          id="message"
-          placeholder="Type your message here..."
-          className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
-        />
-        <div className="flex items-center p-3 pt-0">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Paperclip className="size-4" />
-                  <span className="sr-only">Attach file</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">Attach File</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Mic className="size-4" />
-                  <span className="sr-only">Use Microphone</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">Use Microphone</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <Button type="submit" size="sm" className="ml-auto gap-1.5">
-            Send Message
-            <CornerDownLeft className="size-3.5" />
-          </Button>
-        </div>
-      </form> */}
     </div>
   );
 };
