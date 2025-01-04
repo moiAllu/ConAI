@@ -14,7 +14,7 @@ const cardsData = [
   {
     title: "Rewriter",
     description:
-      "Effortlessly enhance your articles, blog posts, essays, or any text, maintaining original meaning.",
+      "Effortlessly Remove any plagiarism from your content with our Advance ML model. Feel confident your text isn't detectable by AI with our 95% accurate AI Content Detector.",
     icon: <Inbox />,
     link: "/dashboard/rewrite",
   },
@@ -28,21 +28,21 @@ const cardsData = [
   {
     title: "Image Generator",
     description:
-      "Feel confident your text isn't detectable by AI with our 95% accurate AI Content Detector. Protect your privacy and intellectual property.",
+      "Generate Images, Logos, Gifs, and much more with our Advance AI models.",
     icon: <Siren />,
     link: "/dashboard/image-generator",
   },
   {
-    title: "AI Content Detector",
+    title: "Content Detector",
     description:
-      "Elevate Your Conversations: Empower Your Chats with Cutting-edge AI and Real-time Google Insights!",
+      "Detect Plagairism and AI with our most advance crawlers and ML models.",
     icon: <MessageSquareMore />,
     link: "/dashboard/content-detector",
   },
   {
     title: "AI Chat",
     description:
-      "Create easy to understand summaries from websites and long texts.",
+      "Day to day your personal chat assistance, that give you precise outputs while mainting your privacy.",
     icon: <ImagePlus />,
     link: "/dashboard/ai-chat",
   },

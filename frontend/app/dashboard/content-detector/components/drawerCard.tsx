@@ -72,7 +72,7 @@ const DrawerCard = () => {
         <div className="w-full ">
           <Label htmlFor="role">Method</Label>
           <Select
-            defaultValue="Ai Detection"
+            defaultValue="Plagiarism Detection"
             onValueChange={(e) => setMethod(e)}
           >
             <SelectTrigger>
