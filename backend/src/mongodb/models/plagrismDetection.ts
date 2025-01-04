@@ -7,6 +7,9 @@ interface IPlagrismDetection{
     querywords: number;
     count: number;
     cost: number;
+    allwordsmatched: number,
+    allpercentmatched: number,
+    alltextmatched: string
     result: {
         url: string;
         index: number;
@@ -28,14 +31,12 @@ const plagrismDetectionSchema = new Schema<IPlagrismDetectionHistory>({
         type: String,
         required: true
     },
-
     userId: {
         type: String,
         required: true
     },
     data: [
         {   
-            
             prompt: {
                 type: String,
                 required: true
@@ -83,7 +84,19 @@ const plagrismDetectionSchema = new Schema<IPlagrismDetectionHistory>({
                         required: true
                     }
                 }
-            ]
+            ],
+            allwordsmatched: {
+                type:Number, 
+                required: true,
+            },
+            allpercentmatched: {
+                type:Number, 
+                required: true,
+            },
+            alltextmatched:{
+                type: String, 
+                required: true,
+            },
         }
     ]
 });
