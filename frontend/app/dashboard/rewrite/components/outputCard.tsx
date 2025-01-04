@@ -33,14 +33,14 @@ const OutputCard = () => {
     fetchImageById();
   }, [rewriteId]);
   return (
-    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 overflow-y-auto">
+    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 sm:p-4 lg:col-span-2 overflow-y-auto">
       {!selectedRewrite && (
         <Badge variant="outline" className="absolute right-3 top-3">
           Output
         </Badge>
       )}
       {selectedRewrite && (
-        <div className="h-full w-full prose prose-base  overflow-y-auto p-4 ">
+        <div className="h-full w-full prose prose-base  overflow-y-auto sm:p-4 ">
           <Card className="border-none bg-inherit shadow-none">
             <CardTitle className="text-md">Selected Inputs Setting</CardTitle>
 

@@ -47,11 +47,11 @@ const OutputCard = () => {
   }, [documentId]);
 
   return (
-    <div className="relative flex h-full w-full min-h-[90vh] flex-col rounded-xl bg-muted/50 sm:p-4 p-2 lg:col-span-2 mb-10 ">
+    <div className=" flex h-full w-full  flex-col rounded-xl bg-muted/50 sm:p-4 p-2 lg:col-span-2 ">
       <Badge variant="outline" className="absolute right-3 top-3">
         <span>Output</span>
       </Badge>
-      <div className="h-full w-full prose prose-base  overflow-y-auto p-4 ">
+      <div className="h-full w-full prose prose-base  overflow-y-auto p-4 mb-2">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {documents?.documents.at(-1)?.content || "See the output here"}
         </ReactMarkdown>

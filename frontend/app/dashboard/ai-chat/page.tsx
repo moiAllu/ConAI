@@ -8,7 +8,7 @@ import DrawerChatHistory from "./components/drawer-history";
 
 const AIWritingPage = () => {
   return (
-    <div className="p-2 flex flex-col w-full h-full max-h-[1080px] ">
+    <div className="p-2 flex flex-col w-full h-full max-h-[1080px]  ">
       <div className="flex justify-between w-full items-center justify-items-center  mt-2 px-2">
         <div className="flex items-center">
           <SelectModel />
@@ -16,7 +16,7 @@ const AIWritingPage = () => {
         </div>
       </div>
       <Separator className="my-2" />
-      <div className="w-full h-full justify-between flex-col flex overflow-y-auto">
+      <div className="w-full h-full  justify-between flex-col flex overflow-y-auto">
         <Suspense fallback={<div>Loading...</div>}>
           <AIChatHistory />
         </Suspense>

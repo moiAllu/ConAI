@@ -49,7 +49,9 @@ const DrawerHistory = () => {
                 router.push(`/dashboard/ai-writing?documentId=${doc?._id}`)
               }
             >
-              <p className="text-xs dark:text-gray-400">{doc?.title}</p>
+              <p className="text-xs dark:text-gray-400">
+                {doc?.title.slice(0, 30)}...
+              </p>
             </Button>
             {mouseEnter === doc?._id && (
               <Button
