@@ -37,7 +37,7 @@ const AIChatHistory = (props: Props) => {
   console.log(chat);
   return (
     // <div className="flex flex-grow flex-col sm:p-6 p-2 items-center justify-end text-center overflow-y-auto h-[55vh]">
-    <div className="sm:p-6 flex flex-col p-2 overflow-y-auto h-full overflow-auto max-h-[1080px] w-full max-w-[1000px] mx-auto">
+    <div className="sm:p-6 flex flex-col p-2 overflow-y-auto h-[calc(100vh-200px)] sm:h-full overflow-auto max-h-[1080px] w-full max-w-[1000px] mx-auto">
       {hasMessages ? (
         chat?.messages.map((message, idx) => (
           <Suspense

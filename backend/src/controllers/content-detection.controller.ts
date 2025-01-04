@@ -9,6 +9,9 @@ interface IPlagrismDetection{
     querywords: number;
     count: number;
     cost: number;
+    allwordsmatched: number,
+    allpercentmatched: number,
+    alltextmatched: string,
     result: {
         url: string;
         index: number;
@@ -41,7 +44,10 @@ export const getContentDetectionResponse = async (req:Request,res:Response) => {
                 querywords: responseFromCopyscape.querywords,
                 count: responseFromCopyscape.count,
                 cost: responseFromCopyscape.cost,
-                result: responseFromCopyscape.result
+                result: responseFromCopyscape.result,
+                allwordsmatched: responseFromCopyscape.allwordsmatched,
+                allpercentmatched: responseFromCopyscape.allpercentmatched,
+                alltextmatched: responseFromCopyscape.alltextmatched
             })
             await user.save();
             return res.status(200).json({
@@ -50,7 +56,7 @@ export const getContentDetectionResponse = async (req:Request,res:Response) => {
                 data: user.data[user.data.length-1]
             });
         }
-        const response = new PlagrismDetection({method, userId, data:{ prompt:content, querywords: responseFromCopyscape.querywords, count: responseFromCopyscape.count, cost: responseFromCopyscape.cost, result: responseFromCopyscape.result}});
+        const response = new PlagrismDetection({method, userId, data:{ prompt:content, querywords: responseFromCopyscape.querywords, count: responseFromCopyscape.count, cost: responseFromCopyscape.cost, result: responseFromCopyscape.result,  allwordsmatched: responseFromCopyscape.allwordsmatched, allpercentmatched: responseFromCopyscape.allpercentmatched, alltextmatched: responseFromCopyscape.alltextmatched }});
         await response.save();
         return res.status(200).json({
             message: 'Content fetched successfully',

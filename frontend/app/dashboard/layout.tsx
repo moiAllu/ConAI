@@ -67,7 +67,7 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
       {isPhone ? (
         <>
           <Navbar />
-          <div className="h-[calc(100vh-60px)] w-full">{children}</div>
+          <div className="h-full w-full">{children}</div>
         </>
       ) : (
         <div className="block h-screen w-screen max-h-[1080px] max-w-[1920px]">

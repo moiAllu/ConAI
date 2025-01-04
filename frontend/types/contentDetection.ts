@@ -4,6 +4,9 @@ export interface IPlagrismDetection{
     querywords: number;
     count: number;
     cost: number;
+    allwordsmatched?: number;
+    allpercentmatched?: number;
+    alltextmatched?: string;
     result: {
         url: string;
         index: number;

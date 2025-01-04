@@ -80,9 +80,11 @@ const Nav = (props: NavProps) => {
                 <span className="sr-only">history</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="w-screen max-w-[450px]">
+            <DrawerContent className="w-screen sm:max-w-[450px] max-w-[270px]">
               <DrawerHeader>
-                <DrawerTitle>History</DrawerTitle>
+                {props.title !== "Content-Detector" && (
+                  <DrawerTitle>History</DrawerTitle>
+                )}
                 <div className="overflow-y-auto overflow-x-hidden p-2">
                   <DrawerDescription className="text-left">
                     {props.title === "Image-Generator" &&
@@ -106,9 +108,7 @@ const Nav = (props: NavProps) => {
                               }
                             >
                               <span className="text-xs dark:text-gray-400">
-                                {img?.prompt?.lenght === 40
-                                  ? img?.prompt.slice(0, 40) + "..."
-                                  : img?.prompt}
+                                {img?.prompt.slice(0, 30) + "..."}
                               </span>
                             </Button>
                             {mouseEnter === img?._id && (

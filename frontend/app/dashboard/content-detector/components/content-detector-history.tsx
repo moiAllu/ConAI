@@ -6,6 +6,7 @@ import { DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
 
 const ContentDetectorHistory = () => {
   const [history, setHistory] = React.useState({
@@ -30,9 +31,9 @@ const ContentDetectorHistory = () => {
     const reversedDoc = [...doc].reverse();
 
     return (
-      <div className="overflow-y-auto overflow-x-hidden p-2 flex-col h-full">
+      <div className=" p-2 flex-col h-full space-y-2">
         <DrawerTitle>{title}</DrawerTitle>
-        <DrawerDescription>
+        <DrawerDescription className="overflow-y-scroll flex-col max-h-[400px]">
           {reversedDoc.map((item: any) => (
             <div
               className="flex items-center w-full my-1 rounded-md"
@@ -50,9 +51,14 @@ const ContentDetectorHistory = () => {
                   )
                 }
               >
-                <p className="text-sm dark:text-gray-400">
+                <p className="text-xs dark:text-gray-400 sm:flex hidden ">
                   {item.prompt.length > 50
                     ? item?.prompt.substring(0, 50) + "..."
+                    : item?.prompt}
+                </p>
+                <p className="text-xs dark:text-gray-400 sm:hidden">
+                  {item.prompt.length > 50
+                    ? item?.prompt.substring(0, 20) + "..."
                     : item?.prompt}
                 </p>
               </Button>
@@ -73,12 +79,13 @@ const ContentDetectorHistory = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 h-full overflow-hidden">
+    <div className="flex flex-col overflow-hidden h-[90vh]">
       <HistoryCard
         key="aiDetection"
         doc={history.aiDetection}
         title="AI Detection"
       />
+      <Separator className="my-2" />
       <HistoryCard
         key="plagiarismDetection"
         doc={history.plagrismDetection}

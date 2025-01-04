@@ -13,7 +13,7 @@ const RewritePage = () => {
       <Nav title="Rewrite" icon={SquarePen}>
         <DynamicCard />
       </Nav>
-      <div className="px-2 sm:p-5 h-full w-full flex  items-center  sm:space-x-4">
+      <div className="px-2 sm:p-5 sm:h-full h-[calc(100vh-140px)] w-full flex  items-center  sm:space-x-4">
         {!isPhone && <DynamicCard />}
         <Suspense fallback={<div>Loading...</div>}>
           <OutputCard />

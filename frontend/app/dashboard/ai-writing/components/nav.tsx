@@ -36,7 +36,7 @@ const Nav = (props: NavProps) => {
                 <span className="sr-only">history</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="w-screen max-w-[450px]">
+            <DrawerContent className="max-w-[270px] sm:max-w-[450px]">
               <DrawerHeader>
                 <DrawerTitle>History</DrawerTitle>
               </DrawerHeader>
