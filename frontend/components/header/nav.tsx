@@ -71,7 +71,7 @@ const Nav = (props: NavProps) => {
     <div className="w-full">
       <div className="flex items-center justify-between px-4">
         <div className=" flex space-x-2 items-center">
-          <ReceiptText className="font-bold " />
+          <ReceiptText className="font-bold  " />
           <h1 className="sm:text-2xl font-bold text-lg">{props.title}</h1>
           <Drawer direction="left">
             <DrawerTrigger asChild>
@@ -80,124 +80,131 @@ const Nav = (props: NavProps) => {
                 <span className="sr-only">history</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="w-screen sm:max-w-[450px] max-w-[270px]">
-              <DrawerHeader>
-                {props.title !== "Content-Detector" && (
-                  <DrawerTitle>History</DrawerTitle>
-                )}
-                <div className="overflow-y-auto overflow-x-hidden p-2">
-                  <DrawerDescription className="text-left">
-                    {props.title === "Image-Generator" &&
-                      orderBy(images, ["createdAt"], ["desc"]).map(
-                        (img: any) => (
-                          <div
-                            className="flex items-center w-full  my-1 rounded-md"
-                            key={img?._id}
-                            onMouseEnter={() => setMouseEnter(img?._id)}
-                          >
-                            <Button
-                              className="py-1 w-full justify-start rounded-r-none"
-                              size="sm"
-                              variant="secondary"
+            <DrawerContent className="w-screen sm:max-w-[450px] max-w-[270px] h-full">
+              {props.title !== "Content-Detector" && (
+                <DrawerHeader className="h-full w-full flex flex-col">
+                  <DrawerTitle className="text-center mb-0">
+                    History
+                  </DrawerTitle>
+                  <div className="overflow-y-auto overflow-x-hidden p-2 h-full">
+                    <DrawerDescription className="text-left">
+                      {props.title === "Image-Generator" &&
+                        orderBy(images, ["createdAt"], ["desc"]).map(
+                          (img: any) => (
+                            <div
+                              className="flex items-center w-full  my-1 rounded-md"
                               key={img?._id}
-                              // onClick={() => setDocumentId(doc?._id)}
-                              onClick={() =>
-                                router.push(
-                                  `/dashboard/image-generator?imageId=${img?._id}`
-                                )
-                              }
+                              onMouseEnter={() => setMouseEnter(img?._id)}
+                              onMouseLeave={() => setMouseEnter("")}
                             >
-                              <span className="text-xs dark:text-gray-400">
-                                {img?.prompt.slice(0, 30) + "..."}
-                              </span>
-                            </Button>
-                            {mouseEnter === img?._id && (
                               <Button
-                                className="py-1 justify-start rounded-l-none"
+                                className="py-1 w-full justify-start rounded-r-none"
                                 size="sm"
                                 variant="secondary"
+                                key={img?._id}
+                                // onClick={() => setDocumentId(doc?._id)}
+                                onClick={() =>
+                                  router.push(
+                                    `/dashboard/image-generator?imageId=${img?._id}`
+                                  )
+                                }
                               >
-                                <Ellipsis />
+                                <span className="text-xs dark:text-gray-400">
+                                  {img?.prompt.slice(0, 30) + "..."}
+                                </span>
                               </Button>
-                            )}
-                          </div>
-                        )
-                      )}
-                    {props.title === "Rewrite" &&
-                      orderBy(rewrites, ["createdAt"], ["desc"]).map(
-                        (rewrite: any) => (
-                          <div
-                            className="flex items-center w-full  my-1 rounded-md"
-                            key={rewrite?._id}
-                            onMouseEnter={() => setMouseEnter(rewrite?._id)}
-                          >
-                            <Button
-                              className="py-1 w-full justify-start rounded-r-none"
-                              size="sm"
-                              variant="secondary"
+                              {mouseEnter === img?._id && (
+                                <Button
+                                  className="py-1 justify-start rounded-l-none"
+                                  size="sm"
+                                  variant="secondary"
+                                >
+                                  <Ellipsis />
+                                </Button>
+                              )}
+                            </div>
+                          )
+                        )}
+                      {props.title === "Rewrite" &&
+                        orderBy(rewrites, ["createdAt"], ["desc"]).map(
+                          (rewrite: any) => (
+                            <div
+                              className="flex items-center w-full  my-1 rounded-md"
                               key={rewrite?._id}
-                              // onClick={() => setDocumentId(doc?._id)}
-                              onClick={() =>
-                                router.push(
-                                  `/dashboard/rewrite?rewriteId=${rewrite?._id}`
-                                )
-                              }
+                              onMouseEnter={() => setMouseEnter(rewrite?._id)}
+                              onMouseLeave={() => setMouseEnter("")}
                             >
-                              <span className="text-xs dark:text-gray-400">
-                                {rewrite?.input.slice(0, 40) + "..."}
-                              </span>
-                            </Button>
-                            {mouseEnter === rewrite?._id && (
                               <Button
-                                className="py-1 justify-start rounded-l-none"
+                                className="py-1 w-full justify-start rounded-r-none"
                                 size="sm"
                                 variant="secondary"
+                                key={rewrite?._id}
+                                // onClick={() => setDocumentId(doc?._id)}
+                                onClick={() =>
+                                  router.push(
+                                    `/dashboard/rewrite?rewriteId=${rewrite?._id}`
+                                  )
+                                }
                               >
-                                <Ellipsis />
+                                <span className="text-xs dark:text-gray-400">
+                                  {rewrite?.input.slice(0, 30) + "..."}
+                                </span>
                               </Button>
-                            )}
-                          </div>
-                        )
-                      )}
-                    {props.title === "Summarizer" &&
-                      orderBy(summarizers, ["createdAt"], ["desc"]).map(
-                        (summarizer: any) => (
-                          <div
-                            className="flex items-center w-full  my-1 rounded-md"
-                            key={summarizer?._id}
-                            onMouseEnter={() => setMouseEnter(summarizer?._id)}
-                          >
-                            <Button
-                              className="py-1 w-full justify-start rounded-r-none"
-                              size="sm"
-                              variant="secondary"
+                              {mouseEnter === rewrite?._id && (
+                                <Button
+                                  className="py-1 justify-start rounded-l-none"
+                                  size="sm"
+                                  variant="secondary"
+                                >
+                                  <Ellipsis />
+                                </Button>
+                              )}
+                            </div>
+                          )
+                        )}
+                      {props.title === "Summarizer" &&
+                        orderBy(summarizers, ["createdAt"], ["desc"]).map(
+                          (summarizer: any) => (
+                            <div
+                              className="flex items-center w-full  my-1 rounded-md"
                               key={summarizer?._id}
-                              // onClick={() => setDocumentId(doc?._id)}
-                              onClick={() =>
-                                router.push(
-                                  `/dashboard/summarizer?summarizeId=${summarizer?._id}`
-                                )
+                              onMouseEnter={() =>
+                                setMouseEnter(summarizer?._id)
                               }
+                              onMouseLeave={() => setMouseEnter("")}
                             >
-                              <span className="text-xs dark:text-gray-400">
-                                {summarizer?.input.slice(0, 40) + "..."}
-                              </span>
-                            </Button>
-                            {mouseEnter === summarizer?._id && (
                               <Button
-                                className="py-1 justify-start rounded-l-none"
+                                className="py-1 w-full justify-start rounded-r-none"
                                 size="sm"
                                 variant="secondary"
+                                key={summarizer?._id}
+                                // onClick={() => setDocumentId(doc?._id)}
+                                onClick={() =>
+                                  router.push(
+                                    `/dashboard/summarizer?summarizeId=${summarizer?._id}`
+                                  )
+                                }
                               >
-                                <Ellipsis />
+                                <span className="text-xs dark:text-gray-400">
+                                  {summarizer?.input.slice(0, 30) + "..."}
+                                </span>
                               </Button>
-                            )}
-                          </div>
-                        )
-                      )}
-                  </DrawerDescription>
-                </div>
-              </DrawerHeader>
+                              {mouseEnter === summarizer?._id && (
+                                <Button
+                                  className="py-1 justify-start rounded-l-none"
+                                  size="sm"
+                                  variant="secondary"
+                                >
+                                  <Ellipsis />
+                                </Button>
+                              )}
+                            </div>
+                          )
+                        )}
+                    </DrawerDescription>
+                  </div>
+                </DrawerHeader>
+              )}
               <DrawerDescription>{props.history}</DrawerDescription>
             </DrawerContent>
           </Drawer>
@@ -208,7 +215,7 @@ const Nav = (props: NavProps) => {
                 <span className="sr-only">Settings</span>
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="max-h-[80vh]">
+            <DrawerContent className="h-full w-full">
               <DrawerHeader>
                 <DrawerTitle>Configuration</DrawerTitle>
                 <DrawerDescription>

@@ -31,9 +31,9 @@ const ContentDetectorHistory = () => {
     const reversedDoc = [...doc].reverse();
 
     return (
-      <div className=" p-2 flex-col h-full space-y-2">
+      <div className="p-2 flex-col h-full space-y-2 max-h-[400px]">
         <DrawerTitle>{title}</DrawerTitle>
-        <DrawerDescription className="overflow-y-scroll flex-col max-h-[400px]">
+        <div className="overflow-y-scroll flex-col h-full">
           {reversedDoc.map((item: any) => (
             <div
               className="flex items-center w-full my-1 rounded-md"
@@ -73,19 +73,19 @@ const ContentDetectorHistory = () => {
               )}
             </div>
           ))}
-        </DrawerDescription>
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="flex flex-col overflow-hidden h-[90vh]">
+    <div className="flex flex-col overflow-y h-screen">
       <HistoryCard
         key="aiDetection"
         doc={history.aiDetection}
         title="AI Detection"
       />
-      <Separator className="my-2" />
+      <Separator className="mt-8" />
       <HistoryCard
         key="plagiarismDetection"
         doc={history.plagrismDetection}

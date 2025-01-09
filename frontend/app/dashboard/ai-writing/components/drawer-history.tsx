@@ -38,6 +38,7 @@ const DrawerHistory = () => {
             className="flex items-center w-full  my-1 rounded-md"
             key={doc?._id}
             onMouseEnter={() => setMouseEnter(doc?._id)}
+            onMouseLeave={() => setMouseEnter("")}
           >
             <Button
               className="py-1 w-full justify-start rounded-r-none"
