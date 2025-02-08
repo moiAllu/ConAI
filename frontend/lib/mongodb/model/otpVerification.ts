@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 interface IOtpVerification extends Document {
     email: string;
@@ -21,4 +22,5 @@ const otpVerificationSchema = new Schema<IOtpVerification>({
     }
 });
 
-export const OtpVerification = model<IOtpVerification>('OtpVerification', otpVerificationSchema);
+const OtpVerification =  mongoose.models.OtpVerification || model<IOtpVerification>('OtpVerification', otpVerificationSchema);
+export { OtpVerification }

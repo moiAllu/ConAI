@@ -239,7 +239,6 @@ export const sendVerificationCode = async (email: string, otp: string) => {
         return {
             status: 200,
             message:"successfully sent the verfication mail"
-          
         }
       } else {
         return {

@@ -44,10 +44,10 @@ export const requestOtp = async (email:string) => {
         return verificationCodeToMail;
       } catch (e) {
       console.log(e);
-      const response = {
+      return {
         status: 500,
         message: e,
         }
-    return response;
+      
     }
 }

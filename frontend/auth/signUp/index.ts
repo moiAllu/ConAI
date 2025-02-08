@@ -39,7 +39,6 @@ export const signUp = async ( procedure: string, { name, email, password }: Sign
     }
     // Hash password
     const hashedPassword = await hashPassword(10, password);
-    console.log(hashedPassword)
     // Create new user
     const newUser = new UserModel({
       name: name,
