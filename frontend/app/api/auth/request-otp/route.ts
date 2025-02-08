@@ -9,11 +9,6 @@ export async function POST(
        return Response.json({ 
         status: 200,
         message:response.message,
-        },{
-            headers:{
-                "Content-Type":"application/json",
-            },
-            status:200
         })
     }
     return Response.json({

@@ -62,7 +62,7 @@ const SignUp = () => {
                 Enter the OTP sent to your email to verify your account
               </p>
             </div>
-            <InputOTPForm email={email} />
+            <InputOTPForm email={email} otpRequestGen={otpRequestGen} />
           </div>
         )}
       </div>

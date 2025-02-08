@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,8 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LoadingSpinner from "@/components/loading-spinner";
-import { number } from "zod";
-
+import { useMeStore } from "@/app/dashboard/store";
 interface CreateAccountProps {
   setOtpRequestGen: (otpRequestGen: any) => void;
   firstName: string;
@@ -44,10 +43,10 @@ export default function CreateAccount({
     password: "",
     general: "",
   });
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState({});
+  const { setUser } = useMeStore();
   const [success, setSuccess] = useState("");
-  const [loadingOtp, setLoadingOtp] = useState(false);
 
   const validatePassword = (password: string) => {
     const errors = [];
@@ -117,16 +116,14 @@ export default function CreateAccount({
     if (passwordErrors.length > 0) {
       newErrors.password = passwordErrors.join(", ");
     }
-
     if (Object.values(newErrors).some((error) => error !== "")) {
       setErrors(newErrors);
       setLoading(false);
       setOtpRequestGen(null);
       return;
     }
-
     try {
-      const response = await fetch("http://localhost:8000/api/signup", {
+      const response = await fetch("/api/auth/signup", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -135,25 +132,9 @@ export default function CreateAccount({
       });
       const data = await response.json();
       if (data.status === 201 || data.status === 200) {
-        setLoadingOtp(true);
         setSuccess(data.message);
         setUser(data.user);
-        const otpResponse = await fetch(
-          "http://localhost:8000/api/user/otp-request",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
-            method: "POST",
-          }
-        );
-        const otpRequest = await otpResponse.json();
-        if (otpRequest.message === "OTP sent successfully") {
-          console.log("OTP sent successfully");
-          setOtpRequestGen(otpRequest);
-          setLoadingOtp(false);
-        }
+        router.push("/signup/verify-otp");
       } else {
         setErrors({ ...errors, general: data.message });
       }
@@ -163,7 +144,6 @@ export default function CreateAccount({
       console.log(e);
     }
   };
-
   return (
     <div className="flex justify-center items-center">
       <Card className="mx-auto max-w-sm">

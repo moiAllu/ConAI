@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface User {
+export interface User {
     _id: string;
     name: string;
     email: string;
@@ -15,6 +15,7 @@ interface User {
 interface Action {
     setUser: (user: User) => void;
     updateUser: (user: User) => void;
+    setVerified: (verified:boolean)=>void;
 }
 
 export const useMeStore = create<User & Action>()(persist((set) => ({
@@ -32,6 +33,11 @@ export const useMeStore = create<User & Action>()(persist((set) => ({
         set((state) => ({
             ...state,
             ...user,
+        }));
+    },
+    setVerified: (verified:boolean) => {
+        set((state) => ({
+            verified,
         }));
     }
     
