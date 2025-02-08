@@ -18,8 +18,7 @@ export const forgotPassword = async (email:string) => {
       const token = await tokenization({user})
       user.resetToken = token;
       await user.save();
-      const PasswordResetLink = `${process.env.PASSWORD_RESET_LINK}?token=${token}`;
-      console.log(PasswordResetLink);
+      const PasswordResetLink = `${process.env.NEXT_PUBLIC_CONAI_PASSWORD_RESET_LINK}?token=${token}`;
       const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink) as any;
       if(resetLinkGenerated.status===200 && PasswordResetLink !== "" && token !== ""){
         return {

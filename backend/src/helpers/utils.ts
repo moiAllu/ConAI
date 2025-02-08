@@ -1,13 +1,7 @@
-
 import * as bcrypt from 'bcrypt'
-import { Models } from 'interfaces/openAiModels';
-import { createTransport } from 'nodemailer'
+import { createTransport } from "nodemailer"
 import openaiTokenCounter from 'openai-gpt-token-counter';
-const postmark = require("postmark");
 
-const client = new postmark.ServerClient(
-  "c5959f65-7559-4878-801e-9a20db52fb22"
- );
 export const utils = {
     isJSON: (data: string) => {
       try {
@@ -46,33 +40,24 @@ export const countTokens = (messages: any, model:  "gpt-3.5-turbo"|"gpt-3.5-turb
   return tokenCount
 }
 
-export const transporter = createTransport({
-    host :"smtp-api-pk2.infobip.com",
-    port: 587,
-    authMethod:"LOGIN",
-    auth : {
-      user:"al5690410",
-      pass:"lawaN@123"
-    }
-})
 
-// export const transporter = createTransport({
-//   host :"smtp-relay.brevo.com",
-//   port: 587,
-//   auth : {
-//       user: "78bd1d002@smtp-brevo.com",
-//       pass: "xsmtpsib-4c65ca168f55cb7c06144cb8df398ee1b84885299e25cfa6b73c00330586ae31-85CMj4cHRSywB1vL"
-//   }
-// })
+export const transporter = createTransport({
+  port: 465,               // true for 465, false for other ports
+  secure: true,
+  host: "smtp.gmail.com",
+     auth: {
+          user: process.env.GOOGLE_SMTP_USER || "mariikh72@gmail.com",
+          pass: process.env.GOOGLE_SMTP_PASS|| "ucotssafiswipoyj",
+       },
+  });
 
 export const sendVerificationCode = async (email: string, otp: string) => {
   try{
-    
-    const sent = await client.sendEmail({
-      From: "fofalo2247@anypng.com",
-      To: email,
-      Subject: "OTP Verification",
-      HtmlBody: `
+     const {response} = await transporter.sendMail({
+      from: "mariikh72@gmail.com",
+      to: email,
+      subject: "Conai-OTP Verification",
+      html: `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -144,7 +129,7 @@ export const sendVerificationCode = async (email: string, otp: string) => {
       </body>
       </html>
       `,
-      TextBody: `
+      text: `
       Hello,
       
       Thank you for using YourApp. To complete your request, please use the following One-Time Password (OTP):
@@ -162,18 +147,19 @@ export const sendVerificationCode = async (email: string, otp: string) => {
       Best regards,
       The YourApp Team
       `,
-      MessageStream: "outbound"
-      
     });
-    if(sent.ErrorCode===0){
+    if (response.startsWith("250")) {
       return {
-        status: 200,
-        message: sent
+          status: 200,
+          message:"successfully sent the verfication mail"
+        
       }
-    }
-    return {
-      status: 400,
-      message: "Email not sent"
+    } else {
+      return {
+          status: 400,
+          message:"invalid request"
+        
+      }
     }
   }catch(e){
     console.log(e)
@@ -181,13 +167,15 @@ export const sendVerificationCode = async (email: string, otp: string) => {
   
 }
 
+ 
+
 export const sendPasswordResetLink = async (email: string, link: string) => {
     try{
-      const sent = await client.sendEmail({
-        From: "fofalo2247@anypng.com",
-        To: email,
-        Subject: "Password Reset Request - ConAI",
-        HtmlBody: `
+      const {response} = await transporter.sendMail({
+        from: "mariikh72@gmail.com",
+        to: email,
+        subject: "Password Reset Request - ConAI",
+        html: `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -272,7 +260,7 @@ export const sendPasswordResetLink = async (email: string, link: string) => {
         </body>
         </html>
         `,
-        TextBody: `
+        text: `
         Hello,
         
         We received a request to reset your password for your ConAI.io account. If you did not make this request, please disregard this email.
@@ -290,23 +278,21 @@ export const sendPasswordResetLink = async (email: string, link: string) => {
         Best regards,
         The ConAI.io Team
         `,
-        MessageStream: "outbound"
-        
-        
       });
-      if(sent.ErrorCode===0){
+      if (response.startsWith("250")) {
         return {
-          status: 200,
-          message: sent
+            status: 200,
+            message:"successfully sent the password reset mail"
+          
         }
-      }
-      return {
-        status: 400,
-        message: "Email not sent"
+      } else {
+        return {
+            status: 400,
+            message:"invalid request"
+          
+        }
       }
     }catch(e){
       console.log(e)
     }
-    
- 
 }

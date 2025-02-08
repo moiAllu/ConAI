@@ -15,7 +15,7 @@ export const resetPassword = async ({password,verifyPassword,token}:ResetProps) 
       };
     }
     try {
-      const {email} = verifedToken;
+      const {email} = verifedToken.user;
       // Check if user exists
       if (!email || !password || !verifyPassword) {
         return {

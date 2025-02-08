@@ -90,7 +90,7 @@ export const requestForOtpVerificationCode = async (req:Request, res:Response) =
             });
         }
         }
-        const verificationCodeToMail =await sendVerificationCode(email, otp);
+        const verificationCodeToMail = await sendVerificationCode(email, otp);
         if(verificationCodeToMail.status === 200){
             return res.status(200).json({
                 message: "OTP sent successfully"
