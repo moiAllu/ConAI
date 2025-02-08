@@ -1,12 +1,10 @@
-import { resetPassword } from '@/auth'
- 
+import { requestOtp } from '@/auth/requestOpt';
 export async function POST(
   req: Request,
 ) {
   try {
-    const { password,verifyPassword, } = await req.json();
-    const {token}= await req.json();
-    const response = await resetPassword({ password,verifyPassword, token}) as any 
+    const { email } = await req.json();
+    const response = await requestOtp(email)
     if(response?.status === 200){
        return Response.json({ 
         status: 200,
