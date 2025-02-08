@@ -74,23 +74,15 @@ export const storeMessageInAiWritingHistory = async( userId:string, title:string
       
     }
    
-
-// export const deleteMessageInAiWritingHistory = async (userId, id) => {
-//     try {
-//         const aiWritingHistory = await AiWriting.findOne({ userId });
-//         if (aiWritingHistory) {
-//             const documentIndex = aiWritingHistory.documents.findIndex(
-//                 (doc) => doc._id === id
-//             );
-//             if (documentIndex !== -1) {
-//                 aiWritingHistory.documents.splice(documentIndex, 1);
-//                 await aiWritingHistory.save();
-//                 return aiWritingHistory.documents;
-//             }
-//         }
-//         return [];
-//     }
-//     catch (e) {
-//         console.log(e);
-//     }
-// }
+    export const deleteAiWritingByIdHandler = async (userId: string, id: string) => {
+        try {
+            const aiWritingHistory = await AiWriting.deleteOne({ _id:id, userId:userId });
+            if (aiWritingHistory.deletedCount=== 1) {
+                return aiWritingHistory;
+            }
+            return false;
+        } catch (e) {
+            console.log(e); 
+            throw new Error("Failed to delete AI writing history.");
+        }
+    };

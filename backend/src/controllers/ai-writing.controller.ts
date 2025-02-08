@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getAiWritingsByIds, getUserAiWritings,storeMessageInAiWritingHistory} from "../services/aiWritingHistory";
+import { deleteAiWritingByIdHandler, getAiWritingsByIds, getUserAiWritings,storeMessageInAiWritingHistory} from "../services/aiWritingHistory";
 import { getGPTResponse } from "../open-ai";
 
 export const getUserAiWritingsHistory = async (req: Request, res: Response) => {
@@ -35,6 +35,29 @@ export const getAiWritingById = async (req: Request, res: Response) => {
         data: userWritings,
         });
 
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+        message: "Internal server error",
+        status: 500,
+        });
+    }
+}
+export const deleteAiWritingById = async (req:Request,res:Response)=>{
+    const { id, userId } = req.params;
+    try{
+        const userWritings = await deleteAiWritingByIdHandler(userId, id);
+        if (!userWritings) {
+            return res.status(404).json({
+            message: "Document not found",
+            status: 404,
+            });
+        }
+        return res.status(200).json({
+        message: "Document successfully deleted",
+        status: 200,
+        data: userWritings,
+        });
     } catch (e) {
         console.log(e);
         return res.status(500).json({
