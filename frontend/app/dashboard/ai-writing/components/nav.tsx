@@ -31,8 +31,8 @@ const Nav = (props: NavProps) => {
           <h1 className="text-xl font-bold">AI Writing</h1>
           <Drawer direction="left">
             <DrawerTrigger asChild>
-              <Button variant="ghost" size="icon" className="">
-                <History />
+              <Button variant="ghost" size="icon">
+                <History size={22} />
                 <span className="sr-only">history</span>
               </Button>
             </DrawerTrigger>
@@ -46,7 +46,7 @@ const Nav = (props: NavProps) => {
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
-                <Settings className="size-6" />
+                <Settings size="20px" />
                 <span className="sr-only">Settings</span>
               </Button>
             </DrawerTrigger>

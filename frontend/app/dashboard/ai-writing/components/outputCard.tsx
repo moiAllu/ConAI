@@ -27,12 +27,10 @@ const OutputCard = () => {
   const documents = history.find(
     (doc) => doc._id === searchParams.get("documentId")
   );
-  console.log(history);
   useEffect(() => {
     if (!documentId) return;
     const getAiResponse = async () => {
       const response = await getAiWritingById(documentId, userId);
-      console.log(response);
       // useAIWritingStore.setState({ history: response.data });
       useAIWritingStore
         .getState()

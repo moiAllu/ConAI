@@ -16,6 +16,11 @@ import { useMeStore } from "../../store";
 import { Ellipsis } from "lucide-react";
 import { useAIChatStore } from "../store";
 import { getChatHistory } from "@/lib/apicalls/chat-assisstance";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 interface ResizeableSidebarProps {
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
@@ -37,6 +42,7 @@ const ResizeableSidebar = ({
   const router = useRouter();
   const { _id } = useMeStore();
   const [mouseEnter, setMouseEnter] = React.useState("");
+  const [clickedId, setClickedId] = React.useState("");
 
   const onCollapsed = (collapsed: any) => {
     setIsCollapsed(true);
@@ -124,14 +130,25 @@ const ResizeableSidebar = ({
                       {message?.title.slice(0, 25) + "..."}
                     </p>
                   </Button>
-                  {mouseEnter === message.chatId && (
-                    <Button
-                      className="py-1 justify-start rounded-l-none"
-                      size="sm"
-                      variant="secondary"
-                    >
-                      <Ellipsis />
-                    </Button>
+                  {(mouseEnter === message.chatId ||
+                    clickedId === message.chatId) && (
+                    <Popover>
+                      <PopoverTrigger
+                        onClick={() =>
+                          setClickedId(
+                            clickedId === message.chatId ? "" : message.chatId
+                          )
+                        }
+                        className="py-1.5 px-2 bg-muted hover:bg-muted/75"
+                      >
+                        <Ellipsis />
+                      </PopoverTrigger>
+                      <PopoverContent className="flex flex-col max-w-32 p-2 gap-2 ">
+                        <Button variant="secondary">Share</Button>
+                        <Button variant="secondary">Share</Button>
+                        <Button variant="secondary">Share</Button>
+                      </PopoverContent>
+                    </Popover>
                   )}
                 </div>
               ))}
