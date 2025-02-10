@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 import { Schema, model } from 'mongoose';
 
 interface IImageGeneration extends Document {
-    _id?: string;
+    _id: string;
   userId: string;
   prompt: string;
   image: string;

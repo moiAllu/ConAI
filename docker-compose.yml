@@ -14,15 +14,23 @@ services:
       target: production
     restart: unless-stopped
     env_file: ./frontend/.env
+    command: npm start
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - conai
     depends_on:
       - api
   caddy:
-    image: caddy:2-alpine
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     ports:
       - 80:80
       - 443:443
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
     volumes:
       - caddy_data:/data
       - caddy_config:/config

@@ -15,6 +15,12 @@ RUN npm run build
 # production stage
 FROM node:20 as production
 
-COPY --from=development /app/.next .
+WORKDIR /app
 
-CMD [ "npm", "start"]
+COPY package*.json ./
+
+RUN npm ci
+
+COPY  . .
+
+RUN npm run build

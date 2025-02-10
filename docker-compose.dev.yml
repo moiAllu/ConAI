@@ -22,7 +22,7 @@ services:
       - /app/node_modules
     networks:
       - conai
-    command: npm run dev
+    command: npm start
     depends_on:
       - api
   caddy:
@@ -31,7 +31,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     networks:
