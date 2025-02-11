@@ -133,7 +133,9 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/user/otp-verification",
+        `${
+          process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me"
+        }/api/user/otp-verification`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

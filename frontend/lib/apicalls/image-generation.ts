@@ -5,9 +5,10 @@ interface Data {
     background:string,
     color:string, 
 }
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me";
 export const createImage = async (data:Data,userId:string) => {
 
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/generate-image`,{
+    return fetch(`${BACKEND_API_URL}/api/generate-image`,{
         method:"POST",
         credentials:"include",
         headers:{
@@ -22,7 +23,7 @@ export const createImage = async (data:Data,userId:string) => {
 }
 export const getImageById = async (imageId:string,userId:string) => {
 
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/${imageId}/${userId}`,{
+    return fetch(`${BACKEND_API_URL}/api/image/${imageId}/${userId}`,{
 
         method:"GET",
         credentials:"include",
@@ -37,7 +38,7 @@ export const getImageById = async (imageId:string,userId:string) => {
 }
 export const getUserImages = async (userId:string) => {
 
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image-generation/images/${userId}`,{
+    return fetch(`${BACKEND_API_URL}/api/image-generation/images/${userId}`,{
 
         method:"GET",
         credentials:"include",
@@ -51,7 +52,7 @@ export const getUserImages = async (userId:string) => {
     )
 }
 export const deleteImage = async (id:string,userId:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/${id}/${userId}`,{
+    return fetch(`${BACKEND_API_URL}/api/image/${id}/${userId}`,{
         method:"DELETE",
         credentials:"include",
         headers:{
@@ -64,7 +65,7 @@ export const deleteImage = async (id:string,userId:string) => {
     )
 }
 export const downloadImageEndPoint = async (imageId:string,resolution:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/download/${imageId}/${resolution}`,{
+    return fetch(`${BACKEND_API_URL}/api/image/download/${imageId}/${resolution}`,{
         method:"GET",
         credentials:"include",
         headers:{

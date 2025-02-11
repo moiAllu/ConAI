@@ -5,9 +5,10 @@ interface promptMods {
     inputAgeGroup : string,
     inputLength : string, 
   };
+  const BACKEND_API_URL = process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me";
 
     export const generateAiResponse = async (promptMods:promptMods,prompt:string,userId:string,chatId:string) => {
-        return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/ai-writing`,{
+        return fetch(`${BACKEND_API_URL}/api/ai-writing`,{
             method:"POST",
             credentials:"include",
             headers:{
@@ -20,7 +21,7 @@ interface promptMods {
         })
     }
     export const getUserAiWritings = async (userId:string) => {
-        return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/ai-writing/writings/${userId}`,{
+        return fetch(`${BACKEND_API_URL}/api/ai-writing/writings/${userId}`,{
             method:"GET",
             credentials:"include",
         
@@ -35,7 +36,7 @@ interface promptMods {
         )
     }
     export const  getAiWritingById = async (id:string,userId:string) => {
-        return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/ai-writing/${id}/${userId}`,{
+        return fetch(`${BACKEND_API_URL}/api/ai-writing/${id}/${userId}`,{
             method:"GET",
             credentials:"include",
             headers:{
@@ -48,7 +49,7 @@ interface promptMods {
         )
     }
     export const deleteAiWritingById= (id:string, userId:string)=>{
-        return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/ai-writing/${id}/${userId}`,{
+        return fetch(`${BACKEND_API_URL}/api/ai-writing/${id}/${userId}`,{
             method:"DELETE",
             credentials:"include",
             headers:{
