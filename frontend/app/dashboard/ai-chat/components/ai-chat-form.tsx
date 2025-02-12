@@ -31,17 +31,6 @@ const AIChatForm = (props: Props) => {
       return;
     }
     setInput("");
-    addMessageToChat(
-      {
-        id: Math.random().toString(),
-        role: "user",
-        message: input,
-        createdAt: new Date().toISOString(),
-      },
-      chatId,
-      _id
-    );
-
     const response = await addMessageInChat(input, chatId, _id);
     // const data = await response.json();
     const reader = response.body?.getReader() as any;
@@ -74,8 +63,19 @@ const AIChatForm = (props: Props) => {
           if (chatid) {
             router.push(`/dashboard/ai-chat?chatId=${chatid}`);
           }
+          addMessageToChat(
+            {
+              id: chatId,
+              role: "user",
+              message: input,
+              createdAt: new Date().toISOString(),
+            },
+            chatId,
+            _id
+          );
           continue;
         }
+
         if (line.startsWith("messageId: ")) {
           messageId = line.substring(11);
           console.log(messageId);

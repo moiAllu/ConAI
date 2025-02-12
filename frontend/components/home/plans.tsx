@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
+import Link from "next/link";
 type Props = {
   title: string;
   description: string;
@@ -18,7 +18,7 @@ type Props = {
 };
 const Plans = (props: Props) => {
   return (
-    <Card className="xl:w-[350px] min-h-[550px] justify-between flex flex-col shadow-md ">
+    <Card className="xl:w-[350px] h-full  justify-between flex flex-col shadow-md ">
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <CardDescription>{props.description}</CardDescription>
@@ -40,7 +40,9 @@ const Plans = (props: Props) => {
         <div className="flex flex-col justify-end items-end w-full">
           <h3>{props.price} $</h3>
           <div>
-            <Button className="w-full">Get Started</Button>
+            <Button className="w-full">
+              <Link href="/login"> Get Started</Link>
+            </Button>
           </div>
         </div>
       </CardFooter>

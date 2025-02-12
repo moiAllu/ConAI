@@ -1,8 +1,8 @@
-import { Document } from 'mongoose';
-import { Schema, model } from 'mongoose';
+import { Document } from "mongoose";
+import { Schema, model } from "mongoose";
 
 interface IImageGeneration extends Document {
-    _id?: string;
+  _id: string;
   userId: string;
   prompt: string;
   image: string;
@@ -22,7 +22,7 @@ const imageGenerationSchema = new Schema<IImageGeneration>({
   image: {
     type: String,
     required: true,
-  } ,
+  },
   revised_prompt: {
     type: String,
     required: true,
@@ -34,6 +34,6 @@ const imageGenerationSchema = new Schema<IImageGeneration>({
 });
 
 export const ImageGeneration = model<IImageGeneration>(
-  'ImageGeneration',
+  "ImageGeneration",
   imageGenerationSchema
 );
