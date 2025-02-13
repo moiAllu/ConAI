@@ -6,6 +6,7 @@ import {
   storeAiGeneratedSummarize,
 } from "../services/summarizer";
 import { getSummarizeOpenAiRes } from "../open-ai";
+
 export const getSummarizerHistoryContorller = async (
   req: Request,
   res: Response
@@ -31,6 +32,7 @@ export const getSummarizerHistoryContorller = async (
     });
   }
 };
+
 export const getSummarizerByUserIdController = async (
   req: Request,
   res: Response
@@ -56,6 +58,7 @@ export const getSummarizerByUserIdController = async (
     });
   }
 };
+
 export const deleteSummarizerByIdController = async (
   req: Request,
   res: Response
@@ -83,10 +86,36 @@ export const deleteSummarizerByIdController = async (
 
 export const createSummarizer = async (req: Request, res: Response) => {
   const { intensity, content, userId } = req.body;
+
+  let summarizationPrompt = "";
+
+  switch (intensity.toLowerCase()) {
+    case "short":
+      summarizationPrompt = `
+Summarize the following content, retaining most of the details. The summary should be concise but comprehensive.
+`;
+      break;
+    case "medium":
+      summarizationPrompt = `
+Summarize the following content, retaining key points and important information. The summary should be concise and not exceed 1/2 of original text.
+`;
+      break;
+    case "long":
+      summarizationPrompt = `
+Summarize the following content, retaining only the most critical information. The summary should be very concise and exceed 1/2 of original text.
+`;
+      break;
+    default:
+      summarizationPrompt = `
+Summarize the following content, retaining key points and important information. The summary should be concise and not exceed 500 words.
+`;
+  }
+
   try {
     const output = await getSummarizeOpenAiRes(
-      { prompt: content, model: "gpt-3.5-turbo-0125" },
-      "Summarize the following content."
+      { prompt: content, model: "gpt-4o" },
+      summarizationPrompt,
+      intensity
     );
     const userSummarizer = await storeAiGeneratedSummarize(
       intensity,

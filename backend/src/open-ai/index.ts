@@ -5,6 +5,7 @@ interface gptResponseInterface {
   model?: string;
   prompt: string;
 }
+
 export const getGPTResponse = async ({
   prompt,
   model,
@@ -72,15 +73,19 @@ export const getRewriteOpenAiRes = async (
 
 export const getSummarizeOpenAiRes = async (
   { prompt, model }: gptResponseInterface,
-  tunePrompt: string
+  tunePrompt: string,
+  intensity: string
 ) => {
   try {
+    const systemPrompt =
+      "Please respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. don't include headings.";
     const rewrite = await openAIClient.chat.completions.create({
       messages: [
         { role: "user", content: prompt },
         { role: "assistant", content: tunePrompt, name: "tunePrompt" },
+        { role: "system", content: systemPrompt },
       ],
-      model: "gpt-3.5-turbo-0125",
+      model,
       stream: false,
       temperature: 0.1,
     });
