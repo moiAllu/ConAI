@@ -15,164 +15,146 @@ import React from "react";
 import { useMeStore } from "../../store";
 import { useAIWritingStore } from "../store";
 import { toast, Toaster } from "sonner";
+
 const lengthData = [
-  {
-    value: "Short (500 words)",
-    description: "Short length.",
-  },
-  {
-    value: "Medium (1000-1500 words)",
-    description: "Medium length.",
-  },
-  {
-    value: "Long (2000-3000 words)",
-    description: "Long length.",
-  },
+  { value: "Short (500 words)", description: "Short length." },
+  { value: "Medium (1000-1500 words)", description: "Medium length." },
+  { value: "Long (2000-3000 words)", description: "Long length." },
 ];
+
 const ageGroupData = [
-  {
-    value: "Kids (5-11)",
-    description: "Kids age group.",
-  },
-  {
-    value: "Teens (12-17)",
-    description: "Teens age group.",
-  },
-  {
-    value: "Adults (18-50)",
-    description: "Adults age group.",
-  },
-  {
-    value: "Seniors (50+)",
-    description: "Seniors age group.",
-  },
+  { value: "Kids (5-13)", description: "Kids age group." },
+  { value: "Teens (13-19)", description: "Teens age group." },
+  { value: "Adults (20-39)", description: "Adults age group." },
+  { value: "Seniors (50+)", description: "Seniors age group." },
 ];
+
 const toneData = [
-  {
-    value: "Formal",
-    description: "Formal tone.",
-  },
-  {
-    value: "Informal",
-    description: "Informal tone.",
-  },
-  {
-    value: "Neutral",
-    description: "Neutral tone.",
-  },
-  {
-    value: "Professional",
-    description: "Professional tone.",
-  },
-  {
-    value: "Casual",
-    description: "Casual tone.",
-  },
-  {
-    value: "Friendly",
-    description: "Friendly tone.",
-  },
-  {
-    value: "Humorous",
-    description: "Humorous tone.",
-  },
-  {
-    value: "Sarcastic",
-    description: "Sarcastic tone.",
-  },
-  {
-    value: "Serious",
-    description: "Serious tone.",
-  },
-  {
-    value: "Sympathetic",
-    description: "Sympathetic tone.",
-  },
-  {
-    value: "Uplifting",
-    description: "Uplifting tone.",
-  },
-  {
-    value: "Encouraging",
-    description: "Encouraging tone.",
-  },
-  {
-    value: "Motivational",
-    description: "Motivational tone.",
-  },
-  {
-    value: "Inspirational",
-    description: "Inspirational tone.",
-  },
-  {
-    value: "Persuasive",
-    description: "Persuasive tone.",
-  },
-  {
-    value: "Educational",
-    description: "Educational tone.",
-  },
-  {
-    value: "Instructional",
-    description: "Instructional tone.",
-  },
-  {
-    value: "Advisory",
-    description: "Advisory tone.",
-  },
-  {
-    value: "Warning",
-    description: "Warning",
-  },
+  { value: "Formal", description: "Formal tone." },
+  { value: "Informal", description: "Informal tone." },
+  { value: "Neutral", description: "Neutral tone." },
+  { value: "Professional", description: "Professional tone." },
+  { value: "Casual", description: "Casual tone." },
+  { value: "Friendly", description: "Friendly tone." },
+  { value: "Humorous", description: "Humorous tone." },
+  { value: "Serious", description: "Serious tone." },
+  { value: "Sympathetic", description: "Sympathetic tone." },
+  { value: "Uplifting", description: "Uplifting tone." },
+  { value: "Encouraging", description: "Encouraging tone." },
+  { value: "Motivational", description: "Motivational tone." },
+  { value: "Inspirational", description: "Inspirational tone." },
+  { value: "Persuasive", description: "Persuasive tone." },
+  { value: "Educational", description: "Educational tone." },
+  { value: "Instructional", description: "Instructional tone." },
+  { value: "Advisory", description: "Advisory tone." },
+  { value: "Warning", description: "Warning tone." },
 ];
 
 const formatOptions = [
+  { value: "Paragraph", description: "A paragraph of text." },
   {
-    value: "Paragraph",
-    description: "A paragraph of text.",
-  },
-  {
-    value: "Eassy",
+    value: "Essay",
     description: "A full essay.",
     types: [
-      {
-        value: "Argumentative",
-        description: "An argumentative essay.",
-      },
-      {
-        value: "Narrative",
-        description: "A narrative essay.",
-      },
-      {
-        value: "Expository",
-        description: "An expository essay.",
-      },
-      {
-        value: "Descriptive",
-        description: "A descriptive essay.",
-      },
-      {
-        value: "Persuasive",
-        description: "A persuasive essay.",
-      },
+      { value: "Argumentative", description: "An argumentative essay." },
+      { value: "Narrative", description: "A narrative essay." },
+      { value: "Expository", description: "An expository essay." },
+      { value: "Descriptive", description: "A descriptive essay." },
+      { value: "Persuasive", description: "A persuasive essay." },
+    ],
+    allowedTones: [
+      "Formal",
+      "Neutral",
+      "Professional",
+      "Serious",
+      "Persuasive",
+      "Educational",
     ],
   },
   {
     value: "Blog post",
     description: "A blog post.",
+    allowedTones: [
+      "Informal",
+      "Casual",
+      "Friendly",
+      "Humorous",
+      "Inspirational",
+      "Persuasive",
+    ],
   },
   {
     value: "Article",
     description: "An article.",
+    allowedTones: [
+      "Formal",
+      "Neutral",
+      "Professional",
+      "Educational",
+      "Instructional",
+    ],
   },
   {
     value: "Poem",
     description: "A poem.",
+    allowedTones: ["Friendly", "Humorous", "Sympathetic", "Inspirational"],
   },
-  { value: "Email", description: "An email." },
+  {
+    value: "Email",
+    description: "An email.",
+    allowedTones: ["Professional", "Casual", "Friendly", "Formal", "Advisory"],
+  },
   {
     value: "Outline",
     description: "An outline.",
+    allowedTones: ["Neutral", "Professional", "Instructional"],
+  },
+  {
+    value: "Story",
+    description: "A creative or fictional story.",
+    allowedTones: [
+      "Casual",
+      "Friendly",
+      "Humorous",
+      "Serious",
+      "Sympathetic",
+      "Uplifting",
+      "Inspirational",
+    ],
+  },
+  {
+    value: "Application",
+    description: "A formal application (e.g., job, university).",
+    allowedTones: ["Formal", "Professional", "Neutral", "Advisory"],
+  },
+  {
+    value: "Review",
+    description: "A review of a product, service, or experience.",
+    allowedTones: [
+      "Professional",
+      "Neutral",
+      "Casual",
+      "Humorous",
+      "Persuasive",
+      "Serious",
+    ],
+  },
+  {
+    value: "Report",
+    description: "A structured report.",
+    allowedTones: ["Formal", "Neutral", "Professional", "Educational"],
+  },
+  {
+    value: "Speech",
+    description: "A speech for an audience.",
+    allowedTones: [
+      "Inspirational",
+      "Motivational",
+      "Encouraging",
+      "Persuasive",
+      "Formal",
+      "Serious",
+    ],
   },
 ];
 
@@ -205,7 +187,7 @@ const DynamicCard = () => {
       !inputContent
     ) {
       setIsLoading(false);
-      toast.error("Please fill all feilds");
+      toast.error("Please fill all fields");
       return;
     }
     const promptMods = {
@@ -255,6 +237,18 @@ const DynamicCard = () => {
     toast.error("Failed to generate content");
   };
 
+  const getFilteredTones = (format: string) => {
+    const selectedFormat = formatOptions.find(
+      (option) => option.value === format
+    );
+    if (selectedFormat && selectedFormat.allowedTones) {
+      return toneData.filter((tone) =>
+        selectedFormat.allowedTones.includes(tone.value)
+      );
+    }
+    return toneData;
+  };
+
   return (
     <form
       className="grid h-full w-full items-start gap-6 overflow-auto max-w-md"
@@ -294,7 +288,7 @@ const DynamicCard = () => {
             </SelectContent>
           </Select>
         </div>
-        {inputFormat === "Eassy" && (
+        {inputFormat === "Essay" && (
           <div className="grid gap-2">
             <Label htmlFor="type">Type</Label>
             <Select
@@ -311,7 +305,7 @@ const DynamicCard = () => {
               </SelectTrigger>
               <SelectContent>
                 {formatOptions.map((option, index) => {
-                  if (option.value === "Eassy") {
+                  if (option.value === "Essay") {
                     return option?.types?.map((type, index) => (
                       <SelectItem
                         key={index}
@@ -342,7 +336,7 @@ const DynamicCard = () => {
               <SelectValue placeholder="Select tone" />
             </SelectTrigger>
             <SelectContent>
-              {toneData.map((option, index) => (
+              {getFilteredTones(inputFormat).map((option, index) => (
                 <SelectItem
                   key={index}
                   value={option.value}

@@ -6,10 +6,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import DeleteAlert from "@/components/custom/deleteAlert";
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Delete } from "lucide-react";
 import { categorizeChatMessages } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useMeStore } from "../../store";
@@ -144,9 +145,15 @@ const ResizeableSidebar = ({
                         <Ellipsis />
                       </PopoverTrigger>
                       <PopoverContent className="flex flex-col max-w-32 p-2 gap-2 ">
-                        <Button variant="secondary">Share</Button>
-                        <Button variant="secondary">Share</Button>
-                        <Button variant="secondary">Share</Button>
+                        <Button variant="secondary" className="p-1">
+                          <DeleteAlert
+                            _id={message.chatId}
+                            mode="aichat"
+                            userId={_id}
+                            history={chats}
+                            setHistory={setChatHistory}
+                          />
+                        </Button>
                       </PopoverContent>
                     </Popover>
                   )}

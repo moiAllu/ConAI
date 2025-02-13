@@ -22,7 +22,7 @@ const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
 
 const DrawerCard = () => {
   const router = useRouter();
-  const [method, setMethod] = React.useState("Ai Detection");
+  const [method, setMethod] = React.useState("Plagiarism Detection");
   const [content, setContent] = React.useState("");
   const { _id: userId } = useMeStore();
   const { addAiHistory, addPlagrismHistory } = useContentDetectorStore();

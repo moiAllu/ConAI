@@ -106,7 +106,7 @@ const OutputCard = () => {
         </Badge>
       )}
       <div className="w-full min-h-full overflow-y-auto">
-        {base64Image && (
+        {base64Image && imageId && (
           <div className="gap-2  flex flex-col w-full mt-2 h-full">
             <h1 className="md:hidden font-semibold w-full text-center">
               {selectedImage?.prompt}

@@ -31,17 +31,6 @@ const AIChatForm = (props: Props) => {
       return;
     }
     setInput("");
-    addMessageToChat(
-      {
-        id: Math.random().toString(),
-        role: "user",
-        message: input,
-        createdAt: new Date().toISOString(),
-      },
-      chatId,
-      _id
-    );
-
     const response = await addMessageInChat(input, chatId, _id);
     // const data = await response.json();
     const reader = response.body?.getReader() as any;
@@ -52,6 +41,7 @@ const AIChatForm = (props: Props) => {
     let aiResp = "";
     let chatid = "";
     let messageId = "";
+    let promptMsgId = "";
 
     while (!done) {
       const { value, done: readerDone } = await reader.read();
@@ -76,6 +66,22 @@ const AIChatForm = (props: Props) => {
           }
           continue;
         }
+        if (line.startsWith("promptMsgId: ")) {
+          promptMsgId = line.substring(13);
+          console.log("prompt Id", promptMsgId);
+          addMessageToChat(
+            {
+              id: Math.floor(Math.random() * 10000).toString(),
+              role: "user",
+              message: input,
+              createdAt: new Date().toISOString(),
+            },
+            chatid,
+            _id
+          );
+          continue;
+        }
+
         if (line.startsWith("messageId: ")) {
           messageId = line.substring(11);
           console.log(messageId);

@@ -41,38 +41,49 @@ const plansData: typePlansData[] = [
   {
     title: "Free",
     description:
-      "Ideal for individual users wanting to explore the basic features. This plan offers:",
+      "Start with free plan to explore the features. This plan offers:",
     features: [
-      "Access to GPT 4 and 4 Turbo 128K",
-      "Access to Llama 2 70B",
-      "Access to Claude",
-      "Access to Perplexity with Web Search",
+      "Unlimited AI Chats",
+      "20 Rewrites",
+      "20 Plagiarism Checks",
+      "20 Summarizes",
+      "10 AI Generated Photos",
+      "10 AI writtings",
     ],
     price: "0",
   },
   {
-    title: "Plus",
+    title: "Basic",
     description:
       "Ideal for individual users wanting to explore the basic features. This plan offers:",
     features: [
-      "Access to GPT 4 and 4 Turbo 128K",
-      "Access to Llama 2 70B",
-      "Access to Claude",
-      "Access to Perplexity with Web Search",
+      "Unlimited Rewrites",
+      "Unlimited AI Chats",
+      "Unlimited Plagiarism Checks",
+      "Unlimited Summarizes",
+      "100 AI Generated Photos",
+      "500 AI writtings",
+      "support 24/7",
+      "Cancel Anytime",
     ],
-    price: "16",
+    price: "10",
   },
   {
-    title: "Enterprises",
+    title: "Pro",
     description:
-      "Ideal for individual users wanting to explore the basic features. This plan offers:",
+      "Best for professionals and small teams looking to scale their content creation. This plan offers:",
     features: [
-      "Access to GPT 4 and 4 Turbo 128K",
-      "Access to Llama 2 70B",
-      "Access to Claude",
-      "Access to Perplexity with Web Search",
+      "Unlimited Access",
+      "Unlimited Rewrites",
+      "Unlimited AI Chats",
+      "Unlimited Plagiarism Checks",
+      "Unlimited Summarizes",
+      "300 AI Generated Photos",
+      "1000 AI writtings",
+      "support 24/7",
+      "Cancel Anytime",
     ],
-    price: "Ask for Pricing",
+    price: "20",
   },
 ];
 
@@ -86,7 +97,7 @@ const HeroPage = () => {
               Write, visualize what you think?
             </h1>
             <p className="text-lg  mt-4 lg ">
-              enhance your workflow, just think forget about writing on ConAi,
+              enhance your workflow, just think forget about writing on ConAI,
               All your AI tools at one place with conAI
             </p>
           </div>

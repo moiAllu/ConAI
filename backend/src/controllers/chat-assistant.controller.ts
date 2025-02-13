@@ -1,18 +1,19 @@
-import { Request, Response } from 'express';
-import { getGPTResponse, getSummarizeChatHistoryOpenAiRes } from '../open-ai';
+import { Request, Response } from "express";
+import { getSummarizeChatHistoryOpenAiRes } from "../open-ai";
 import {
   storeMessageInChatHistory,
   getChatHistory,
   getUserChats,
-} from '../services/chatHistory';
-import jwt from 'jsonwebtoken';
-import openAIClient from '../config/open-ai';
-import { countTokens } from '../helpers';
-import { ChatCompletionMessageParam } from 'openai/resources';
-
+  updateStoreMessageInChatHistory,
+  deleteChatById,
+} from "../services/chatHistory";
+import jwt from "jsonwebtoken";
+import openAIClient from "../config/open-ai";
+import { countTokens } from "../helpers";
+import { ChatCompletionMessageParam } from "openai/resources";
 
 export const getUserChatsController = async (req: Request, res: Response) => {
-  const {userId} =req.params;
+  const { userId } = req.params;
   try {
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
 
@@ -20,14 +21,14 @@ export const getUserChatsController = async (req: Request, res: Response) => {
     const userChats = await getUserChats(userId);
 
     return res.status(200).json({
-      message: 'User chats fetched successfully',
+      message: "User chats fetched successfully",
       status: 200,
       data: userChats,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       status: 500,
     });
   }
@@ -35,28 +36,28 @@ export const getUserChatsController = async (req: Request, res: Response) => {
 
 export const getChatHistoryController = async (req: Request, res: Response) => {
   const { chatId } = req.params;
-  const token = req.header('Authorization');
+  const token = req.header("Authorization");
   try {
     // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
     // const userId = req.user.id;
-    const {user} = jwt.verify(token, process.env.JWT_SECRET)
+    const { user } = jwt.verify(token, process.env.JWT_SECRET);
     // get from MOngo Model
     const chatHistory = await getChatHistory(chatId, user._id);
     if (!chatHistory) {
       return res.status(404).json({
-        message: 'Chat not found',
+        message: "Chat not found",
         status: 404,
       });
     }
     return res.status(200).json({
-      message: 'Chat history fetched successfully',
+      message: "Chat history fetched successfully",
       status: 200,
       data: chatHistory,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
-      message: 'Internal server error',
+      message: "Internal server error",
       status: 500,
     });
   }
@@ -64,103 +65,127 @@ export const getChatHistoryController = async (req: Request, res: Response) => {
 
 export const getGPTReponseController = async (req: Request, res: Response) => {
   const { chatId, title, prompt, _id } = req.body;
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache, no-transform');
-  res.setHeader('Connection', 'keep-alive');
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache, no-transform");
+  res.setHeader("Connection", "keep-alive");
 
   try {
     if (!prompt) {
-      return res.status(400).write(`error: ${JSON.stringify('Prompt is required')}\n\n`);
+      return res
+        .status(400)
+        .write(`error: ${JSON.stringify("Prompt is required")}\n\n`);
     }
     // UNCOMMENT WHEN NEEDED
-    const systemPrompt = "Please respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. Include headings."
-    let assistantMessages: ChatCompletionMessageParam[]= [];
+    const systemPrompt =
+      "Please respond in Markdown format, when appropriate, avoiding unnecessary formatting in formal contexts like letters or applications. Include headings.";
+    let assistantMessages: ChatCompletionMessageParam[] = [];
 
     if (chatId) {
       const chatHistory = await getChatHistory(chatId, _id);
       if (chatHistory && chatHistory.messages) {
         assistantMessages = chatHistory.messages
-          .filter(item => item.role === 'assistant')
-          .map(item => ({ role: item.role, content: item.message }));
+          .filter((item) => item.role === "assistant")
+          .map((item) => ({ role: item.role, content: item.message }));
       }
     }
 
     let messages: ChatCompletionMessageParam[] = [
-      { role: 'system', content: systemPrompt },
+      { role: "system", content: systemPrompt },
       ...assistantMessages,
-      { role: 'user', content: prompt },
+      { role: "user", content: prompt },
     ];
-    const tokens = countTokens(messages, 'gpt-3.5-turbo');
+    const tokens = countTokens(messages, "gpt-3.5-turbo");
     const maxTokens = 2096;
 
     if (tokens > maxTokens - 500) {
-      const messagesToSummarize = assistantMessages.slice(1, -5);
+      const messagesToSummarize = assistantMessages.slice(1, -7);
       const summarizedContent = await getSummarizeChatHistoryOpenAiRes(
         messagesToSummarize,
         "gpt-3.5-turbo-0125"
       );
       messages = [
-        { role: 'system', content: systemPrompt },
-        { role: 'assistant', content: summarizedContent },
-        { role: 'user', content: prompt },
+        { role: "system", content: systemPrompt },
+        { role: "assistant", content: summarizedContent },
+        { role: "user", content: prompt },
       ];
     }
 
     const chatCompletion = await openAIClient.chat.completions.create({
       messages: messages,
       // model: model || CONFIG.OPENAI_GPT_MODEL,
-      model: 'gpt-3.5-turbo-0125',
+      model: "gpt-3.5-turbo-0125",
       stream: true,
-    },
-  );
-  if(!chatCompletion){
-    console.log('Content not found');
-    return res.write(`error: ${JSON.stringify('Content not found')}\n\n`);
-  }
-  // const countToken = countTokens([{role: 'user', content: prompt}],"gpt-3.5-turbo");
-  // console.log(countToken)
-    // const aiResp = 'UNCOMMENT THE ABOVE LINE TO GET AI RESPONSE';
-  
-    // TODO: GET FROM REQUEST AFTER JWT AUTHENTICATION
-    // const userId = req.user.id;
+    });
+    if (!chatCompletion) {
+      console.log("Content not found");
+      return res.write(`error: ${JSON.stringify("Content not found")}\n\n`);
+    }
+
+    let aiResp = "Thinking...";
     const userId = _id;
-    const newChatId = await storeMessageInChatHistory(
+    const { newChatId, messageId: promptId } = await storeMessageInChatHistory(
       chatId,
       title,
       userId,
-      'user',
+      "user",
       prompt
     );
-    const tempMessageId = Math.floor(Math.random() * 10000);
     res.write(`chatId: ${newChatId ? newChatId : chatId}\n\n`);
-    res.write(`messageId: ${tempMessageId}\n\n`);
-    let aiResp = "";
+    res.write(`promptMsgId: ${promptId}\n\n`);
+
+    const { newChatId: sameChatId, messageId: responseMsgId } =
+      await storeMessageInChatHistory(
+        newChatId ? newChatId : chatId,
+        title,
+        userId,
+        "assistant",
+        aiResp
+      );
+    aiResp = "";
+    res.write(`messageId: ${responseMsgId}\n\n`);
     for await (const chunks of chatCompletion) {
-      if (chunks.choices[0]?.finish_reason === 'stop') {
-          res.write('data: [DONE]\n\n');
-          await storeMessageInChatHistory(
-            newChatId ? newChatId : chatId,
-            title,
-            userId,
-            'assistant',
-            aiResp
-          );
-          return res.end();
+      if (chunks.choices[0]?.finish_reason === "stop") {
+        res.write("data: [DONE]\n\n");
+        await updateStoreMessageInChatHistory(
+          newChatId ? newChatId : chatId,
+          title,
+          userId,
+          responseMsgId,
+          "assistant",
+          aiResp
+        );
+        return res.end();
       }
       const content = chunks.choices[0]?.delta?.content;
       if (content) {
-          aiResp += content;
-          res.write(`data: ${JSON.stringify(content)}\n\n`);
+        aiResp += content;
+        res.write(`data: ${JSON.stringify(content)}\n\n`);
       }
-  }
-    // return res.status(200).json({
-    //   message: 'AI response generated successfully',
-    //   status: 200,
-    //   data: aiResp,
-    //   chatId: newChatId ? newChatId : undefined,
-    // });
+    }
   } catch (e) {
     console.log(e);
     return res.status(500).write(`error: ${JSON.stringify(e)}\n\n`);
+  }
+};
+export const deleteChatByIdController = async (req: Request, res: Response) => {
+  const { chatId, userId } = req.params;
+  try {
+    const deletedChat = await deleteChatById(chatId, userId);
+    if (!deletedChat) {
+      return res.status(404).json({
+        message: "Chat not found",
+        status: 404,
+      });
+    }
+    return res.status(200).json({
+      message: "User chat deleted successfully",
+      status: 200,
+      data: deletedChat,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      message: "Internal server error",
+      status: 500,
+    });
   }
 };

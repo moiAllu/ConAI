@@ -26,10 +26,40 @@ const DeleteAlert = ({ mode, userId, _id, setHistory }: Props) => {
   const deleteHandler = async () => {
     const result = await deleteHistoryByIdHandler({ userId, _id, mode });
     if (result.status === 200) {
-      setHistory((prev: any) => prev.filter((doc: any) => doc._id !== _id));
-      toast.success("Successfully deleted.");
-      router.push(`/dashboard/ai-writing`);
-      return;
+      if (mode === "aichat") {
+        setHistory((prev: any) =>
+          prev.map((category: any) => ({
+            ...category,
+            chats: category.chats.filter((chat: any) => chat.chatId !== _id),
+          }))
+        );
+        router.push(`/dashboard/ai-chat`);
+        return;
+      }
+      if (mode === "aiwriting") {
+        setHistory((prev: any) => prev.filter((doc: any) => doc._id !== _id));
+        toast.success("Successfully deleted.");
+        router.push(`/dashboard/ai-writing`);
+        return;
+      }
+      if (mode === "rewrite") {
+        setHistory(_id);
+        toast.success("Successfully deleted.");
+        router.push(`/dashboard/rewrite`);
+        return;
+      }
+      if (mode === "imagegeneration") {
+        setHistory(_id);
+        toast.success("Successfully deleted.");
+        router.push(`/dashboard/image-generator`);
+        return;
+      }
+      if (mode === "summarizer") {
+        setHistory(_id);
+        toast.success("Successfully deleted.");
+        router.push(`/dashboard/summarizer`);
+        return;
+      }
     }
   };
   return (

@@ -1,79 +1,86 @@
 interface Data {
-    prompt:string,
-    aspect:string, 
-    style:string, 
-    background:string,
-    color:string, 
+  prompt: string;
+  aspect: string;
+  style: string;
+  background: string;
+  color: string;
 }
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me";
-export const createImage = async (data:Data,userId:string) => {
-
-    return fetch(`${BACKEND_API_URL}/api/generate-image`,{
-        method:"POST",
-        credentials:"include",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-        },
-        body: JSON.stringify({data,userId}),
-    }).then(res=>{
-        return res.json();
+export const createImage = async (data: Data, userId: string) => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/generate-image`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("accessToken") || "",
+      },
+      body: JSON.stringify({ data, userId }),
     }
-    )
-}
-export const getImageById = async (imageId:string,userId:string) => {
-
-    return fetch(`${BACKEND_API_URL}/api/image/${imageId}/${userId}`,{
-
-        method:"GET",
-        credentials:"include",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-        },
-    }).then(res=>{
-        return res.json();
+  ).then((res) => {
+    return res.json();
+  });
+};
+export const getImageById = async (imageId: string, userId: string) => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/${imageId}/${userId}`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("accessToken") || "",
+      },
     }
-    )
-}
-export const getUserImages = async (userId:string) => {
-
-    return fetch(`${BACKEND_API_URL}/api/image-generation/images/${userId}`,{
-
-        method:"GET",
-        credentials:"include",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-        },
-    }).then(res=>{
-        return res.json();
+  ).then((res) => {
+    return res.json();
+  });
+};
+export const getUserImages = async (userId: string) => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image-generation/images/${userId}`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("accessToken") || "",
+      },
     }
-    )
-}
-export const deleteImage = async (id:string,userId:string) => {
-    return fetch(`${BACKEND_API_URL}/api/image/${id}/${userId}`,{
-        method:"DELETE",
-        credentials:"include",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-        },
-    }).then(res=>{
-        return res.json();
+  ).then((res) => {
+    return res.json();
+  });
+};
+export const deleteImageById = async (id: string, userId: string) => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/${id}/${userId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("accessToken") || "",
+      },
     }
-    )
-}
-export const downloadImageEndPoint = async (imageId:string,resolution:string) => {
-    return fetch(`${BACKEND_API_URL}/api/image/download/${imageId}/${resolution}`,{
-        method:"GET",
-        credentials:"include",
-        headers:{
-            "Content-Type":"application/json",
-            Authorization: localStorage.getItem("accessToken") || "",
-        },
-    }).then(res=>{
-        return res.json();
+  ).then((res) => {
+    return res.json();
+  });
+};
+export const downloadImageEndPoint = async (
+  imageId: string,
+  resolution: string
+) => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/image/download/${imageId}/${resolution}`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("accessToken") || "",
+      },
     }
-    )
-}
+  ).then((res) => {
+    return res.json();
+  });
+};
