@@ -1,4 +1,5 @@
 import { deleteAiWritingById } from "../apicalls/ai-writing";
+import { deleteChatById } from "../apicalls/chat-assisstance";
 import { deleteImageById } from "../apicalls/image-generation";
 import { deleteRewriteById } from "../apicalls/rewrite";
 import { deleteSummarizeById } from "../apicalls/summarize";
@@ -13,7 +14,7 @@ export const deleteHistoryByIdHandler = ({ mode, userId, _id }: Props) => {
     return deleteAiWritingById(_id, userId);
   }
   if (mode === "aichat") {
-    // return deleteAiChatById(_id,userId)
+    return deleteChatById(_id, userId);
   }
   if (mode === "imagegeneration") {
     return deleteImageById(_id, userId);
