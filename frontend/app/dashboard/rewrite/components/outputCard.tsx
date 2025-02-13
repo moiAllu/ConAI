@@ -13,6 +13,7 @@ import remarkGfm from "remark-gfm";
 import { getUserRewriteById } from "../../../../lib/apicalls/rewrite";
 import { useMeStore } from "../../store";
 import { useRewriteStore } from "../store";
+import { toast, Toaster } from "sonner";
 
 const OutputCard = () => {
   const searchParams = useSearchParams();
@@ -32,11 +33,30 @@ const OutputCard = () => {
     };
     fetchImageById();
   }, [rewriteId]);
+
+  const handleCopy = () => {
+    const textToCopy = selectedRewrite?.output || "";
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      toast.success("Copied to clipboard");
+    });
+  };
+
   return (
     <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 sm:p-4 lg:col-span-2 overflow-y-auto">
-      {!selectedRewrite && (
-        <Badge variant="outline" className="absolute right-3 top-3">
-          Output
+      {selectedRewrite ? (
+        <Badge
+          variant="outline"
+          className="absolute right-3 top-3 cursor-pointer"
+          onClick={handleCopy}
+        >
+          <span>Copy</span>
+        </Badge>
+      ) : (
+        <Badge
+          variant="outline"
+          className="absolute right-3 top-3 cursor-pointer"
+        >
+          <span>Output</span>
         </Badge>
       )}
       {selectedRewrite && (
@@ -78,6 +98,7 @@ const OutputCard = () => {
           </Card>
         </div>
       )}
+      <Toaster richColors />
     </div>
   );
 };

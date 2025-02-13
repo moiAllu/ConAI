@@ -55,7 +55,6 @@ const Nav = (props: NavProps) => {
       }
     };
     const fetchSummarizes = async () => {
-      console.log("fetching", summarizers);
       const response = await getUserSummarizesHistory(userId);
       if (response.status === 200) {
         setSummarizers(response.data[0].summarizes.reverse());
