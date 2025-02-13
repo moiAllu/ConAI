@@ -25,7 +25,7 @@ const AIChatHistory = (props: Props) => {
             .getState()
             .setAllMessagesInChat(resp.data.messages, chatId, _id);
         }
-      }, 4000); // Delay for 4 seconds
+      }, 2000); // Delay for 2 seconds
     }
     // fetch chatId from query params
     const chatId = searchParams.get("chatId");
