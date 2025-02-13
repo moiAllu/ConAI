@@ -44,9 +44,6 @@ const DynamicCard = () => {
     e.preventDefault();
     setIsLoading(true);
     setIsError({ status: false, message: "" });
-    if (mode === "Recreate") {
-      setIntensity("High");
-    }
     if (!content) {
       setIsLoading(false);
       setIsError({ status: true, message: "Content is required" });
@@ -54,7 +51,7 @@ const DynamicCard = () => {
       return;
     }
     const response = await createRewrite(
-      intensity,
+      mode === "Recreate" ? "High" : intensity,
       mode,
       inputLanguage,
       content,
@@ -120,7 +117,11 @@ const DynamicCard = () => {
         ))}
       </fieldset>
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Processing..." : "Rewrite"}
+        {isLoading
+          ? "Processing..."
+          : mode === "Recreate"
+          ? "Recreate"
+          : "Rewrite"}
       </Button>
       <Toaster richColors />
     </form>

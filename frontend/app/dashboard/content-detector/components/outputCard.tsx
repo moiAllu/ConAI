@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useContentDetectorStore } from "../store";
@@ -54,7 +55,6 @@ const OutputCard = () => {
     plagrimHistory.plagrismDetectionHistory.find(
       (doc) => doc._id === searchParams.get("documentId")
     );
-
   return (
     <div className="relative flex sm:h-full h-[calc(100vh-150px)] w-full flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
       {!aiDocument ||

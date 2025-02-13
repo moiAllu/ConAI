@@ -41,6 +41,7 @@ const AIChatForm = (props: Props) => {
     let aiResp = "";
     let chatid = "";
     let messageId = "";
+    let promptMsgId = "";
 
     while (!done) {
       const { value, done: readerDone } = await reader.read();
@@ -63,14 +64,19 @@ const AIChatForm = (props: Props) => {
           if (chatid) {
             router.push(`/dashboard/ai-chat?chatId=${chatid}`);
           }
+          continue;
+        }
+        if (line.startsWith("promptMsgId: ")) {
+          promptMsgId = line.substring(13);
+          console.log("prompt Id", promptMsgId);
           addMessageToChat(
             {
-              id: chatId,
+              id: Math.floor(Math.random() * 10000).toString(),
               role: "user",
               message: input,
               createdAt: new Date().toISOString(),
             },
-            chatId,
+            chatid,
             _id
           );
           continue;

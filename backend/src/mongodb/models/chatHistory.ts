@@ -1,9 +1,9 @@
-import { Document } from 'mongoose';
-import { Schema, model } from 'mongoose';
+import { Document } from "mongoose";
+import { Schema, model } from "mongoose";
 
 interface IChatMessage {
   _id?: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   message: string;
   createdAt?: Date;
 }
@@ -13,6 +13,7 @@ interface IChatHistory extends Document {
   title?: string;
   messages: IChatMessage[];
   createdAt?: Date;
+  chatSummary?: string;
 }
 
 const chatHistorySchema = new Schema<IChatHistory>({
@@ -20,16 +21,17 @@ const chatHistorySchema = new Schema<IChatHistory>({
     type: Date,
     default: Date.now,
   },
-
   title: {
     type: String,
   },
-
+  chatSummary: {
+    type: String,
+    default: "...",
+  },
   userId: {
     type: String,
     required: true,
   },
-
   messages: [
     {
       role: {
@@ -49,6 +51,6 @@ const chatHistorySchema = new Schema<IChatHistory>({
 });
 
 export const ChatHistory = model<IChatHistory>(
-  'ChatHistory',
+  "ChatHistory",
   chatHistorySchema
 );

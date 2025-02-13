@@ -1,6 +1,6 @@
 "use client";
 import React, { Suspense, useEffect } from "react";
-import { IMessage, useAIChatStore } from "../store";
+import { useAIChatStore } from "../store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
@@ -12,21 +12,20 @@ type Props = {};
 const AIChatHistory = (props: Props) => {
   const { _id } = useMeStore();
   const chats = useAIChatStore((state) => state.chats);
-  // console.log(chats);
   const searchParams = useSearchParams();
   const chat = chats.find((chat) => chat.id === searchParams.get("chatId"));
-  // console.log("chat", chat);
   const hasMessages = chat?.messages?.length || 0;
-
   useEffect(() => {
     // fetch from API and load messages
     async function fetchMessages(chatId: string) {
-      const resp = await getChatByID(chatId);
-      if (resp?.data?.messages?.length) {
-        useAIChatStore
-          .getState()
-          .setAllMessagesInChat(resp.data.messages, chatId, _id);
-      }
+      setTimeout(async () => {
+        const resp = await getChatByID(chatId);
+        if (resp?.data?.messages?.length) {
+          useAIChatStore
+            .getState()
+            .setAllMessagesInChat(resp.data.messages, chatId, _id);
+        }
+      }, 4000); // Delay for 4 seconds
     }
     // fetch chatId from query params
     const chatId = searchParams.get("chatId");
@@ -34,7 +33,6 @@ const AIChatHistory = (props: Props) => {
       fetchMessages(chatId);
     }
   }, [searchParams, _id]);
-  console.log(chat);
   return (
     // <div className="flex flex-grow flex-col sm:p-6 p-2 items-center justify-end text-center overflow-y-auto h-[55vh]">
     <div className="sm:p-6 flex flex-col p-2 overflow-y-auto h-[calc(100vh-200px)] sm:h-full overflow-auto max-h-[1080px] w-full max-w-[1000px] mx-auto">
