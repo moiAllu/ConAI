@@ -116,3 +116,10 @@ export const getUserChats = async (userId: string) => {
     createdAt: chat.createdAt,
   }));
 };
+export const deleteChatById = async (id: string, userId: string) => {
+  const chatHistory = await ChatHistory.findOneAndDelete({ _id: id, userId });
+  if (!chatHistory) {
+    return null;
+  }
+  return chatHistory;
+};

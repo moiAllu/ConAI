@@ -5,6 +5,7 @@ import {
   getChatHistory,
   getUserChats,
   updateStoreMessageInChatHistory,
+  deleteChatById,
 } from "../services/chatHistory";
 import jwt from "jsonwebtoken";
 import openAIClient from "../config/open-ai";
@@ -164,5 +165,27 @@ export const getGPTReponseController = async (req: Request, res: Response) => {
   } catch (e) {
     console.log(e);
     return res.status(500).write(`error: ${JSON.stringify(e)}\n\n`);
+  }
+};
+export const deleteChatByIdController = async (req: Request, res: Response) => {
+  const { chatId, userId } = req.params;
+  try {
+    const deletedChat = await deleteChatById(chatId, userId);
+    if (!deletedChat) {
+      return res.status(404).json({
+        message: "Chat not found",
+        status: 404,
+      });
+    }
+    return res.status(200).json({
+      message: "User chat deleted successfully",
+      status: 200,
+      data: deletedChat,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      message: "Internal server error",
+      status: 500,
+    });
   }
 };
