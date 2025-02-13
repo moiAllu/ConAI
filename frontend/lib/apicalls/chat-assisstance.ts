@@ -1,3 +1,4 @@
+
 export const addMessageInChat = async (
   input: string,
   chatId: string,
@@ -25,6 +26,20 @@ export const getChatByID = async (chatId: string) => {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("accessToken") || "",
       },
+
+export const getChatHistory=async (userId:string)=>{
+   return fetch(
+      `${BACKEND_API_URL}/api/chat/ai-assistant/chats/` + userId,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("accessToken") || "",
+        },
+        method: "GET",
+        credentials: "include",
+      }
+    ).then(res=>{
+      return res.json();
     }
   ).then((res) => {
     return res.json();

@@ -1,5 +1,6 @@
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me";
 export  const getUserContentDetections = async (userId:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/content-detection/detections/${userId}`,{
+    return fetch(`${BACKEND_API_URL}/api/content-detection/detections/${userId}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -12,7 +13,7 @@ export  const getUserContentDetections = async (userId:string) => {
     )
 }
 export const getContentDetectionById = async (userId:string, id:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/content-detection/detection/${userId}/${id}`,{
+    return fetch(`${BACKEND_API_URL}/api/content-detection/detection/${userId}/${id}`,{
         method:"GET",
         credentials:"include",
         headers:{
@@ -25,7 +26,7 @@ export const getContentDetectionById = async (userId:string, id:string) => {
     )
 }
 export const createContentDetection = async (userId:string, method:string, content:string, compareTo?:string) => {
-    return fetch(`${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/content-detection/detection`,{
+    return fetch(`${BACKEND_API_URL}/api/content-detection/detection`,{
         method:"POST",
         credentials:"include",
         headers:{

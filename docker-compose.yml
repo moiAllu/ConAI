@@ -1,0 +1,49 @@
+name: conai
+services:
+  api:
+    build:
+      context: ./backend
+      target: production
+    restart: unless-stopped
+    env_file: ./backend/.env
+    networks:
+      - conai
+  frontend:
+    build:
+      context: ./frontend
+      target: production
+    restart: unless-stopped
+    env_file: ./frontend/.env
+    command: npm start
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - conai
+    depends_on:
+      - api
+  caddy:
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - conai
+    depends_on:
+      - api
+      - frontend
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  conai:
+    driver: bridge
