@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { UploadIcon, ReceiptText, IconNode, LucideIcon } from "lucide-react";
 import { Settings, History } from "lucide-react";
 import { useMeStore } from "../../app/dashboard/store";
+import DeleteAlert from "../custom/deleteAlert";
 
 import {
   Drawer,
@@ -34,9 +35,10 @@ interface NavProps {
 
 const Nav = (props: NavProps) => {
   const router = useRouter();
-  const { setRewrites, rewrites } = useRewriteStore();
-  const { setSummarizers, summarizers } = useSummarizerStore();
-  const { setImagesIds, images } = useImageStore();
+  const { setRewrites, rewrites, deleteRewrite } = useRewriteStore();
+  const { setSummarizers, summarizers, deleteSummarizer } =
+    useSummarizerStore();
+  const { setImagesIds, images, deleteImage } = useImageStore();
   const [mouseEnter, setMouseEnter] = useState("");
   const userId = useMeStore((state) => state._id);
   React.useEffect(() => {
@@ -59,7 +61,6 @@ const Nav = (props: NavProps) => {
         setSummarizers(response.data[0].summarizes.reverse());
       }
     };
-
     if (props.title === "Image-Generator") {
       fetchImages();
     } else if (props.title === "Rewrite") {
@@ -115,13 +116,13 @@ const Nav = (props: NavProps) => {
                                 </span>
                               </Button>
                               {mouseEnter === img?._id && (
-                                <Button
-                                  className="py-1 justify-start rounded-l-none"
-                                  size="sm"
-                                  variant="secondary"
-                                >
-                                  <Ellipsis />
-                                </Button>
+                                <DeleteAlert
+                                  _id={img?._id}
+                                  mode="imagegeneration"
+                                  userId={userId}
+                                  history={history}
+                                  setHistory={deleteImage}
+                                />
                               )}
                             </div>
                           )
@@ -152,13 +153,13 @@ const Nav = (props: NavProps) => {
                                 </span>
                               </Button>
                               {mouseEnter === rewrite?._id && (
-                                <Button
-                                  className="py-1 justify-start rounded-l-none"
-                                  size="sm"
-                                  variant="secondary"
-                                >
-                                  <Ellipsis />
-                                </Button>
+                                <DeleteAlert
+                                  _id={rewrite?._id}
+                                  mode="rewrite"
+                                  userId={userId}
+                                  history={history}
+                                  setHistory={deleteRewrite}
+                                />
                               )}
                             </div>
                           )
@@ -191,13 +192,13 @@ const Nav = (props: NavProps) => {
                                 </span>
                               </Button>
                               {mouseEnter === summarizer?._id && (
-                                <Button
-                                  className="py-1 justify-start rounded-l-none"
-                                  size="sm"
-                                  variant="secondary"
-                                >
-                                  <Ellipsis />
-                                </Button>
+                                <DeleteAlert
+                                  _id={summarizer?._id}
+                                  mode="summarizer"
+                                  userId={userId}
+                                  history={history}
+                                  setHistory={deleteSummarizer}
+                                />
                               )}
                             </div>
                           )
