@@ -21,11 +21,11 @@ CONAI is a full SaaS product that leverages multiple APIs and AI models to provi
 ### Cloning the Repository
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/moiAllu/ConAI.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd <repository-name>
+   cd ConAI
    ```
 
 ### Running Frontend Separately
