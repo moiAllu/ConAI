@@ -4,7 +4,6 @@ import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { sendPasswordResetLink, utils } from "../helpers/utils";
 import { UserModel } from "../mongodb/models";
-const postmark = require("postmark");
 
 const cookieConfig = {
   httpOnly: true, // to disable accessing cookie via client side js
@@ -34,17 +33,17 @@ export const login = async (req: Request, res: Response) => {
       const token = await jwt.sign({ user }, process.env.JWT_SECRET, {
         expiresIn: "8h",
       });
-    
+
       res.setHeader(
         "Set-Cookie",
-         cookie.serialize("CONAI", token, {
+        cookie.serialize("CONAI", token, {
           httpOnly: true,
           maxAge: 8 * 60 * 60,
           path: "/",
-          secure: process.env.DEPLOYMENT ? "true": "false",
+          secure: process.env.DEPLOYMENT ? "true" : "false",
           overwrite: true,
-          sameSite: process.env.DEPLOYMENT ? "none": "lax",
-          // domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost', 
+          sameSite: process.env.DEPLOYMENT ? "none" : "lax",
+          // domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost',
         })
       );
       // Send token to client
@@ -106,10 +105,10 @@ export const signup = async (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 8 * 60 * 60,
         path: "/",
-        secure: process.env.DEPLOYMENT ? "true": "false",
+        secure: process.env.DEPLOYMENT ? "true" : "false",
         overwrite: true,
-        sameSite: process.env.DEPLOYMENT ? "none": "lax",
-        // domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost', 
+        sameSite: process.env.DEPLOYMENT ? "none" : "lax",
+        // domain: process.env.DEPLOYMENT === "production" ? "con-ai.vercel.app": 'localhost',
       })
     );
     // Send token to client
@@ -130,8 +129,7 @@ export const signup = async (req: Request, res: Response) => {
 // Update user controller
 export const update_user = async (req: Request, res: Response) => {
   // TODO: Implement update user logic
-  const { name, email, bio } =
-    req.body;
+  const { name, email, bio } = req.body;
   try {
     // Check if user exists
     const user = await UserModel.findOne({
@@ -143,19 +141,19 @@ export const update_user = async (req: Request, res: Response) => {
         message: "User not found",
       });
     }
-      user.name= name;
-      user.bio=bio;
+    user.name = name;
+    user.bio = bio;
 
-      await user.save();
-      return res.status(200).json({
-        status:200,
-        message: "User updated successfully",
-        user
-      });
+    await user.save();
+    return res.status(200).json({
+      status: 200,
+      message: "User updated successfully",
+      user,
+    });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
-      status:500,
+      status: 500,
       message: "Internal server error",
     });
   }
@@ -227,8 +225,15 @@ export const forgotPassword = async (req: Request, res: Response) => {
     await user.save();
     const PasswordResetLink = `${process.env.PASSWORD_RESET_LINK}?token=${token}`;
     console.log(PasswordResetLink);
-    const resetLinkGenerated= await sendPasswordResetLink(email,PasswordResetLink);
-    if(resetLinkGenerated.status===200 && PasswordResetLink !== "" && token !== ""){
+    const resetLinkGenerated = await sendPasswordResetLink(
+      email,
+      PasswordResetLink
+    );
+    if (
+      resetLinkGenerated.status === 200 &&
+      PasswordResetLink !== "" &&
+      token !== ""
+    ) {
       return res.status(200).json({
         status: 200,
         message: "A password reset link has been sent to your email",

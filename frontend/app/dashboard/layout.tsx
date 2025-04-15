@@ -3,11 +3,16 @@ import { Metadata } from "next";
 // import { cookies } from "next/headers";
 import React, { use, useEffect } from "react";
 import ResizeableSidebar from "./components/resizeable-sidebar";
-import { useMeStore, useSubscriptionStore } from "@/app/dashboard/store";
+import {
+  useMeStore,
+  useSubscriptionStore,
+  useStripeCustomerDetailStore,
+} from "@/app/dashboard/store";
 import { useWindowSize } from "@/lib/hooks";
 import { Navbar } from "@/components/navbar/NavBar";
 import { getMe } from "@/lib/apicalls/user";
 import { getUserSubscriptionDetails } from "@/lib/apicalls/subcriptionPlans";
+import { getStripeCustomerDetailById } from "@/lib/apicalls/srtipe-customer-detail";
 
 // export const metadata: Metadata = {
 //   title: "Forms",
@@ -41,6 +46,7 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   const isPhone = useWindowSize().width < 640;
   const { _id } = useMeStore();
   const { setUserSubscription } = useSubscriptionStore();
+  const { setStripeCustomerDetail } = useStripeCustomerDetailStore();
   const { setUser } = useMeStore();
   useEffect(() => {
     const setUserToState = async () => {
@@ -54,8 +60,12 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   useEffect(() => {
     const userSubscriptionDetail = async () => {
       const userSubscriptionDetail = await getUserSubscriptionDetails(_id);
+      const stripeCustomerDetail = await getStripeCustomerDetailById(_id);
       if (userSubscriptionDetail.status === 200) {
         setUserSubscription(userSubscriptionDetail.data);
+      }
+      if (stripeCustomerDetail.status === 200) {
+        setStripeCustomerDetail(stripeCustomerDetail.data);
       }
     };
     userSubscriptionDetail();

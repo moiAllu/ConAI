@@ -1,28 +1,36 @@
-import express, { Express, Request, Response, Application } from 'express';
-import dotenv from 'dotenv';
-import { connectDB } from './mongodb/connect';
-import cors from 'cors';
-import router from './routes/index';
-import cookieParser from 'cookie-parser';
+import express, { Express, Request, Response, Application } from "express";
+import dotenv from "dotenv";
+import { connectDB } from "./mongodb/connect";
+import cors from "cors";
+import router from "./routes/index";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app: Application = express();
 const port = process.env.PORT || 8000;
 app.use(
   cors({
-    origin: ["https://auth.localhost","https://conai.me" ,"http://localhost:3000", "https://con-ai.vercel.app", "https://con-ai-fe.vercel.app", "https://conai.onrender.com"],
+    origin: [
+      "https://auth.localhost",
+      "https://conai.me",
+      "http://localhost:3001",
+      "http://localhost:3000",
+      "https://con-ai.vercel.app",
+      "https://con-ai-fe.vercel.app",
+      "https://conai.onrender.com",
+    ],
     credentials: true,
-    optionsSuccessStatus : 200,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(cookieParser('secret'));
+app.use(cookieParser("secret"));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: "50mb" }));
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Express & TypeScript Server');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Welcome to Express & TypeScript Server");
 });
 
 app.use(router);

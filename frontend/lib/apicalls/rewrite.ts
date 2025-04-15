@@ -34,7 +34,8 @@ export const createRewrite = async (
   inputLanguage: string,
   content: string,
   userId: string,
-  model: string
+  model: string,
+  stripe_subscription_id: string
 ) => {
   return fetch(
     `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/rewrite/create`,
@@ -52,6 +53,7 @@ export const createRewrite = async (
         content,
         userId,
         model,
+        stripe_subscription_id,
       }),
     }
   ).then((res) => {

@@ -24,7 +24,11 @@ const DrawerCard = () => {
   const router = useRouter();
   const [method, setMethod] = React.useState("Plagiarism Detection");
   const [content, setContent] = React.useState("");
-  const { _id: userId } = useMeStore();
+  const {
+    _id: userId,
+    stripe_subscription_id,
+    incrementUsageLimit,
+  } = useMeStore();
   const { addAiHistory, addPlagrismHistory } = useContentDetectorStore();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState({ status: false, message: "" });
@@ -41,9 +45,11 @@ const DrawerCard = () => {
     const contentDetection = await createContentDetection(
       userId,
       method,
-      content
+      content,
+      stripe_subscription_id || ""
     );
     if (contentDetection.status === 200) {
+      incrementUsageLimit("plagiairism");
       method === "Ai Detection"
         ? addAiHistory(contentDetection.data, userId, "ai detection")
         : addPlagrismHistory(
@@ -56,6 +62,10 @@ const DrawerCard = () => {
       );
       setIsLoading(false);
       toast.success(contentDetection.message);
+      return;
+    } else if (contentDetection.status === 403) {
+      toast.error(contentDetection.message);
+      setIsLoading(false);
       return;
     }
     setIsError({ status: true, message: contentDetection.message });

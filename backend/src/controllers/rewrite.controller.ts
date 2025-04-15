@@ -7,6 +7,8 @@ import {
   getAiGeneratedRewriteById,
   deleteAiGeneratedRewriteById,
 } from "../services/rewrite";
+import { checkAndUpdateUsage } from "../services/usageLimits";
+
 export const getUserRewriteHistory = async (req: Request, res: Response) => {
   const { userId } = req.params;
   try {
@@ -23,6 +25,7 @@ export const getUserRewriteHistory = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const getUserRewriteById = async (req: Request, res: Response) => {
   const { userId, rewriteId } = req.params;
   try {
@@ -45,6 +48,7 @@ export const getUserRewriteById = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const deleteUserRewriteById = async (req: Request, res: Response) => {
   const { rewriteId, userId } = req.params;
   try {
@@ -66,10 +70,12 @@ export const deleteUserRewriteById = async (req: Request, res: Response) => {
     });
   }
 };
+
 interface PromptTuning {
   intensity: string;
   mode: string;
 }
+
 const PromptTuning = ({ intensity, mode }: PromptTuning) => {
   if (mode === "Recreate") {
     return "Your task is to retain only the relevant context from the user input and generate a completely original version from scratch. Ensure the output is unique and free from any form of plagiarism.";
@@ -87,20 +93,38 @@ const PromptTuning = ({ intensity, mode }: PromptTuning) => {
     return "Rewrite the content with significant changes to ensure it is completely original and free from plagiarism. The new text should be substantially different in structure and wording while still conveying the same message and tone. Strive for a high level of creativity and rewording to make it unique.";
   }
 };
+
 export const rewriteController = async (req: Request, res: Response) => {
-  const { intensity, mode, inputLanguage, content, userId, model } = req.body;
+  const {
+    intensity,
+    mode,
+    inputLanguage,
+    content,
+    userId,
+    model,
+    stripe_subscription_id,
+  } = req.body;
   try {
+    // Check usage limits before processing
+    const usage = await checkAndUpdateUsage(
+      userId,
+      stripe_subscription_id,
+      "rewrite"
+    );
+
     const tunedPrompt = PromptTuning({ intensity, mode });
     const response = await getRewriteOpenAiRes(
       { prompt: content, model },
       `Your serve here as a rewriter. ${tunedPrompt}`
     );
+
     if (!response) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Content not found",
         status: 404,
       });
     }
+
     const rewrite = await storeAiGeneratedRewrite(
       intensity,
       mode,
@@ -110,12 +134,24 @@ export const rewriteController = async (req: Request, res: Response) => {
       model,
       response
     );
+
     return res.status(200).json({
       message: "Rewrite created successfully",
       status: 200,
       data: rewrite,
+      usage: {
+        current: usage.currentUsage,
+        limit: usage.limit,
+        remaining: usage.remaining,
+      },
     });
   } catch (e) {
+    if (e.message.includes("limit")) {
+      return res.status(403).json({
+        message: e.message,
+        status: 403,
+      });
+    }
     return res.status(500).json({
       message: "Internal server error",
       status: 500,

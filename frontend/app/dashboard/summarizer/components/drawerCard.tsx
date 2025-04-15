@@ -22,6 +22,7 @@ const DrawerCard = () => {
   const [intensity, setIntensity] = React.useState("Medium");
   const [content, setContent] = React.useState("");
   const userId = useMeStore((state) => state._id);
+  const { _id, incrementUsageLimit, stripe_subscription_id } = useMeStore();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState({ status: false, message: "" });
   const { addSummarizer } = useSummarizerStore();
@@ -35,12 +36,22 @@ const DrawerCard = () => {
     }
     setIsError({ status: false, message: "" });
     setIsLoading(true);
-    const response = await createSummarize(intensity, content, userId);
+    const response = await createSummarize(
+      intensity,
+      content,
+      userId,
+      stripe_subscription_id || ""
+    );
     setIsLoading(false);
     if (response.status === 200) {
+      incrementUsageLimit("summarize");
       toast.success("Summarized successfully");
       addSummarizer(response.data);
       router.push(`/dashboard/summarizer?summarizeId=${response.data._id}`);
+      return;
+    } else if (response.status === 403) {
+      toast.error(response.message);
+      setIsLoading(false);
       return;
     }
     setIsError({ status: true, message: "Failed to summarize" });

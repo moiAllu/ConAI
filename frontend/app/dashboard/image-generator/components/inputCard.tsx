@@ -64,6 +64,7 @@ const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
 
 const InputCard = () => {
   const userId = useMeStore((state) => state._id);
+  const { incrementUsageLimit, stripe_subscription_id } = useMeStore();
   const [aspect, onAspectChange] = React.useState("square");
   const [style, onStyleChange] = React.useState("");
   const [background, onBackgroundChange] = React.useState("random");
@@ -104,15 +105,21 @@ const InputCard = () => {
         color,
         prompt,
       },
-      userId
+      userId,
+      stripe_subscription_id || ""
     );
     if (createdImage.status === 200) {
+      incrementUsageLimit("imageGeneration");
       setIsLoading(false);
       addImage(createdImage.data.data);
       router.push(
         `/dashboard/image-generator?imageId=${createdImage.data.data._id}`
       );
       toast.success(createdImage.message);
+      return;
+    } else if (createdImage.status === 403) {
+      toast.error(createdImage.message);
+      setIsLoading(false);
       return;
     }
     setIsLoading(false);
