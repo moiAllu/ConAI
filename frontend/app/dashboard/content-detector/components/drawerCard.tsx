@@ -89,7 +89,7 @@ const DrawerCard = () => {
               <SelectValue placeholder="Select a role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Ai Detection">AI Detection</SelectItem>
+              {/* <SelectItem value="Ai Detection">AI Detection</SelectItem> */}
               <SelectItem value="Plagiarism Detection">
                 Plagiarism Detection
               </SelectItem>

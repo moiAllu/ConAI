@@ -79,13 +79,13 @@ const ContentDetectorHistory = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-y h-screen">
-      <HistoryCard
+    <div className="flex flex-col overflow-y h-screen mt-2">
+      {/* <HistoryCard
         key="aiDetection"
         doc={history.aiDetection}
         title="AI Detection"
       />
-      <Separator className="mt-8" />
+      <Separator className="mt-8" /> */}
       <HistoryCard
         key="plagiarismDetection"
         doc={history.plagrismDetection}
