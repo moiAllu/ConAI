@@ -171,7 +171,7 @@ const DynamicCard = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
 
-  const { _id } = useMeStore();
+  const { _id, incrementUsageLimit, stripe_subscription_id } = useMeStore();
   const addDocumentToHistory = useAIWritingStore(
     (state) => state.addDocumentToHistory
   );
@@ -203,9 +203,11 @@ const DynamicCard = () => {
       promptMods,
       inputContent,
       _id,
-      ""
+      "",
+      stripe_subscription_id || ""
     );
     if (response.status === 200) {
+      incrementUsageLimit("aiWriting");
       addDocumentToHistory(
         {
           content: inputContent,
@@ -231,6 +233,10 @@ const DynamicCard = () => {
       setInputFormat("");
       setInputType("");
       router.push(`/dashboard/ai-writing?documentId=${response.storeId}`);
+      return;
+    } else if (response.status === 403) {
+      toast.error(response.message);
+      setIsLoading(false);
       return;
     }
     setIsLoading(false);

@@ -7,12 +7,13 @@ import {
   getDownloadableImage,
   getGeneratedImageByUserId,
 } from "../services/imageGenerationHistory";
+import { checkAndUpdateUsage } from "../services/usageLimits";
 
 export const imageGenerationController = async (
   req: Request,
   res: Response
 ) => {
-  const { data, userId } = req.body;
+  const { data, userId, stripe_subscription_id } = req.body;
   const { aspect, style, background, color, prompt } = data;
   if (!aspect || !style || !background || !color || !prompt) {
     return res.status(400).json({
@@ -20,33 +21,55 @@ export const imageGenerationController = async (
       status: 400,
     });
   }
-  const tunePrompt = `create a ${aspect} image, ${style} style with ${background} background and ${color} color. ${prompt}`;
+
   try {
+    // Check usage limits before processing
+    const usage = await checkAndUpdateUsage(
+      userId,
+      stripe_subscription_id,
+      "imageGeneration"
+    );
+    const tunePrompt = `create a ${aspect} image, ${style} style with ${background} background and ${color} color. ${prompt}`;
     const imageGeneration: any = await getGeneratedImage(tunePrompt);
+
     if (!imageGeneration.b64_json) {
       return res.status(404).json({
         message: "Image not found",
         status: 404,
       });
     }
+
     const storedImage = await storeGeneratedImageInHistory(
       userId,
       prompt,
       imageGeneration.b64_json,
       imageGeneration.revised_prompt
     );
+
     if (storedImage.status !== 200) {
       return res.status(500).json({
         message: "Failed to store image in history",
         status: 500,
       });
     }
+
     return res.status(200).json({
       message: "Image generated successfully",
       status: 200,
       data: storedImage,
+      usage: {
+        current: usage.currentUsage,
+        limit: usage.limit,
+        remaining: usage.remaining,
+      },
     });
   } catch (e) {
+    if (e.message.includes("limit")) {
+      return res.status(403).json({
+        message: e.message,
+        status: 403,
+      });
+    }
     return res.status(500).json({
       message: "Internal server error",
       status: 500,

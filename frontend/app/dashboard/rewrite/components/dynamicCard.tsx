@@ -35,6 +35,10 @@ const DynamicCard = () => {
   const [inputLanguage, setLanguage] = React.useState("");
   const [content, setContent] = React.useState("");
   const userId = useMeStore((state) => state._id);
+  const { incrementUsageLimit } = useMeStore();
+  const stripe_subscription_id = useMeStore(
+    (state) => state.stripe_subscription_id
+  );
   const router = useRouter();
   const { addRewrite } = useRewriteStore();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -56,14 +60,20 @@ const DynamicCard = () => {
       inputLanguage,
       content,
       userId,
-      "gpt-4o"
+      "gpt-4o",
+      stripe_subscription_id || ""
     );
     if (response.status === 200) {
+      incrementUsageLimit("rewrite");
       toast.success("Rewrite successful");
       addRewrite(response.data);
       router.push(`/dashboard/rewrite?rewriteId=${response.data._id}`);
       setIsLoading(false);
       setContent("");
+      return;
+    } else if (response.status === 403) {
+      toast.error(response.message);
+      setIsLoading(false);
       return;
     }
     setIsLoading(false);

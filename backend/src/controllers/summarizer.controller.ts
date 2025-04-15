@@ -6,6 +6,7 @@ import {
   storeAiGeneratedSummarize,
 } from "../services/summarizer";
 import { getSummarizeOpenAiRes } from "../open-ai";
+import { checkAndUpdateUsage } from "../services/usageLimits";
 
 export const getSummarizerHistoryContorller = async (
   req: Request,
@@ -85,50 +86,61 @@ export const deleteSummarizerByIdController = async (
 };
 
 export const createSummarizer = async (req: Request, res: Response) => {
-  const { intensity, content, userId } = req.body;
-
-  let summarizationPrompt = "";
-
-  switch (intensity.toLowerCase()) {
-    case "short":
-      summarizationPrompt = `
-Summarize the following content, retaining most of the details. The summary should be concise but comprehensive.
-`;
-      break;
-    case "medium":
-      summarizationPrompt = `
-Summarize the following content, retaining key points and important information. The summary should be concise and not exceed 1/2 of original text.
-`;
-      break;
-    case "long":
-      summarizationPrompt = `
-Summarize the following content, retaining only the most critical information. The summary should be very concise and exceed 1/2 of original text.
-`;
-      break;
-    default:
-      summarizationPrompt = `
-Summarize the following content, retaining key points and important information. The summary should be concise and not exceed 500 words.
-`;
-  }
+  const { intensity, content, userId, stripe_subscription_id } = req.body;
 
   try {
+    // Check usage limits before processing
+    const usage = await checkAndUpdateUsage(
+      userId,
+      stripe_subscription_id,
+      "summarize"
+    );
+
+    let summarizationPrompt = "";
+    switch (intensity.toLowerCase()) {
+      case "short":
+        summarizationPrompt = `Summarize the following content, retaining most of the details. The summary should be concise but comprehensive.`;
+        break;
+      case "medium":
+        summarizationPrompt = `Summarize the following content, retaining key points and important information. The summary should be concise and not exceed 1/2 of original text.`;
+        break;
+      case "long":
+        summarizationPrompt = `Summarize the following content, retaining only the most critical information. The summary should be very concise and exceed 1/2 of original text.`;
+        break;
+      default:
+        summarizationPrompt = `Summarize the following content, retaining key points and important information. The summary should be concise and not exceed 500 words.`;
+    }
+
     const output = await getSummarizeOpenAiRes(
       { prompt: content, model: "gpt-4o" },
       summarizationPrompt,
       intensity
     );
+
     const userSummarizer = await storeAiGeneratedSummarize(
       intensity,
       content,
       userId,
       output
     );
+
     return res.status(200).json({
       message: "Summarizer created successfully",
       status: 200,
       data: userSummarizer,
+      usage: {
+        current: usage.currentUsage,
+        limit: usage.limit,
+        remaining: usage.remaining,
+      },
     });
   } catch (e) {
+    if (e.message.includes("limit")) {
+      return res.status(403).json({
+        message: e.message,
+        status: 403,
+      });
+    }
     return res.status(500).json({
       message: "Internal server error",
       status: 500,

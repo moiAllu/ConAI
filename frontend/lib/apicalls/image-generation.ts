@@ -5,7 +5,11 @@ interface Data {
   background: string;
   color: string;
 }
-export const createImage = async (data: Data, userId: string) => {
+export const createImage = async (
+  data: Data,
+  userId: string,
+  stripe_subscription_id: string
+) => {
   return fetch(
     `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/generate-image`,
     {
@@ -15,7 +19,7 @@ export const createImage = async (data: Data, userId: string) => {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("accessToken") || "",
       },
-      body: JSON.stringify({ data, userId }),
+      body: JSON.stringify({ data, userId, stripe_subscription_id }),
     }
   ).then((res) => {
     return res.json();
