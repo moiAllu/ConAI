@@ -1,6 +1,10 @@
 "use client";
 import { useEffect } from "react";
-import { useMeStore, useSubscriptionStore } from "@/app/dashboard/store";
+import {
+  useMeStore,
+  useSubscriptionStore,
+  useStripeCustomerDetailStore,
+} from "@/app/dashboard/store";
 import Image from "next/image";
 import { ChevronLeft } from "lucide-react";
 
@@ -10,6 +14,7 @@ import ResizeableSidebar from "@/app/dashboard/components/resizeable-sidebar";
 import Link from "next/link";
 import { getMe } from "@/lib/apicalls/user";
 import { getUserSubscriptionDetails } from "@/lib/apicalls/subcriptionPlans";
+import { getStripeCustomerDetailById } from "@/lib/apicalls/srtipe-customer-detail";
 
 const sidebarNavItems = [
   {
@@ -46,6 +51,7 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   const { setUser, _id } = useMeStore();
   const { userSubscription, setUserSubscription } = useSubscriptionStore();
+  const { setStripeCustomerDetail } = useStripeCustomerDetailStore();
   useEffect(() => {
     const setUserToState = async () => {
       const user = await getMe();
@@ -58,8 +64,12 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
   useEffect(() => {
     const userSubscriptionDetail = async () => {
       const userSubscriptionDetail = await getUserSubscriptionDetails(_id);
+      const stripeCustomerDetail = await getStripeCustomerDetailById(_id);
       if (userSubscriptionDetail.status === 200) {
         setUserSubscription(userSubscriptionDetail.data);
+      }
+      if (stripeCustomerDetail.status === 200) {
+        setStripeCustomerDetail(stripeCustomerDetail.data);
       }
     };
     userSubscriptionDetail();
