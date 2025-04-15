@@ -20,7 +20,6 @@ const CheckoutSession = () => {
           userId
         );
         if (checkoutSession.status === 200) {
-          console.log(checkoutSession.data);
           setUserSubscription({
             _id: checkoutSession.data.subscription.id,
             user_id: userId,
@@ -42,6 +41,7 @@ const CheckoutSession = () => {
             plan_period_start:
               checkoutSession.data.subscription.current_period_start,
             trail_end: checkoutSession.data.subscription.trail_end,
+            current_plan: checkoutSession.data.subscription.plan.name, // Add this line
           });
           toast.success("Subscription created successfully");
         } else {
