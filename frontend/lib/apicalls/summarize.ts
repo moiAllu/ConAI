@@ -1,4 +1,5 @@
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me";
+const BACKEND_API_URL =
+  process.env.NEXT_PUBLIC_CONAI_BACKEND_URL || "https://api.conai.me";
 export const getUserSummarizesHistory = async (userId: string) => {
   return fetch(
     `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/summarizer/summarizes/${userId}`,
@@ -18,24 +19,22 @@ export const getUserSummarizeById = async (
   summarizeId: string,
   userId: string
 ) => {
-  return fetch(
-    `${BACKEND_API_URL}/api/summarizer/${summarizeId}/${userId}`,
-    {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("accessToken") || "",
-      },
-    }
-  ).then((res) => {
+  return fetch(`${BACKEND_API_URL}/api/summarizer/${summarizeId}/${userId}`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("accessToken") || "",
+    },
+  }).then((res) => {
     return res.json();
   });
 };
 export const createSummarize = async (
   intensity: string,
   content: string,
-  userId: string
+  userId: string,
+  stripe_subscription_id: string
 ) => {
   return fetch(
     `${process.env.NEXT_PUBLIC_CONAI_BACKEND_URL}/api/summarizer/create`,
@@ -50,6 +49,7 @@ export const createSummarize = async (
         intensity,
         content,
         userId,
+        stripe_subscription_id,
       }),
     }
   ).then((res) => {
