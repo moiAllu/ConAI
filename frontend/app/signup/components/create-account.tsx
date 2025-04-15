@@ -20,10 +20,12 @@ interface CreateAccountProps {
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   setFirstName: (firstName: string) => void;
   setLastName: (lastName: string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
+  setConfirmPassword: (confirmPassword: string) => void;
 }
 export default function CreateAccount({
   setOtpRequestGen,
@@ -31,16 +33,19 @@ export default function CreateAccount({
   lastName,
   email,
   password,
+  confirmPassword,
   setFirstName,
   setLastName,
   setPassword,
   setEmail,
+  setConfirmPassword,
 }: CreateAccountProps) {
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
     general: "",
   });
   const router = useRouter();
@@ -87,6 +92,7 @@ export default function CreateAccount({
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
       general: "",
     });
     setLoading(true);
@@ -96,6 +102,7 @@ export default function CreateAccount({
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
       general: "",
     };
 
@@ -110,6 +117,9 @@ export default function CreateAccount({
     }
     if (!email || !email.includes("@") || !email.includes(".")) {
       newErrors.email = "Invalid email address";
+    }
+    if (confirmPassword !== password) {
+      newErrors.confirmPassword = "Invalid Password";
     }
 
     const passwordErrors = validatePassword(password);
@@ -250,52 +260,67 @@ export default function CreateAccount({
                 className={`${errors.password && "border-red-700"}`}
                 disabled={loading}
               />
-              <div className="text-xs space-y-1">
-                <p className="text-muted-foreground">Password requirements:</p>
-                {Object.entries(getPasswordRequirementStatus(password)).map(
-                  ([requirement, isMet]) => (
-                    <div key={requirement} className="flex items-center gap-2">
-                      {isMet ? (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-green-500"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ) : (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-gray-300"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                      <span
-                        className={isMet ? "text-green-500" : "text-gray-500"}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setErrors({ ...errors, confirmPassword: "" });
+                  setConfirmPassword(e.target.value);
+                  console.log(e.target.value);
+                }}
+                className={`${errors.confirmPassword && "border-red-700"}`}
+                disabled={loading}
+              />
+            </div>
+            <div className="text-xs space-y-1">
+              <p className="text-muted-foreground">Password requirements:</p>
+              {Object.entries(getPasswordRequirementStatus(password)).map(
+                ([requirement, isMet]) => (
+                  <div key={requirement} className="flex items-center gap-2">
+                    {isMet ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 text-green-500"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
                       >
-                        {requirement === "minLength" && "At least 8 characters"}
-                        {requirement === "uppercase" && "One uppercase letter"}
-                        {requirement === "lowercase" && "One lowercase letter"}
-                        {requirement === "number" && "One number"}
-                        {requirement === "special" &&
-                          'One special character (!@#$%^&*(),.?":{}|<>)'}
-                      </span>
-                    </div>
-                  )
-                )}
-              </div>
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 text-gray-300"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                    <span
+                      className={isMet ? "text-green-500" : "text-gray-500"}
+                    >
+                      {requirement === "minLength" && "At least 8 characters"}
+                      {requirement === "uppercase" && "One uppercase letter"}
+                      {requirement === "lowercase" && "One lowercase letter"}
+                      {requirement === "number" && "One number"}
+                      {requirement === "special" &&
+                        'One special character (!@#$%^&*(),.?":{}|<>)'}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
             {errors.general && (
               <div className="flex w-full justify-center text-red-700 p-2 rounded bg-muted">

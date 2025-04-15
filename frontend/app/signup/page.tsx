@@ -10,6 +10,7 @@ const SignUp = () => {
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
   const isPhone = useWindowSize().width < 768;
 
   if (isPhone) {
@@ -36,6 +37,8 @@ const SignUp = () => {
             setFirstName={setFirstName}
             setLastName={setLastName}
             setPassword={setPassword}
+            setConfirmPassword={setConfirmPassword}
+            confirmPassword={confirmPassword}
           />
         )}
       </div>
@@ -44,6 +47,7 @@ const SignUp = () => {
     return (
       <div className="w-full h-screen md:flex justify-center items-center gap-8">
         <CreateAccount
+          setConfirmPassword={setConfirmPassword}
           setOtpRequestGen={setOtpRequestGen}
           firstName={firstName}
           password={password}
@@ -53,6 +57,7 @@ const SignUp = () => {
           setFirstName={setFirstName}
           setLastName={setLastName}
           setPassword={setPassword}
+          confirmPassword={confirmPassword}
         />
         {otpRequestGen && (
           <div className=" flex flex-col gap-4 w-full h-full max-w-[300px] justify-center">
