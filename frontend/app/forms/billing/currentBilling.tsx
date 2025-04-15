@@ -6,12 +6,16 @@ import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSubscriptionStore } from "@/app/dashboard/store";
+import {
+  useStripeCustomerDetailStore,
+  useSubscriptionStore,
+} from "@/app/dashboard/store";
 import { createCustomerBillingPortalSession } from "@/lib/apicalls/subcriptionPlans";
 import { toast, Toaster } from "sonner";
 import LoadingSpinner from "@/components/loading-spinner";
 const CurrentBilling = () => {
   const { userSubscription } = useSubscriptionStore();
+  const { stripeCustomerDetail } = useStripeCustomerDetailStore();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState({ status: false, message: "" });
   const editUserSubscriptionHandler = async () => {
@@ -71,20 +75,43 @@ const CurrentBilling = () => {
             <CardContent className="p-6">
               <div className=" flex justify-between items-center">
                 <h1 className="text-xl font-semibold">Master</h1>
-                <span className="text-sm">Pro Plan</span>
+                <span className="text-sm">
+                  {userSubscription.current_plan.charAt(0).toUpperCase() +
+                    userSubscription.current_plan.slice(1)}{" "}
+                  Plan
+                </span>
               </div>
-              <h1>******4242</h1>
+              <div className="flex items-center">
+                <span>******</span>
+                <span>
+                  {
+                    stripeCustomerDetail?.payment_detail[0]
+                      ?.payment_method_details.card.last4
+                  }
+                </span>
+              </div>
               <CardDescription>
-                <h1>Ali Asghar Abbasi</h1>
-                <h1>10$</h1>
+                <h1>{stripeCustomerDetail.name}</h1>
+                <h1>{userSubscription.plan_amount / 100}</h1>
                 <h1>Monthly</h1>
               </CardDescription>
             </CardContent>
             <Separator className="mb-4" />
             <CardFooter>
               <CardDescription>
-                <div className="flex justify-between items-center ">
-                  <h1>Expires on 27/12</h1>
+                <div className="flex justify-between items-center space-x-1 ">
+                  <h1>Expires on</h1>
+                  <span>
+                    {
+                      stripeCustomerDetail?.payment_detail[0]
+                        ?.payment_method_details.card.exp_month
+                    }
+                    /
+                    {
+                      stripeCustomerDetail?.payment_detail[0]
+                        ?.payment_method_details.card.exp_year
+                    }
+                  </span>
                 </div>
               </CardDescription>
             </CardFooter>
