@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/registry/default/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/registry/new-york/ui/tooltip";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 
 interface NavProps {
   isCollapsed: boolean;
@@ -28,37 +25,34 @@ export function Nav({ links, isCollapsed }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
+      className="group flex flex-col data-[collapsed=true]:items-center"
     >
-      <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+      <nav className="flex w-full flex-col gap-0.5">
         {links.map((link, index) =>
           isCollapsed ? (
             <TooltipProvider key={index}>
-              <Tooltip key={index} delayDuration={0}>
+              <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Link
                     href={link.href}
                     className={cn(
-                      buttonVariants({
-                        variant: link.variant,
-                        size: "icon",
-                      }),
-
+                      "relative flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-all duration-200 hover:bg-muted/70 hover:text-foreground",
                       link.variant === "default" &&
-                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                        "bg-primary/10 text-primary before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[3px] before:rounded-full before:bg-primary before:content-[''] hover:bg-primary/15",
                     )}
                   >
-                    <link.icon className="h-5 w-5" />
+                    <link.icon className="h-5 w-5" strokeWidth={2} />
                     <span className="sr-only">{link.title}</span>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent
                   side="right"
-                  className="flex items-center gap-4"
+                  sideOffset={12}
+                  className="rounded-xl border border-border/50 bg-popover px-3 py-2 text-sm font-medium shadow-lg"
                 >
                   {link.title}
                   {link.label && (
-                    <span className="ml-auto text-muted-foreground">
+                    <span className="ml-1.5 text-muted-foreground font-normal">
                       {link.label}
                     </span>
                   )}
@@ -70,22 +64,17 @@ export function Nav({ links, isCollapsed }: NavProps) {
               key={index}
               href={link.href}
               className={cn(
-                buttonVariants({ variant: link.variant, size: "lg" }),
+                "relative flex h-11 items-center gap-3 rounded-xl pl-3 pr-3 py-2.5 text-sm font-medium transition-all duration-200",
+                link.variant === "ghost" &&
+                  "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                 link.variant === "default" &&
-                  "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                "justify-start"
+                  "bg-primary/10 text-primary before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[3px] before:rounded-full before:bg-primary before:content-[''] hover:bg-primary/15",
               )}
             >
-              <link.icon className="mr-2 h-6 w-6" />
-              {link.title}
+              <link.icon className="h-5 w-5 shrink-0" strokeWidth={2} />
+              <span className="truncate">{link.title}</span>
               {link.label && (
-                <span
-                  className={cn(
-                    "ml-auto",
-                    link.variant === "default" &&
-                      "text-background dark:text-white"
-                  )}
-                >
+                <span className="ml-auto text-xs text-muted-foreground">
                   {link.label}
                 </span>
               )}

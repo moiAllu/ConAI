@@ -10,33 +10,15 @@ import {
 } from "@/app/dashboard/store";
 import { useWindowSize } from "@/lib/hooks";
 import { Navbar } from "@/components/navbar/NavBar";
-import { getMe } from "@/lib/apicalls/user";
+import { getMe, logOutUser } from "@/lib/apicalls/user";
 import { getUserSubscriptionDetails } from "@/lib/apicalls/subcriptionPlans";
 import { getStripeCustomerDetailById } from "@/lib/apicalls/srtipe-customer-detail";
+import { getOrCreateDeviceId, getDeviceName } from "@/lib/helper/deviceId";
 
 // export const metadata: Metadata = {
 //   title: "Forms",
 //   description: "Advanced form example using react-hook-form and Zod.",
 // };
-
-const sidebarNavItems = [
-  {
-    title: "Profile",
-    href: "/forms",
-  },
-  {
-    title: "Account",
-    href: "/forms/account",
-  },
-  {
-    title: "Appearance",
-    href: "/forms/appearance",
-  },
-  {
-    title: "Notifications",
-    href: "/forms/notifications",
-  },
-];
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -51,8 +33,31 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   useEffect(() => {
     const setUserToState = async () => {
       const user = await getMe();
+      if (user.status === 401) {
+        await logOutUser();
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("accessToken");
+          window.location.href = "/login";
+        }
+        return;
+      }
       if (user.status === 200) {
         setUser(user.user);
+        const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+        if (token) {
+          const deviceId = getOrCreateDeviceId();
+          fetch("/api/auth/register-device", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", accessToken: token },
+            body: JSON.stringify({
+              deviceId,
+              name: getDeviceName(),
+              userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+            }),
+          }).then((r) => r.json()).then((d) => {
+            if (d.token && typeof window !== "undefined") localStorage.setItem("accessToken", d.token);
+          }).catch(() => {});
+        }
       }
     };
     setUserToState();
@@ -73,14 +78,14 @@ export default function DashboardLayout({ children }: SettingsLayoutProps) {
   const defaultLayout = undefined;
   const defaultCollapsed = true;
   return (
-    <div className="w-full h-full">
+    <div className="flex h-dvh w-full flex-col overflow-hidden sm:h-screen sm:max-h-[1080px] sm:max-w-[1920px]">
       {isPhone ? (
         <>
           <Navbar />
-          <div className="h-full w-full">{children}</div>
+          <main className="min-h-0 flex-1 overflow-auto">{children}</main>
         </>
       ) : (
-        <div className="block h-screen w-screen max-h-[1080px] max-w-[1920px]">
+        <div className="flex min-h-0 flex-1 flex-col">
           <ResizeableSidebar
             defaultLayout={defaultLayout}
             defaultCollapsed={defaultCollapsed}

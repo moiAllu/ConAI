@@ -1,10 +1,21 @@
 import { Schema, model, Document } from "mongoose";
 
+const deviceSchema = new Schema(
+  {
+    deviceId: { type: String, required: true },
+    name: { type: String, required: true },
+    lastUsed: { type: Date, required: true },
+    userAgent: { type: String, required: false },
+  },
+  { _id: false }
+);
+
 interface IUser extends Document {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   verified: boolean;
+  provider?: 'credentials' | 'google';
   phone_number: string;
   profile: string;
   created_at: Date;
@@ -12,6 +23,8 @@ interface IUser extends Document {
   loginAttempts: number;
   activeSession: true;
   resetToken?: string;
+  lastLogin?: Date;
+  devices?: { deviceId: string; name: string; lastUsed: Date; userAgent?: string }[];
   isSuscritpionActive?: boolean;
   bio?: string;
   plan: "free" | "basic" | "pro";
@@ -46,7 +59,13 @@ const userSchema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
+  },
+  provider: {
+    type: String,
+    enum: ['credentials', 'google'],
+    default: 'credentials',
+    required: false,
   },
   verified: {
     type: Boolean,
@@ -73,6 +92,15 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: false,
   },
+  lastLogin: {
+    type: Date,
+    required: false,
+  },
+  devices: {
+    type: [deviceSchema],
+    default: [],
+    required: false,
+  } as any,
   isSuscritpionActive: {
     type: Boolean,
     required: false,

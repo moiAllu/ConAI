@@ -2,6 +2,13 @@ import _ from "lodash";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export interface UserNotifications {
+  communication_emails: boolean;
+  marketing_emails: boolean;
+  social_emails: boolean;
+  security_emails: boolean;
+}
+
 export interface User {
   _id: string;
   name: string;
@@ -13,6 +20,7 @@ export interface User {
   bio?: string;
   stripe_subscription_id?: string;
   plan?: "free" | "basic" | "pro";
+  notifications?: UserNotifications;
   usageLimit: {
     rewrite: number;
     aiWriting: number;
@@ -32,7 +40,7 @@ interface Action {
       | "aiWriting"
       | "imageGeneration"
       | "plagiairism"
-      | "summarize"
+      | "summarize",
   ) => void;
   resetUsageLimit: () => void;
 }
@@ -49,6 +57,7 @@ export const useMeStore = create<User & Action>()(
       bio: "",
       stripe_subscription_id: "",
       plan: "free",
+      notifications: undefined,
       usageLimit: {
         rewrite: 0,
         aiWriting: 0,
@@ -64,7 +73,7 @@ export const useMeStore = create<User & Action>()(
           | "aiWriting"
           | "imageGeneration"
           | "plagiairism"
-          | "summarize"
+          | "summarize",
       ) => {
         set((state) => ({
           usageLimit: {
@@ -107,8 +116,8 @@ export const useMeStore = create<User & Action>()(
       getStorage() {
         return localStorage;
       },
-    }
-  )
+    },
+  ),
 );
 
 interface SubscriptionDetail {
@@ -160,7 +169,7 @@ export const useSubscriptionStore = create<SubscriptionActionStore>()(
     setUserSubscription: (subscription) => {
       set({ userSubscription: subscription });
     },
-  })
+  }),
 );
 
 interface StripeCustomerDetail {

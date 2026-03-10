@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -26,7 +27,6 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { logOutUser } from "@/lib/apicalls/user";
 
 interface ResizeableSidebarProps {
@@ -44,15 +44,9 @@ const ResizeableSidebar = ({
 }: ResizeableSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const { name, avatar } = useMeStore();
-  const onCollapsed = () => {
-    // setIsCollapsed(collapsed);
-    setIsCollapsed(true);
-    // document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-    //   collapsed
-    // )}`;
-  };
+  const onCollapsed = () => setIsCollapsed(true);
   const pathname = usePathname();
-  const isPhone = useWindowSize().width < 640;
+  useWindowSize().width;
 
   const logOutHandler = async () => {
     const response = await logOutUser();
@@ -72,16 +66,12 @@ const ResizeableSidebar = ({
       return;
     }
   };
+
   return (
-    <div className="w-full h-full ">
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden bg-muted/30">
       <ResizablePanelGroup
         direction="horizontal"
-        className="w-full h-full"
-        // onLayout={(sizes: number[]) => {
-        //   document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-        //     sizes
-        //   )}`;
-        // }}
+        className="h-full min-h-0 w-full"
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
@@ -91,27 +81,33 @@ const ResizeableSidebar = ({
           maxSize={18}
           onCollapse={onCollapsed}
           className={cn(
-            isCollapsed &&
-              "min-w-[50px] min-h-full transition-all duration-300 ease-in-out"
+            "relative flex flex-col rounded-r-2xl border border-l-0 border-border/30 bg-card/80 shadow-lg shadow-black/5 backdrop-blur-xl dark:shadow-black/20",
+            isCollapsed && "min-w-[64px] transition-all duration-300 ease-out",
           )}
           onExpand={() => setIsCollapsed(false)}
         >
-          <div className="flex flex-col h-full justify-between p-2 gap-5">
+          <div className="flex h-full min-h-0 flex-col">
+            {/* Header */}
             <div
-              className={` ${
-                isCollapsed && "h-16"
-              } flex items-center justify-between w-full `}
+              className={cn(
+                "flex shrink-0 items-center px-3",
+                isCollapsed
+                  ? "h-16 justify-center"
+                  : "h-16 justify-between gap-2 px-4",
+              )}
             >
               {isCollapsed ? (
-                <div className="flex items-center justify-center w-full">
-                  <span className="text-4xl font-bold ">C</span>
-                </div>
+                <Logo width={36} height={36} className="shrink-0" />
               ) : (
-                <Logo />
+                <>
+                  <Logo className="h-9 shrink-0" />
+                  <ThemeToggle />
+                </>
               )}
-              {!isCollapsed && <ThemeToggle />}
             </div>
-            <div className="flex-1 sm: mt-5">
+
+            {/* Nav + Tools */}
+            <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-3 pb-4 pt-1">
               <Nav
                 isCollapsed={isCollapsed}
                 links={[
@@ -123,16 +119,13 @@ const ResizeableSidebar = ({
                   },
                   {
                     title: "Rewrite",
-                    label: "",
                     icon: SquarePen,
                     variant:
                       pathname === "/dashboard/rewrite" ? "default" : "ghost",
-
                     href: "/dashboard/rewrite",
                   },
                   {
                     title: "AI Writing",
-                    label: "",
                     icon: ReceiptText,
                     variant:
                       pathname === "/dashboard/ai-writing"
@@ -142,134 +135,161 @@ const ResizeableSidebar = ({
                   },
                 ]}
               />
-              <div className="sm:mt-14 flex w-full justify-center sm:justify-start sm:px-2 ">
-                <span className="text-md font-semibold ">Tools</span>
-              </div>
-              <Nav
-                isCollapsed={isCollapsed}
-                links={[
-                  {
-                    title: "Image Generator",
-                    label: "",
-                    icon: Image,
-                    variant:
-                      pathname === "/dashboard/image-generator"
-                        ? "default"
-                        : "ghost",
-                    href: "/dashboard/image-generator",
-                  },
-                  {
-                    title: "Content Detector",
-                    label: "",
-                    icon: Siren,
-                    variant:
-                      pathname === "/dashboard/content-detector"
-                        ? "default"
-                        : "ghost",
-                    href: "/dashboard/content-detector",
-                  },
-                  {
-                    title: "AI Chat",
-                    label: "",
-                    icon: MessageSquareMore,
-                    variant:
-                      pathname === "/dashboard/ai-chat" ? "default" : "ghost",
-                    href: "/dashboard/ai-chat",
-                  },
-                  {
-                    title: "Summarizer",
-                    label: "",
-                    icon: BookText,
-                    variant:
-                      pathname === "/dashboard/summarizer"
-                        ? "default"
-                        : "ghost",
-                    href: "/dashboard/summarizer",
-                  },
-                ]}
-              />
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className={`w-full flex   ${
-                    !isCollapsed ? "border gap-2 p-2 rounded-lg" : "lg:ml-2"
-                  }  mb-5`}
-                >
-                  <Avatar className="border border-violet-800">
-                    <AvatarImage src={avatar} alt="Avatar" />
-                    <AvatarFallback>
-                      {!avatar && name.charAt(0) + name.charAt(1)}
-                    </AvatarFallback>
-                  </Avatar>
-                  {!isCollapsed && (
-                    <div className="flex flex-col w-full text-start ">
-                      <span className="text-sm font-semibold ">{name}</span>
-                      <span className="text-xs text-gray-500">Admin</span>
-                    </div>
-                  )}
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="bottom"
-                align="end"
-                sideOffset={4}
+
+              <div
+                className={cn(
+                  "flex flex-col gap-2",
+                  isCollapsed && "items-center",
+                )}
               >
-                <DropdownMenuLabel className="p-0 font-normal"></DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/forms/subscription"
-                      className="flex items-center space-x-1"
-                    >
-                      <Sparkles />
-                      <span>Upgrade to Pro</span>
-                    </Link>
+                {!isCollapsed && (
+                  <span className="px-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70">
+                    Tools
+                  </span>
+                )}
+                <Nav
+                  isCollapsed={isCollapsed}
+                  links={[
+                    {
+                      title: "Image Generator",
+                      icon: Image,
+                      variant:
+                        pathname === "/dashboard/image-generator"
+                          ? "default"
+                          : "ghost",
+                      href: "/dashboard/image-generator",
+                    },
+                    {
+                      title: "Content Detector",
+                      icon: Siren,
+                      variant:
+                        pathname === "/dashboard/content-detector"
+                          ? "default"
+                          : "ghost",
+                      href: "/dashboard/content-detector",
+                    },
+                    {
+                      title: "AI Chat",
+                      icon: MessageSquareMore,
+                      variant:
+                        pathname === "/dashboard/ai-chat" ? "default" : "ghost",
+                      href: "/dashboard/ai-chat",
+                    },
+                    {
+                      title: "Summarizer",
+                      icon: BookText,
+                      variant:
+                        pathname === "/dashboard/summarizer"
+                          ? "default"
+                          : "ghost",
+                      href: "/dashboard/summarizer",
+                    },
+                  ]}
+                />
+              </div>
+            </div>
+
+            {/* User block */}
+            <div className="shrink-0 p-3 pt-0">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex w-full items-center gap-3 rounded-2xl bg-muted/50 px-3 py-2.5 transition-all duration-200 hover:bg-muted/80",
+                      isCollapsed && "justify-center px-2 py-3",
+                    )}
+                  >
+                    <Avatar className="h-9 w-9 shrink-0 ring-2 ring-background shadow-sm">
+                      <AvatarImage src={avatar} alt="Avatar" />
+                      <AvatarFallback className="text-sm font-semibold bg-primary/15 text-primary">
+                        {!avatar && name
+                          ? name.charAt(0) + name.charAt(1)
+                          : "?"}
+                      </AvatarFallback>
+                    </Avatar>
+                    {!isCollapsed && (
+                      <div className="flex min-w-0 flex-1 flex-col items-start text-left">
+                        <span className="truncate text-sm font-semibold">
+                          {name || "Account"}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          Manage account
+                        </span>
+                      </div>
+                    )}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="min-w-56 rounded-2xl border-border/50 shadow-xl"
+                  side="right"
+                  align="end"
+                  sideOffset={12}
+                >
+                  <DropdownMenuLabel className="p-0 font-normal" />
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/forms/subscription"
+                        className="flex cursor-pointer items-center gap-2.5"
+                      >
+                        <Sparkles className="h-4 w-4" />
+                        <span>Upgrade to Pro</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/forms"
+                        className="flex cursor-pointer items-center gap-2.5"
+                      >
+                        <BadgeCheck className="h-4 w-4" />
+                        <span>Account</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/forms/billing"
+                        className="flex cursor-pointer items-center gap-2.5"
+                      >
+                        <CreditCard className="h-4 w-4" />
+                        <span>Billing</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/forms/notifications"
+                        className="flex cursor-pointer items-center gap-2.5"
+                      >
+                        <Bell className="h-4 w-4" />
+                        <span>Notifications</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={logOutHandler}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Log out
                   </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/forms/account"
-                      className="flex items-center space-x-1"
-                    >
-                      <BadgeCheck />
-                      <span>Account</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/forms/billing"
-                      className="flex items-center space-x-1"
-                    >
-                      <CreditCard />
-                      <span>Billing</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link
-                      href="/forms/notifications"
-                      className="flex items-center space-x-1"
-                    >
-                      <Bell />
-                      <span>Notifications</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logOutHandler}>
-                  <LogOut />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel>{children}</ResizablePanel>
+
+        <ResizableHandle
+          withHandle
+          className="bg-border/40 hover:bg-border/70"
+        />
+
+        <ResizablePanel className="min-h-0 overflow-auto bg-background">
+          {children}
+        </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   );
