@@ -1,6 +1,6 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -14,7 +14,13 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useMeStore } from "../../store";
 import { useAIWritingStore } from "../store";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
+import { Upload, FileText, X, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const ACCEPT_UPLOAD = ".doc,.docx,.pdf,.txt";
+const labelClass = "text-[10px] font-medium uppercase tracking-wider text-muted-foreground";
+const triggerClass = "h-8 rounded-lg border-border/80 bg-muted/30 text-xs";
 
 const lengthData = [
   { value: "Short (500 words)", description: "Short length." },
@@ -168,6 +174,8 @@ const DynamicCard = () => {
   const [inputAgeGroup, setInputAgeGroup] = React.useState("");
   const [inputLength, setInputLength] = React.useState("");
   const [inputContent, setInputContent] = React.useState("");
+  const [uploadFileName, setUploadFileName] = React.useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
 
@@ -257,195 +265,199 @@ const DynamicCard = () => {
 
   return (
     <form
-      className="grid h-full w-full items-start gap-6 overflow-auto max-w-md"
+      className={cn(
+        "flex h-full min-h-0 w-full max-w-md flex-col gap-4 rounded-2xl border border-border/50",
+        "bg-background/70 shadow-sm backdrop-blur-sm"
+      )}
       onSubmit={submitHandler}
     >
-      <fieldset
-        className="grid gap-6 rounded-lg border p-4"
-        disabled={isLoading}
-      >
-        <legend className=" px-1 text-sm font-medium">Settings</legend>
-        <div className="grid gap-2">
-          <Label htmlFor="format">Format</Label>
-          <Select
-            name="format"
-            required
-            onValueChange={(e) => {
-              setInputFormat(e);
-            }}
-            value={inputFormat}
-          >
-            <SelectTrigger
-              id="format"
-              className="items-start [&_[data-description]]:hidden"
-            >
-              <SelectValue placeholder="Select a format" />
-            </SelectTrigger>
-            <SelectContent>
-              {formatOptions.map((option, index) => (
-                <SelectItem
-                  key={index}
-                  value={option.value}
-                  data-description={option.description}
-                >
-                  {option.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        {inputFormat === "Essay" && (
-          <div className="grid gap-2">
-            <Label htmlFor="type">Type</Label>
+      <div className="shrink-0 space-y-3 px-4 pt-4">
+        {/* Inline toolbar – same style as Rewrite */}
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1">
+            <label className={labelClass}>Format</label>
             <Select
-              name="type"
+              value={inputFormat}
+              onValueChange={setInputFormat}
+              disabled={isLoading}
               required
-              onValueChange={(e) => setInputType(e)}
-              value={inputType}
             >
-              <SelectTrigger
-                id="type"
-                className="items-start [&_[data-description]]:hidden"
-              >
-                <SelectValue placeholder="Select a type" />
+              <SelectTrigger className={cn(triggerClass, "w-[110px]")}>
+                <SelectValue placeholder="Format" />
               </SelectTrigger>
               <SelectContent>
-                {formatOptions.map((option, index) => {
-                  if (option.value === "Essay") {
-                    return option?.types?.map((type, index) => (
-                      <SelectItem
-                        key={index}
-                        value={type.value}
-                        data-description={type.description}
-                      >
-                        {type.value}
-                      </SelectItem>
-                    ));
-                  }
-                })}
+                {formatOptions.map((option, index) => (
+                  <SelectItem key={index} value={option.value}>
+                    {option.value}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-        )}
-        <div className="grid gap-2">
-          <Label htmlFor="tone">Tone</Label>
-          <Select
-            name="tone"
-            required
-            onValueChange={(e) => setInputTone(e)}
-            value={inputTone}
-          >
-            <SelectTrigger
-              id="tone"
-              className="items-start [&_[data-description]]:hidden"
+          {inputFormat === "Essay" && (
+            <div className="space-y-1">
+              <label className={labelClass}>Type</label>
+              <Select
+                value={inputType}
+                onValueChange={setInputType}
+                disabled={isLoading}
+                required
+              >
+                <SelectTrigger className={cn(triggerClass, "w-[120px]")}>
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(formatOptions.find((o) => o.value === "Essay")?.types ?? []).map((type, index) => (
+                    <SelectItem key={index} value={type.value}>
+                      {type.value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <div className="space-y-1">
+            <label className={labelClass}>Tone</label>
+            <Select
+              value={inputTone}
+              onValueChange={setInputTone}
+              disabled={isLoading}
+              required
             >
-              <SelectValue placeholder="Select tone" />
-            </SelectTrigger>
-            <SelectContent>
-              {getFilteredTones(inputFormat).map((option, index) => (
-                <SelectItem
-                  key={index}
-                  value={option.value}
-                  data-description={option.description}
-                >
-                  {option.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="age group">Age Group</Label>
-          <Select
-            required
-            name="agegroup"
-            onValueChange={(e) => setInputAgeGroup(e)}
-            value={inputAgeGroup}
-          >
-            <SelectTrigger
-              id="agegroup"
-              className="items-start [&_[data-description]]:hidden"
+              <SelectTrigger className={cn(triggerClass, "w-[100px]")}>
+                <SelectValue placeholder="Tone" />
+              </SelectTrigger>
+              <SelectContent>
+                {getFilteredTones(inputFormat).map((option, index) => (
+                  <SelectItem key={index} value={option.value}>
+                    {option.value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <label className={labelClass}>Age</label>
+            <Select
+              value={inputAgeGroup}
+              onValueChange={setInputAgeGroup}
+              disabled={isLoading}
+              required
             >
-              <SelectValue placeholder="Select Age Group" />
-            </SelectTrigger>
-            <SelectContent>
-              {ageGroupData.map((option, index) => (
-                <SelectItem
-                  key={index}
-                  value={option.value}
-                  data-description={option.description}
-                >
-                  {option.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </fieldset>
-      <fieldset
-        className="grid gap-6 rounded-lg border p-4"
-        disabled={isLoading}
-      >
-        <legend className="-ml-1 px-1 text-sm font-medium">Content</legend>
-        <div className="grid gap-1">
-          <Label htmlFor="length">Length</Label>
-          <Select
-            name="length"
-            required
-            onValueChange={(e) => setInputLength(e)}
-            value={inputLength}
-          >
-            <SelectTrigger
-              id="length"
-              className="items-start [&_[data-description]]:hidden"
+              <SelectTrigger className={cn(triggerClass, "w-[95px]")}>
+                <SelectValue placeholder="Age" />
+              </SelectTrigger>
+              <SelectContent>
+                {ageGroupData.map((option, index) => (
+                  <SelectItem key={index} value={option.value}>
+                    {option.value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <label className={labelClass}>Length</label>
+            <Select
+              value={inputLength}
+              onValueChange={setInputLength}
+              disabled={isLoading}
+              required
             >
-              <SelectValue placeholder="Select length" />
-            </SelectTrigger>
-            <SelectContent>
-              {lengthData.map((option, index) => (
-                <SelectItem
-                  key={index}
-                  value={option.value}
-                  data-description={option.description}
-                >
-                  {option.value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="content">Prompt</Label>
-          <Textarea
-            id="content"
-            placeholder="What is in your mind..."
-            onChange={(e) => {
-              if (e.target.value.length > MAX_CHARS_COUNT) return;
-              setInputContent(e.target.value);
-            }}
-            value={inputContent}
-            className="resize-none h-full min-h-[150px]"
-          />
-          <div className=" text-sm text-gray-600 w-full text-end">
-            <span>{countWords(inputContent)}</span>
+              <SelectTrigger className={cn(triggerClass, "w-[130px]")}>
+                <SelectValue placeholder="Length" />
+              </SelectTrigger>
+              <SelectContent>
+                {lengthData.map((option, index) => (
+                  <SelectItem key={index} value={option.value}>
+                    {option.value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
+
+        {/* Upload – same as Rewrite */}
+        <div className="space-y-1">
+          <label className={labelClass}>Or upload file</label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPT_UPLOAD}
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              setUploadFileName(file ? file.name : null);
+            }}
+          />
+          {uploadFileName ? (
+            <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/10 px-3 py-2">
+              <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span className="min-w-0 truncate text-xs text-foreground">{uploadFileName}</span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 shrink-0"
+                onClick={() => {
+                  setUploadFileName(null);
+                  fileInputRef.current?.value && (fileInputRef.current.value = "");
+                }}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className={cn(
+                "flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-border/60 py-2.5 text-xs text-muted-foreground",
+                "hover:border-border hover:bg-muted/10 hover:text-foreground"
+              )}
+            >
+              <Upload className="h-3.5 w-3.5" />
+              Upload .doc, .pdf or .txt
+            </button>
+          )}
+        </div>
+
+        {/* Prompt zone – exact same as Rewrite textarea block */}
+        <div className="flex min-h-0 flex-1 flex-col gap-1.5 rounded-xl border border-border/40 bg-muted/10 p-3">
+          <Textarea
+            id="content"
+            value={inputContent}
+            onChange={(e) => {
+              if (e.target.value.length <= MAX_CHARS_COUNT) setInputContent(e.target.value);
+            }}
+            placeholder="What is in your mind…"
+            disabled={isLoading}
+            className={cn(
+              "min-h-[120px] max-h-[min(400px,60vh)] resize-y rounded-lg border-border/50 bg-background/90 text-sm",
+              "placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-primary/20"
+            )}
+          />
+          <p className="text-right text-[10px] text-muted-foreground">
+            {countWords(inputContent)}
+          </p>
+        </div>
+
         <Button
-          className="w-full flex items-center justify-center gap-2"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !inputContent.trim()}
+          className={cn(
+            "h-9 w-full shrink-0 rounded-xl text-sm font-medium",
+            "bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+          )}
         >
           {isLoading ? (
-            <>
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              Generating...
-            </>
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            <span>Generate</span>
+            "Generate"
           )}
         </Button>
-        <Toaster richColors />
-      </fieldset>
+      </div>
     </form>
   );
 };
