@@ -1,6 +1,6 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -14,34 +14,33 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useMeStore } from "../../store";
 import { useContentDetectorStore } from "../store";
-import { toast, Toaster } from "sonner";
-import LoadingSpinner from "@/components/loading-spinner";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const MAX_CHARS_COUNT = 9000;
 const countWords = (str: string) => `${str.length} / ${MAX_CHARS_COUNT}`;
+
+const labelClass =
+  "text-[10px] font-medium uppercase tracking-wider text-muted-foreground";
+const triggerClass = "h-8 rounded-lg border-border/80 bg-muted/30 text-xs";
 
 const DrawerCard = () => {
   const router = useRouter();
   const [method, setMethod] = React.useState("Plagiarism Detection");
   const [content, setContent] = React.useState("");
-  const {
-    _id: userId,
-    stripe_subscription_id,
-    incrementUsageLimit,
-  } = useMeStore();
+  const { _id: userId, stripe_subscription_id, incrementUsageLimit } =
+    useMeStore();
   const { addAiHistory, addPlagrismHistory } = useContentDetectorStore();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState({ status: false, message: "" });
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    if (!content || content.length === 0) {
-      setIsError({ status: true, message: "Content is required" }),
-        toast.error("Content is required");
-      setIsLoading(false);
+    if (!content?.trim()) {
+      toast.error("Content is required");
       return;
     }
+    setIsLoading(true);
     const contentDetection = await createContentDetection(
       userId,
       method,
@@ -60,72 +59,80 @@ const DrawerCard = () => {
       router.push(
         `/dashboard/content-detector?documentId=${contentDetection.data?._id}`
       );
-      setIsLoading(false);
       toast.success(contentDetection.message);
-      return;
+      setContent("");
     } else if (contentDetection.status === 403) {
       toast.error(contentDetection.message);
-      setIsLoading(false);
-      return;
+    } else {
+      toast.error(contentDetection.message);
     }
-    setIsError({ status: true, message: contentDetection.message });
-    toast.error(contentDetection.message);
     setIsLoading(false);
   };
+
   return (
     <form
-      className="flex flex-col h-full w-full items-start gap-6 overflow-auto max-w-md sm:p-0 p-2"
+      className={cn(
+        "flex h-full min-h-0 w-full max-w-md flex-col gap-4 rounded-2xl border border-border/50",
+        "bg-background/70 shadow-sm backdrop-blur-sm"
+      )}
       onSubmit={onSubmitHandler}
     >
-      <fieldset className="flex flex-col rounded-lg border p-4 w-full gap-2 h-full">
-        <legend className="px-1 text-sm font-medium">Settings</legend>
-        <div className="w-full ">
-          <Label htmlFor="role">Method</Label>
-          <Select
-            defaultValue="Plagiarism Detection"
-            onValueChange={(e) => setMethod(e)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a role" />
-            </SelectTrigger>
-            <SelectContent>
-              {/* <SelectItem value="Ai Detection">AI Detection</SelectItem> */}
-              <SelectItem value="Plagiarism Detection">
-                Plagiarism Detection
-              </SelectItem>
-            </SelectContent>
-          </Select>
+      <div className="shrink-0 space-y-3 px-4 pt-4">
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1">
+            <label className={labelClass}>Method</label>
+            <Select
+              value={method}
+              onValueChange={setMethod}
+              disabled={isLoading}
+            >
+              <SelectTrigger className={cn(triggerClass, "w-[160px]")}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Plagiarism Detection">
+                  Plagiarism Detection
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="w-full h-full">
-          <Label htmlFor="content">Content</Label>
+
+        <div className="flex min-h-0 flex-1 flex-col gap-1.5 rounded-xl border border-border/40 bg-muted/10 p-3">
           <Textarea
-            onChange={(e) => {
-              if (e.target.value.length > MAX_CHARS_COUNT) return;
-              setContent(e.target.value);
-            }}
             value={content}
+            onChange={(e) => {
+              if (e.target.value.length <= MAX_CHARS_COUNT)
+                setContent(e.target.value);
+            }}
             id="content"
-            placeholder="You are a..."
-            // className="sm:h-[95%] resize-none relative border-0 bg-muted/50 p-1 shadow-none focus-visible:ring-0"
-            className="resize-none h-[95%] min-h-[100px] mt-1"
+            placeholder="Paste or type content to detect…"
+            disabled={isLoading}
+            className={cn(
+              "min-h-[120px] max-h-[min(400px,60vh)] resize-y rounded-lg border-border/50 bg-background/90 text-sm",
+              "placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-primary/20"
+            )}
           />
-          <div className=" text-sm text-gray-600 w-full text-end">
-            <span>{countWords(content)}</span>
-          </div>
+          <p className="text-right text-[10px] text-muted-foreground">
+            {countWords(content)}
+          </p>
         </div>
-        <br className="hidden sm:flex" />
-      </fieldset>
-      <Button type="submit" className="w-full sm:mb-5" disabled={isLoading}>
-        {isLoading ? (
-          <div className="flex gap-1 items-center">
-            <LoadingSpinner />
-            <span>Processing</span>
-          </div>
-        ) : (
-          "Detect"
-        )}
-      </Button>
-      <Toaster richColors />
+
+        <Button
+          type="submit"
+          disabled={isLoading || !content.trim()}
+          className={cn(
+            "h-9 w-full shrink-0 rounded-xl text-sm font-medium",
+            "bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+          )}
+        >
+          {isLoading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            "Detect"
+          )}
+        </Button>
+      </div>
     </form>
   );
 };

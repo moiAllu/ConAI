@@ -1,32 +1,44 @@
 "use client";
+
 import Nav from "@/components/header/nav";
-import { Square, SquareActivity } from "lucide-react";
 import React, { Suspense } from "react";
+import { Siren } from "lucide-react";
 import DrawerCard from "./components/drawerCard";
-import { useWindowSize } from "@/lib/hooks";
 import OutputCard from "./components/outputCard";
 import ContentDetectorHistory from "./components/content-detector-history";
+import { Toaster } from "sonner";
+
 const ContentDetectionPage = () => {
-  const isPhone = useWindowSize().width < 640;
   return (
-    <div className="sm:py-5 py-2 flex flex-col w-full h-full">
-      <Nav
-        title="Content-Detector"
-        icon={SquareActivity}
-        history={
-          <>
-            <ContentDetectorHistory />
-          </>
-        }
-      >
-        <DrawerCard />
-      </Nav>
-      <div className="p-2 sm:p-5 h-full w-full flex  items-center  space-x-4 ">
-        {!isPhone && <DrawerCard />}
-        <Suspense fallback={<div>Loading...</div>}>
-          <OutputCard />
-        </Suspense>
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-gradient-to-br from-slate-200 via-slate-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto px-3 py-3 sm:px-4 sm:py-4">
+        <Nav
+          title="Content-Detector"
+          icon={Siren}
+          mobileSettingsLabel="Detect"
+          history={<ContentDetectorHistory />}
+        >
+          <DrawerCard />
+        </Nav>
+
+        <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,380px)_1fr]">
+          <div className="hidden min-h-0 flex-col overflow-hidden lg:flex">
+            <DrawerCard />
+          </div>
+          <div className="flex min-h-[200px] flex-1 flex-col overflow-hidden lg:min-h-0">
+            <Suspense
+              fallback={
+                <div className="flex h-full min-h-[200px] items-center justify-center rounded-2xl border border-border/40 bg-muted/10 text-sm text-muted-foreground">
+                  Loading…
+                </div>
+              }
+            >
+              <OutputCard />
+            </Suspense>
+          </div>
+        </div>
       </div>
+      <Toaster richColors position="bottom-right" />
     </div>
   );
 };
