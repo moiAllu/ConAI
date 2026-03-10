@@ -21,36 +21,38 @@ export interface Action {
 }
 
 export const useSummarizerStore = create<SummarizerHistory & Action>()(
-  persist((set) => ({
-    summarizers: [],
-    setSummarizers: (summarizers) => {
-      set({ summarizers });
-    },
-    addSummarizer: (summarizer) => {
-      set((state) => {
-        const existingSummarizer = state.summarizers.find(
-          (rw) => rw._id === summarizer._id
-        );
-        if (existingSummarizer) {
-          existingSummarizer.output = summarizer.output;
+  persist(
+    (set) => ({
+      summarizers: [],
+      setSummarizers: (summarizers) => {
+        set({ summarizers });
+      },
+      addSummarizer: (summarizer) => {
+        set((state) => {
+          const existingSummarizer = state.summarizers.find(
+            (rw) => rw._id === summarizer._id,
+          );
+          if (existingSummarizer) {
+            existingSummarizer.output = summarizer.output;
+            return state;
+          }
+          state.summarizers.push(summarizer);
           return state;
-        }
-        state.summarizers.push(summarizer);
-        return state;
-      });
+        });
+      },
+      deleteSummarizer: (id) => {
+        set((state) => ({
+          summarizers: state.summarizers.filter(
+            (summarizer) => summarizer._id !== id,
+          ),
+        }));
+      },
+    }),
+    {
+      name: "summarizerStore",
+      getStorage() {
+        return localStorage;
+      },
     },
-    deleteSummarizer: (id) => {
-      set((state) => ({
-        summarizers: state.summarizers.filter(
-          (summarizer) => summarizer._id !== id
-        ),
-      }));
-    },
-  }),
-  {
-    name: "summarizerStore",
-    getStorage() {
-      return localStorage;
-    },
-  })
+  ),
 );
