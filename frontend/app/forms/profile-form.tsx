@@ -1,10 +1,9 @@
 "use client";
-import Link from "next/link";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/registry/new-york/ui/button";
 import {
   Form,
@@ -16,13 +15,6 @@ import {
   FormMessage,
 } from "@/registry/new-york/ui/form";
 import { Input } from "@/registry/new-york/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/new-york/ui/select";
 import { Textarea } from "@/registry/new-york/ui/textarea";
 import { toast, Toaster } from "sonner";
 import { useMeStore } from "../dashboard/store";
@@ -67,13 +59,8 @@ export function ProfileForm() {
     defaultValues,
     mode: "onChange",
   });
-  const { name, email, _id, verified, updateUser } = useMeStore();
+  const { name, email, updateUser } = useMeStore();
   const [isLoading, setIsLoading] = useState(false);
-
-  const { fields, append } = useFieldArray({
-    name: "urls",
-    control: form.control,
-  });
 
   async function onSubmit(data: ProfileFormValues) {
     setIsLoading(true);
@@ -94,113 +81,53 @@ export function ProfileForm() {
   return (
     <Form {...form}>
       <Toaster />
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder={name} {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled={verified}
-              >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium">Username</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={email} />
-                  </SelectTrigger>
+                  <Input
+                    placeholder={name}
+                    className="rounded-xl border-border/50 bg-background"
+                    {...field}
+                  />
                 </FormControl>
-                {!verified && (
-                  <Button type="reset" onClick={() => {}}>
-                    Verify
-                  </Button>
-                )}
-              </Select>
-              <FormDescription>
-                {verified ? (
-                  "Your email is verified."
-                ) : (
-                  <>Your email is not verified. Please verify your email.</>
-                )}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
+                <FormDescription className="text-xs">
+                  This is your public display name. It can be your real name or a
+                  pseudonym. You can only change this once every 30 days.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="bio"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bio</FormLabel>
+              <FormLabel className="text-sm font-medium">Bio</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Tell us a little bit about yourself"
-                  className="resize-none"
+                  className="min-h-[100px] resize-y rounded-xl border-border/50 bg-background text-sm"
                   {...field}
                 />
               </FormControl>
-              {/* <FormDescription>
-                You can <span>@mention</span> other users and organizations to
-                link to them.
-              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* 
-        <div>
-          {fields.map((field, index) => (
-            <FormField
-              control={form.control}
-              key={field.id}
-              name={`urls.${index}.value`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    URLs
-                  </FormLabel>
-                  <FormDescription className={cn(index !== 0 && "sr-only")}>
-                    Add links to your website, blog, or social media profiles.
-                  </FormDescription>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2"
-            onClick={() => append({ value: "" })}
-          >
-            Add URL
-          </Button>
-        </div> */}
-        <Button type="submit" disabled={isLoading}>
-          Update profile
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="rounded-xl bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+        >
+          {isLoading ? "Updating…" : "Update profile"}
         </Button>
       </form>
     </Form>
