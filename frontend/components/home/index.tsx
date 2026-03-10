@@ -1,33 +1,39 @@
-import Image from "next/image";
 import React from "react";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Button } from "../ui/button";
 import Plans from "./plans";
-import CardCarousel from "./cardCarousel";
-import Footer from "./footer";
-import { Card } from "../ui/card";
 import Link from "next/link";
+import FeaturesSection from "./FeaturesSection";
+
 type typeModelsList = {
   title: string;
-  image: string;
+  initial: string;
+  accent: string; // Tailwind classes: bg-*/20 dark:bg-*/30 text-* dark:text-*
 };
 
 const modelsList: typeModelsList[] = [
   {
     title: "GPT-4 Turbo",
-    image: "gpt",
+    initial: "GPT",
+    accent:
+      "bg-emerald-500/15 dark:bg-emerald-400/20 text-emerald-700 dark:text-emerald-300 ring-emerald-500/30 dark:ring-emerald-400/30",
   },
   {
     title: "Claude 2",
-    image: "claude",
+    initial: "CL",
+    accent:
+      "bg-amber-500/15 dark:bg-amber-400/20 text-amber-800 dark:text-amber-200 ring-amber-500/30 dark:ring-amber-400/30",
   },
   {
-    title: "Llamba",
-    image: "llamba",
+    title: "Llama",
+    initial: "LL",
+    accent:
+      "bg-orange-500/15 dark:bg-orange-400/20 text-orange-700 dark:text-orange-300 ring-orange-500/30 dark:ring-orange-400/30",
   },
   {
     title: "Stable Diffusion",
-    image: "stablediffusion",
+    initial: "SD",
+    accent:
+      "bg-violet-500/15 dark:bg-violet-400/20 text-violet-700 dark:text-violet-300 ring-violet-500/30 dark:ring-violet-400/30",
   },
 ];
 type typePlansData = {
@@ -89,77 +95,119 @@ const plansData: typePlansData[] = [
 
 const HeroPage = () => {
   return (
-    <div className=" w-full h-full flex flex-col items-center gap-28">
-      <section className="w-full h-full flex flex-col items-center">
-        <div className="flex flex-col justify-center items-center sm:p-16 py-10 px-5 gap-10 md:w-[800px]">
-          <div className="container sm:flex flex-col items-center justify-items-center text-center sm:text-start">
-            <h1 className="text-5xl font-bold text-primary md:w-[420px]">
-              Write, visualize what you think?
-            </h1>
-            <p className="text-lg  mt-4 lg ">
-              enhance your workflow, just think forget about writing on ConAI,
-              All your AI tools at one place with conAI
-            </p>
+    <div className=" w-full h-full flex flex-col items-center gap-14 sm:gap-16 ">
+      <section
+        id="hero"
+        className="relative w-full min-h-[60vh] flex flex-col items-center justify-center scroll-mt-20 overflow-hidden"
+      >
+        <div className="flex flex-col items-center text-center px-4 sm:px-6 pt-12 sm:pt-16 pb-8 max-w-4xl mx-auto">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary mb-4">
+            All your AI tools in one workflow
+          </span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary tracking-tight leading-[1.1] max-w-3xl">
+            Rewrite, humanize, detect{" "}
+            <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-600 dark:from-violet-400 dark:via-indigo-400 dark:to-cyan-400 bg-clip-text text-transparent">
+              & create
+            </span>{" "}
+            — all in one place
+          </h1>
+          <p className="text-lg sm:text-xl text-muted-foreground mt-6 max-w-2xl leading-relaxed">
+            Check plagiarism, generate and enhance images, and polish your
+            content with AI.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4 mt-10">
+            <Link href="/dashboard">
+              <Button
+                size="lg"
+                className="text-base px-8 h-12 rounded-xl shadow-lg shadow-primary/20"
+              >
+                Get Started
+              </Button>
+            </Link>
+            <a
+              href="#features"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              Try tools below ↓
+            </a>
           </div>
-          <Link href="/dashboard">
-            <Button>Get Started</Button>
-          </Link>
         </div>
-        <AspectRatio
-          ratio={16 / 5}
-          className="bg-muted rounded-lg border dark:border-gray-900 "
-        >
-          <Image
-            src="/hero_grid.svg"
-            alt="Photo by Drew Beamer"
-            fill
-            className="rounded-md object-cover bg-white dark:bg-black saturate-0 dark:brightness-[400%] contrast-[400%]"
-          />
-        </AspectRatio>
+
+        <FeaturesSection />
       </section>
 
-      <section className=" w-full flex flex-col p-4 sm:p-10 gap-20 justify-center items-center text-center sm:text-start ">
-        <h2 className="text-4xl font-bold text-primary">
-          Explore our variety of language models
-        </h2>
-        <Card className=" sm:h-[200px] w-full items-center sm:flex justify-between sm:px-20 rounded-md shadow-sm ">
-          {modelsList.map((model, index) => (
-            <div
-              className="flex items-center justify-center w-full px-2"
-              key={index}
-            >
-              <div className="p-1">
-                <Image
-                  src={`/models/${model.image}.svg`}
-                  alt={`${model.image}`}
-                  width={78}
-                  height={78}
-                  className="rounded-md object-cover"
-                />
-              </div>
-              <h3 className="text-lg font-bold text-primary ">{model.title}</h3>
+      <section
+        id="models"
+        className="relative w-full flex flex-col items-center scroll-mt-20 px-4 sm:px-6 overflow-hidden pb-14"
+      >
+        <div className="w-full max-w-5xl mx-auto flex flex-col items-center text-center gap-12">
+          <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
+            Powered by leading AI
+          </span>
+          <div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary tracking-tight">
+              Explore our variety of{" "}
+              <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 dark:from-violet-400 dark:via-indigo-400 dark:to-blue-400 bg-clip-text text-transparent">
+                language models
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground mt-4 max-w-xl mx-auto">
+              GPT-4, Claude, Llama, Stable Diffusion — all in one platform.
+            </p>
+          </div>
+          <div className="w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg ring-1 ring-primary/10 dark:ring-white/10 bg-card/80 dark:bg-card/90 backdrop-blur-xl border border-border/50">
+            <div className="grid grid-cols-2 sm:flex sm:flex-row sm:justify-evenly sm:gap-0 gap-6 p-8 sm:py-12 sm:px-10">
+              {modelsList.map((model, index) => (
+                <div
+                  className="flex flex-col items-center justify-center gap-3 sm:gap-4 px-2"
+                  key={index}
+                >
+                  <div
+                    className={`rounded-2xl p-4 ring-1 min-w-[72px] min-h-[72px] flex items-center justify-center font-bold text-xl sm:text-2xl tracking-tight ${model.accent}`}
+                  >
+                    {model.initial}
+                  </div>
+                  <h3 className="text-sm sm:text-base font-semibold text-primary">
+                    {model.title}
+                  </h3>
+                </div>
+              ))}
             </div>
-          ))}
-        </Card>
-      </section>
-      <section className=" w-full flex flex-col p-4 sm:p-10  gap-20 justify-center items-center  ">
-        <div className=" flex flex-col gap-5 justify-center items-center md:w-[80%] text-center sm:text-start">
-          <h2 className="text-4xl font-bold text-primary ">Our Plans</h2>
-          <h3 className="text-xl text-gray-800 text-primary ">
-            Transparent, flexible plans to suit your budget and specific needs
-            effortlessly
-          </h3>
+          </div>
         </div>
-        <div className="grid grid-flow-row sm:grid-cols-2 lg:grid-cols-3  gap-4 justify-center items-center">
-          {plansData.map((plan, index) => (
-            <Plans
-              key={index}
-              title={plan.title}
-              description={plan.description}
-              features={plan.features}
-              price={plan.price}
-            />
-          ))}
+      </section>
+
+      <section
+        id="plans"
+        className="relative w-full flex flex-col items-center scroll-mt-20 px-4 sm:px-6 overflow-hidden pb-14"
+      >
+        <div className="w-full max-w-6xl mx-auto flex flex-col items-center gap-12">
+          <span className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
+            Simple pricing
+          </span>
+          <div className="text-center max-w-2xl">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary tracking-tight">
+              Our{" "}
+              <span className="bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-600 dark:from-violet-400 dark:via-indigo-400 dark:to-cyan-400 bg-clip-text text-transparent">
+                Plans
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground mt-4">
+              Transparent, flexible plans to suit your budget and specific
+              needs.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
+            {plansData.map((plan, index) => (
+              <Plans
+                key={index}
+                title={plan.title}
+                description={plan.description}
+                features={plan.features}
+                price={plan.price}
+              />
+            ))}
+          </div>
         </div>
       </section>
       {/* <section className=" w-full flex flex-col sm:p-10 p-4 gap-20 justify-center items-center ">

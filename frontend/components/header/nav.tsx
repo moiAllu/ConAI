@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { UploadIcon, ReceiptText, IconNode, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { Settings, History } from "lucide-react";
 import { useMeStore } from "../../app/dashboard/store";
 import DeleteAlert from "../custom/deleteAlert";
@@ -19,7 +19,6 @@ import { getUserImages } from "@/lib/apicalls/image-generation";
 import { useImageStore } from "@/app/dashboard/image-generator/store";
 import { useRouter } from "next/navigation";
 import { orderBy } from "lodash";
-import { Ellipsis } from "lucide-react";
 import { useState } from "react";
 import { useRewriteStore } from "../../app/dashboard/rewrite/store";
 import { getUserRewritesHistory } from "@/lib/apicalls/rewrite";
@@ -31,6 +30,8 @@ interface NavProps {
   history?: React.ReactNode;
   title: string;
   icon: LucideIcon;
+  /** Label for the settings/form drawer on mobile (e.g. "Write" for Rewrite). Default "Settings". */
+  mobileSettingsLabel?: string;
 }
 
 const Nav = (props: NavProps) => {
@@ -68,17 +69,32 @@ const Nav = (props: NavProps) => {
       fetchSummarizes();
     }
   }, [userId]);
+  const settingsLabel = props.mobileSettingsLabel ?? "Settings";
+  const TitleIcon = props.icon;
+
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between px-4">
-        <div className=" flex space-x-2 items-center">
-          <ReceiptText className="font-bold  " />
-          <h1 className="sm:text-2xl font-bold text-lg">{props.title}</h1>
+      <div className="flex items-center justify-between gap-2 px-3 sm:px-4">
+        {/* On desktop: title + icon. On mobile: hidden (feature name is in top navbar). */}
+        <div className="hidden min-w-0 flex-1 items-center gap-2 md:flex">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted/50">
+            <TitleIcon className="h-4 w-4 text-muted-foreground sm:h-5 sm:w-5" />
+          </div>
+          <h1 className="truncate text-lg font-semibold sm:text-2xl sm:font-bold">
+            {props.title}
+          </h1>
+        </div>
+        {/* On mobile: actions take full width for more space. */}
+        <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2 md:flex-initial md:flex-shrink-0">
           <Drawer direction="left">
             <DrawerTrigger asChild>
-              <Button variant="ghost" size="icon" className="">
-                <History />
-                <span className="sr-only">history</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-10 min-w-0 flex-1 gap-2 rounded-xl border border-border/40 bg-muted/20 px-3 text-sm font-medium md:flex-initial md:h-9 md:min-w-0 md:rounded-lg md:border-0 md:bg-transparent md:px-2.5 md:text-xs [&_svg]:shrink-0"
+              >
+                <History className="h-4 w-4 md:h-5 md:w-5" />
+                <span>History</span>
               </Button>
             </DrawerTrigger>
             <DrawerContent className="w-screen sm:max-w-[450px] max-w-[270px] h-full">
@@ -211,16 +227,28 @@ const Nav = (props: NavProps) => {
           </Drawer>
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Settings className="size-6" />
-                <span className="sr-only">Settings</span>
+              <Button
+                variant="default"
+                size="sm"
+                className="h-10 min-w-0 flex-1 gap-2 rounded-xl bg-foreground px-3 text-sm font-medium text-background hover:bg-foreground/90 md:hidden [&_svg]:shrink-0"
+              >
+                <Settings className="h-4 w-4" />
+                <span>{settingsLabel}</span>
               </Button>
             </DrawerTrigger>
             <DrawerContent className="h-full w-full">
               <DrawerHeader>
-                <DrawerTitle>Configuration</DrawerTitle>
+                <DrawerTitle>{settingsLabel}</DrawerTitle>
                 <DrawerDescription>
-                  Configure the settings for the model and messages.
+                  {props.title === "Rewrite"
+                    ? "Enter text, choose options, and rewrite."
+                    : props.title === "Image-Generator"
+                    ? "Choose style, aspect, and describe your image to generate."
+                    : props.title === "Content-Detector"
+                    ? "Paste content and run plagiarism or AI detection."
+                    : props.title === "Summarizer"
+                    ? "Paste content, choose intensity, and summarize."
+                    : "Configure the settings for the model and messages."}
                 </DrawerDescription>
               </DrawerHeader>
               {props.children}

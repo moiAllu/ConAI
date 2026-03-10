@@ -18,14 +18,24 @@ import { Button } from "../ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 import { Separator } from "../ui/separator";
 import Logo from "./logo";
-import { Nav } from "@/app/dashboard/components/nav";
 import { ThemeToggle } from "../theme-toggle";
 import { usePathname } from "next/navigation";
-import { redirect } from "next/navigation";
 import { LucideIcon, Settings } from "lucide-react";
 
 import { useMeStore } from "@/app/dashboard/store";
 import { logOutUser } from "@/lib/apicalls/user";
+
+const DASHBOARD_FEATURES: { path: string; label: string; icon: LucideIcon }[] = [
+  { path: "/dashboard/rewrite", label: "Rewrite", icon: SquarePen },
+  { path: "/dashboard/ai-writing", label: "AI Writing", icon: ReceiptText },
+  { path: "/dashboard/image-generator", label: "Image Generator", icon: Image },
+  { path: "/dashboard/content-detector", label: "Content Detector", icon: Siren },
+  { path: "/dashboard/ai-chat", label: "AI Chat", icon: MessageSquareMore },
+  { path: "/dashboard/summarizer", label: "Summarizer", icon: BookText },
+];
+function getFeatureForPath(pathname: string) {
+  return DASHBOARD_FEATURES.find((f) => pathname === f.path || pathname.startsWith(f.path + "/"));
+}
 type typeLink = {
   title: string;
   icon: LucideIcon;
@@ -114,111 +124,126 @@ const PhoneNavbar = () => {
       return;
     }
   };
+  const feature = getFeatureForPath(pathname);
+
   return (
-    <div className="sm:hidden flex items-center justify-between w-full h-full px-2 ">
+    <div className="flex w-full items-center justify-between gap-2 sm:hidden">
       <Drawer direction="left">
-        <DrawerTrigger>
-          <Menu />
+        <DrawerTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0 rounded-lg -ml-1">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Menu</span>
+          </Button>
         </DrawerTrigger>
-        <DrawerContent className="w-full h-full overflow-auto">
-          <div className="w-full flex left-0 justify-between p-2">
-            <Logo width={60} height={60} />
-            <DrawerTrigger>
-              <X size={17} />
-            </DrawerTrigger>
-          </div>
-          <Separator className="my-2" />
-          <div className="flex flex-col space-y-1 mt-2">
-            {topLinks.map((link, itx) => (
-              <Link
-                key={itx}
-                href={link.href}
-                passHref
-                className=" flex items-center space-x-2 text-sm ml-6 hover:bg-muted"
-              >
-                <DrawerTrigger>
-                  <Button
-                    variant={pathname === link.href ? "default" : "ghost"}
-                    className="space-x-1"
-                  >
-                    <link.icon className="h-5 w-5" />
-                    <span>{link.title}</span>
-                  </Button>
-                </DrawerTrigger>
-              </Link>
-            ))}
-          </div>
-          <div className="p-2 ">
-            <span className="text-md font-semibold ">Tools</span>
-          </div>
-          <div className="flex flex-col space-y-1">
-            {toolsLinks.map((link, itx) => (
-              <Link
-                key={itx}
-                href={link.href}
-                passHref
-                className=" flex items-center space-x-2 text-sm ml-6 hover:bg-muted"
-              >
-                <DrawerTrigger>
-                  <Button
-                    variant={pathname === link.href ? "default" : "ghost"}
-                    className="space-x-1"
-                  >
-                    <link.icon className="h-5 w-5" />
-                    <span>{link.title}</span>
-                  </Button>
-                </DrawerTrigger>
-              </Link>
-            ))}
-          </div>
-          <Separator className="my-2" />
-          <div className="flex flex-col ">
-            {links.map((link, itx) => (
-              <Link
-                key={itx}
-                href={link.href}
-                passHref
-                className=" flex items-center space-x-2 text-sm ml-6 hover:bg-muted"
-              >
-                <DrawerTrigger>
-                  <Button className="space-x-1" variant="link">
-                    <link.icon className="h-5 w-5" />
-                    <span>{link.title}</span>
-                  </Button>
-                </DrawerTrigger>
-              </Link>
-            ))}
-          </div>
-          <Separator className="my-2" />
-          {!name && (
-            <Link href="/login" className="w-full flex">
-              <DrawerTrigger>
-                <Button className="m-2">Log in</Button>
-              </DrawerTrigger>
+        <DrawerContent className="h-full w-full max-w-[280px] overflow-auto border-r border-border/50 bg-background/95 backdrop-blur-xl">
+          <div className="flex items-center justify-between border-b border-border/50 px-4 py-4">
+            <Link href="/" className="shrink-0">
+              <Logo width={56} height={56} />
             </Link>
-          )}
-          {name && (
-            <DrawerTrigger className="flex w-full flex-col justify-between h-full p-2 space-y-1">
-              <Link
-                href="/forms"
-                className="flex text-sm p-2 ml-4 items-center space-x-1"
-              >
-                <Settings size={17} />
-                <span>Settings</span>
-              </Link>
-              <Button
-                className=" w-full flex items-center gap-2 p-2 border rounded-lg mb-5"
-                variant="destructive"
-                onClick={logOutHandler}
-              >
-                {"Logout"}
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-lg">
+                <X className="h-5 w-5" />
               </Button>
             </DrawerTrigger>
-          )}
+          </div>
+          <nav className="flex flex-1 flex-col gap-1 p-4">
+            <div className="flex flex-col gap-0.5">
+              {topLinks.map((link, itx) => (
+                <Link key={itx} href={link.href} passHref>
+                  <DrawerTrigger asChild>
+                    <Button
+                      variant={pathname === link.href ? "secondary" : "ghost"}
+                      className="w-full justify-start gap-3 rounded-xl"
+                    >
+                      <link.icon className="h-4 w-4 shrink-0" />
+                      <span className="text-sm font-medium">{link.title}</span>
+                    </Button>
+                  </DrawerTrigger>
+                </Link>
+              ))}
+            </div>
+            <p className="mt-4 mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Tools
+            </p>
+            <div className="flex flex-col gap-0.5">
+              {toolsLinks.map((link, itx) => (
+                <Link key={itx} href={link.href} passHref>
+                  <DrawerTrigger asChild>
+                    <Button
+                      variant={pathname === link.href ? "secondary" : "ghost"}
+                      className="w-full justify-start gap-3 rounded-xl"
+                    >
+                      <link.icon className="h-4 w-4 shrink-0" />
+                      <span className="text-sm font-medium">{link.title}</span>
+                    </Button>
+                  </DrawerTrigger>
+                </Link>
+              ))}
+            </div>
+            <Separator className="my-4" />
+            <div className="flex flex-col gap-0.5">
+              {links.map((link, itx) => (
+                <Link key={itx} href={link.href} passHref>
+                  <DrawerTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-3 rounded-xl text-muted-foreground"
+                    >
+                      <link.icon className="h-4 w-4 shrink-0" />
+                      <span className="text-sm">{link.title}</span>
+                    </Button>
+                  </DrawerTrigger>
+                </Link>
+              ))}
+            </div>
+          </nav>
+          <div className="border-t border-border/50 p-4">
+            {!name && (
+              <DrawerTrigger asChild>
+                <Button asChild className="w-full rounded-xl" size="lg">
+                  <Link href="/login">Log in</Link>
+                </Button>
+              </DrawerTrigger>
+            )}
+            {name && (
+              <div className="flex flex-col gap-2">
+                <Button asChild variant="ghost" className="w-full justify-start gap-3 rounded-xl" size="sm">
+                  <Link href="/forms">
+                    <DrawerTrigger asChild>
+                      <>
+                        <Settings className="h-4 w-4" />
+                        <span>Settings</span>
+                      </>
+                    </DrawerTrigger>
+                  </Link>
+                </Button>
+                <Button
+                  variant="destructive"
+                  className="w-full rounded-xl"
+                  onClick={logOutHandler}
+                >
+                  Log out
+                </Button>
+              </div>
+            )}
+          </div>
         </DrawerContent>
       </Drawer>
-      <Logo width={60} height={60} />
-      <ThemeToggle />
+      <div className="flex min-w-0 flex-1 justify-center">
+        {feature ? (
+          <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/30 px-3 py-1.5">
+            <feature.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <span className="truncate text-sm font-semibold">{feature.label}</span>
+          </div>
+        ) : (
+          <Link href="/" className="shrink-0">
+            <Logo width={48} height={48} />
+          </Link>
+        )}
+      </div>
+      <div className="flex shrink-0 items-center gap-0.5">
+        <ThemeToggle />
+      </div>
     </div>
   );
 };

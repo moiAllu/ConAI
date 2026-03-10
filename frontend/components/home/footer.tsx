@@ -1,192 +1,128 @@
 "use client";
+
 import React from "react";
-import { useTheme } from "next-themes";
+import Logo from "@/components/navbar/logo";
 
 const footerData = [
   {
     title: "Company",
     links: [
-      {
-        title: "About",
-        link: "#",
-      },
-      {
-        title: "Contact",
-        link: "#",
-      },
-      {
-        title: "Careers",
-        link: "#",
-      },
-      {
-        title: "Abuse",
-        link: "#",
-      },
-      {
-        title: "Terms",
-        link: "#",
-      },
+      { title: "About", link: "#" },
+      { title: "Contact", link: "#" },
+      { title: "Careers", link: "#" },
+      { title: "Terms", link: "#" },
     ],
   },
   {
-    title: "Services",
+    title: "Product",
     links: [
-      {
-        title: "AI Models",
-        link: "#",
-      },
-      {
-        title: "API",
-        link: "#",
-      },
-      {
-        title: "Pricing",
-        link: "#",
-      },
+      { title: "Features", link: "/#features" },
+      { title: "Models", link: "/#models" },
+      { title: "Pricing", link: "/#plans" },
+      { title: "API", link: "#" },
     ],
   },
   {
-    title: "Community",
+    title: "Resources",
     links: [
-      {
-        title: "Blog",
-        link: "#",
-      },
-      {
-        title: "Forum",
-        link: "#",
-      },
-      {
-        title: "Discord",
-        link: "#",
-      },
-    ],
-  },
-
-  {
-    title: "Legal",
-    links: [
-      {
-        title: "Privacy",
-        link: "#",
-      },
-      {
-        title: "Cookies",
-        link: "#",
-      },
-    ],
-  },
-  {
-    title: "Support",
-    links: [
-      {
-        title: "Help",
-        link: "#",
-      },
-      {
-        title: "Status",
-        link: "#",
-      },
+      { title: "Blog", link: "#" },
+      { title: "Help", link: "#" },
+      { title: "Status", link: "#" },
     ],
   },
 ];
+
+const socialIcons = [
+  {
+    label: "Twitter",
+    href: "#",
+    svg: (
+      <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+        fill="currentColor"
+      />
+    ),
+  },
+  {
+    label: "LinkedIn",
+    href: "#",
+    svg: (
+      <path
+        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+        fill="currentColor"
+      />
+    ),
+  },
+  {
+    label: "GitHub",
+    href: "#",
+    svg: (
+      <path
+        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+        fill="currentColor"
+      />
+    ),
+  },
+];
+
 const Footer = () => {
-  const { theme } = useTheme();
   return (
-    <section className=" w-full flex flex-col sm:p-10 gap-20 justify-center items-center mt-20 lg:mx-auto lg:container ">
-      <div className="w-full bg-black  dark:bg-white h-1 rounded-md" />
-      <div className=" w-full h-full flex flex-col justify-start space-y-10 sm:p-2 p-8">
-        <div className="grid sm:flex md:px-20 justify-between w-full ">
-          <div className=" sm:flex grid grid-flow-row grid-cols-1 sm:flex-col justify-items-center mb-10 sm:mb-0 ">
-            <h1 className="text-2xl font-bold">ConAi</h1>
-            <p className="sm:text-sm w-[70%] text-gray-600 text-xs text-center sm:text-start ">
-              {
-                "Conai is a platform that allows you to access the latest AI models."
-              }
+    <footer className="relative w-full border-t border-border/50 bg-muted/20">
+      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:px-8">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="sm:col-span-2 lg:col-span-2">
+            <Logo href="/" width={120} height={44} className="inline-flex" />
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+              One platform for the latest AI models — rewrite, humanize, detect,
+              and create with a single workflow.
             </p>
-            {/* <p className="text-sm">© 2021 Conai. All rights reserved.</p> */}
           </div>
-          <div className="sm:flex grid grid-flow-row grid-cols-1 gap-10">
-            {footerData.map((data, index) => (
-              <div
-                className="flex flex-col gap-2 justify-start items-center "
-                key={index}
-              >
-                <h1 className="text-lg font-semibold">{data.title}</h1>
-                <div className="text-sm text-gray-400 flex flex-col">
-                  {data.links.map((link, index) => (
-                    <a href={link.link} className="text-sm" key={index}>
-                      {link.title}
+          {footerData.map((group, index) => (
+            <div key={index} className="flex flex-col gap-4">
+              <h3 className="text-sm font-semibold text-foreground">
+                {group.title}
+              </h3>
+              <ul className="flex flex-col gap-2.5">
+                {group.links.map((item, i) => (
+                  <li key={i}>
+                    <a
+                      href={item.link}
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {item.title}
                     </a>
-                  ))}
-                </div>
-              </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="mt-14 flex flex-col items-center justify-between gap-6 border-t border-border/50 pt-10 sm:flex-row">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} ConAI. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6">
+            {socialIcons.map((social, i) => (
+              <a
+                key={i}
+                href={social.href}
+                aria-label={social.label}
+                className="text-muted-foreground transition-colors hover:text-primary"
+              >
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden
+                >
+                  {social.svg}
+                </svg>
+              </a>
             ))}
           </div>
         </div>
-        <div className="p-4 flex  items-center justify-between">
-          <p className="text-sm">© 2024 Conai. All rights reserved.</p>
-          <div className=" flex justify-center items-center space-x-2">
-            <a href="#" className="text-sm mr-2">
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 21 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8.76511 9.83991L13.8489 6.86733L8.73567 3.94567L8.76511 9.83991ZM20.0829 2.09121C20.213 2.55229 20.3045 3.17074 20.3673 3.95635C20.44 4.7419 20.4729 5.41959 20.4758 6.00902L20.5389 6.83392C20.5496 8.98532 20.4003 10.5677 20.1303 11.5809C19.8891 12.4663 19.3222 13.0389 18.4393 13.2889C17.9782 13.419 17.1338 13.5116 15.8374 13.577C14.5606 13.6521 13.3918 13.6875 12.3112 13.6929L10.7495 13.7596C6.63333 13.7802 4.06855 13.6358 3.05533 13.3658C2.16997 13.1246 1.59735 12.5577 1.34734 11.6747C1.21732 11.2137 1.12582 10.5952 1.06295 9.80961C0.990261 9.02405 0.957404 8.34636 0.954461 7.75694L0.891397 6.93204C0.880653 4.78064 1.02993 3.19823 1.29995 2.18501C1.54112 1.29965 2.10806 0.727028 2.99097 0.477019C3.45204 0.347004 4.29644 0.254371 5.59288 0.188953C6.86963 0.113809 8.0385 0.0785 9.11912 0.0731034L10.6808 0.00636064C14.7969 -0.0141952 17.3617 0.13018 18.3749 0.400192C19.2603 0.64137 19.8329 1.2083 20.0829 2.09121Z"
-                  fill={theme === "light" ? "#1E1F1E" : "#F2F2F2"}
-                />
-              </svg>
-            </a>
-            <a href="#" className="text-sm">
-              <svg
-                width="38"
-                height="39"
-                viewBox="0 0 38 39"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M14.7293 9.85411L22.9812 9.8129C26.1248 9.79721 28.6917 12.3386 28.7074 15.4822L28.7486 23.7342C28.7562 25.2453 28.1631 26.6976 27.0999 27.7714C26.0367 28.8453 24.5905 29.4528 23.0793 29.4604L14.8274 29.5016C11.6838 29.5173 9.11686 26.9759 9.10116 23.8323L9.05995 15.5803C9.0524 14.0692 9.64546 12.6169 10.7087 11.5431C11.7719 10.4692 13.2181 9.86166 14.7293 9.85411ZM14.5426 11.8198C13.6046 11.8245 12.707 12.2016 12.0471 12.8682C11.3871 13.5347 11.019 14.4361 11.0237 15.3741L11.0669 24.0189C11.0767 25.9739 12.6662 27.5476 14.6211 27.5378L23.266 27.4947C24.2039 27.49 25.1016 27.1129 25.7615 26.4463C26.4214 25.7798 26.7896 24.8784 26.7849 23.9404L26.7417 15.2956C26.7319 13.3406 25.1424 11.7669 23.1875 11.7767L14.5426 11.8198ZM24.0299 13.2461C24.3555 13.2444 24.6685 13.3723 24.9 13.6014C25.1314 13.8305 25.2623 14.1422 25.264 14.4679C25.2656 14.7936 25.1378 15.1066 24.9086 15.338C24.6795 15.5694 24.3678 15.7004 24.0421 15.702C23.7165 15.7036 23.4035 15.5758 23.172 15.3467C22.9406 15.1175 22.8097 14.8058 22.808 14.4802C22.8064 14.1545 22.9342 13.8415 23.1634 13.6101C23.3925 13.3786 23.7042 13.2477 24.0299 13.2461ZM18.8798 14.7454C20.1825 14.7389 21.4344 15.2501 22.3602 16.1667C23.2859 17.0832 23.8097 18.33 23.8162 19.6327C23.8227 20.9354 23.3114 22.1874 22.3949 23.1131C21.4783 24.0389 20.2315 24.5626 18.9288 24.5691C17.6261 24.5756 16.3742 24.0644 15.4484 23.1478C14.5227 22.2313 13.9989 20.9845 13.9924 19.6818C13.9859 18.3791 14.4972 17.1271 15.4137 16.2014C16.3303 15.2756 17.5771 14.7519 18.8798 14.7454ZM18.8896 16.7101C18.108 16.714 17.3599 17.0283 16.81 17.5837C16.26 18.1392 15.9533 18.8903 15.9572 19.672C15.9611 20.4536 16.2753 21.2017 16.8308 21.7516C17.3862 22.3015 18.1374 22.6083 18.919 22.6044C19.7006 22.6005 20.4487 22.2862 20.9986 21.7308C21.5486 21.1753 21.8553 20.4242 21.8514 19.6425C21.8475 18.8609 21.5333 18.1128 20.9778 17.5629C20.4224 17.013 19.6712 16.7062 18.8896 16.7101Z"
-                  fill={theme === "light" ? "#1E1F1E" : "#F2F2F2"}
-                />
-              </svg>
-            </a>
-            <a href="#" className="text-sm">
-              <svg
-                width="38"
-                height="39"
-                viewBox="0 0 38 39"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M16.3875 28.7779L20.317 28.7582L20.2777 20.8894L23.8182 20.8717L24.1877 16.96L20.2582 16.9796L20.2483 15.005C20.247 14.7445 20.3493 14.4941 20.5326 14.3089C20.7159 14.1238 20.9653 14.019 21.2258 14.0177L24.1729 14.003L24.1533 10.0735L21.2062 10.0882C19.9035 10.0947 18.6567 10.6185 17.7402 11.5442C16.8236 12.47 16.3123 13.7219 16.3188 15.0246L16.3287 16.9992L14.364 17.009L13.9945 20.9208L16.3482 20.909L16.3875 28.7779Z"
-                  fill={theme === "light" ? "#1E1F1E" : "#F2F2F2"}
-                />
-              </svg>
-            </a>
-            <a href="#" className="text-sm">
-              <svg
-                width="39"
-                height="38"
-                viewBox="0 0 39 38"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M29.529 13.261C28.7743 13.6087 27.96 13.8387 27.1157 13.9509C27.9776 13.426 28.6415 12.5974 28.9509 11.6037C28.138 12.0989 27.2359 12.4473 26.284 12.6485C25.5037 11.8075 24.4108 11.3218 23.173 11.328C20.8644 11.3395 18.9877 13.2351 18.9993 15.5633C19.001 15.8973 19.0419 16.2213 19.1122 16.5255C15.6141 16.3661 12.4916 14.7018 10.406 12.1678C10.0456 12.7885 9.84298 13.5165 9.84681 14.2828C9.85412 15.7465 10.5974 17.0396 11.7406 17.7707C11.0431 17.7742 10.3938 17.5809 9.82253 17.289L9.82267 17.3185C9.83288 19.3619 11.2953 21.0639 13.2227 21.4374C12.6054 21.6097 11.9565 21.6365 11.3271 21.5157C11.5981 22.3518 12.1243 23.082 12.8317 23.6035C13.5392 24.1251 14.3923 24.4119 15.2712 24.4235C13.7874 25.6102 11.9441 26.2569 10.0441 26.2572C9.71014 26.2589 9.37603 26.2409 9.04183 26.2033C10.9143 27.3925 13.138 28.0789 15.5153 28.067C23.2564 28.0283 27.478 21.5824 27.4502 16.0123C27.4493 15.8257 27.4484 15.6488 27.4376 15.4622C28.2599 14.8687 28.9635 14.1186 29.529 13.261Z"
-                  fill={theme === "light" ? "#1E1F1E" : "#F2F2F2"}
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
       </div>
-    </section>
+    </footer>
   );
 };
 

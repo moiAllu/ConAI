@@ -2,11 +2,14 @@
 import * as React from "react";
 import PhoneNavbar from "./phone-navbar";
 import DesktopNavbar from "./desktop-navbar";
+
 export const Navbar = () => {
   return (
-    <div className=" h-[60px] sticky top-0 bg-white dark:bg-black bg-opacity-95 shadow-md dark:shadow-sm dark:shadow-gray-900 rounded-lg flex sm:p-5 z-10 md:mx-auto md:container">
-      <PhoneNavbar />
-      <DesktopNavbar />
-    </div>
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/90 backdrop-blur-xl">
+      <div className="flex h-14 items-center justify-between px-3 sm:h-16 sm:px-4 md:mx-auto md:max-w-7xl md:px-6">
+        <PhoneNavbar />
+        <DesktopNavbar />
+      </div>
+    </header>
   );
 };
