@@ -13,18 +13,25 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const isPhone = useWindowSize().width < 768;
 
+  const pageBg =
+    "min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950";
+
   if (isPhone) {
     return (
-      <div className="w-full h-screen flex justify-center">
+      <div className={`w-full ${pageBg} flex justify-center p-4`}>
         {otpRequestGen ? (
-          <div className=" flex flex-col gap-4 w-full h-full max-w-[300px] justify-center">
-            <div>
-              <h2 className="text-2xl font-bold">Verify your email</h2>
-              <p className="text-sm text-gray-500">
-                Enter the OTP sent to your email to verify your account
+          <div className="flex flex-col gap-4 w-full max-w-[340px] justify-center">
+            <div className="rounded-2xl border-0 bg-white/80 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-sm dark:bg-slate-900/80 dark:shadow-slate-950/50">
+              <h2 className="text-xl font-semibold tracking-tight">
+                Verify your email
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Enter the code sent to your email to verify your account
               </p>
+              <div className="mt-4">
+                <InputOTPForm email={email} />
+              </div>
             </div>
-            <InputOTPForm email={email} />
           </div>
         ) : (
           <CreateAccount
@@ -43,35 +50,42 @@ const SignUp = () => {
         )}
       </div>
     );
-  } else
-    return (
-      <div className="w-full h-screen md:flex justify-center items-center gap-8">
-        <CreateAccount
-          setConfirmPassword={setConfirmPassword}
-          setOtpRequestGen={setOtpRequestGen}
-          firstName={firstName}
-          password={password}
-          lastName={lastName}
-          email={email}
-          setEmail={setEmail}
-          setFirstName={setFirstName}
-          setLastName={setLastName}
-          setPassword={setPassword}
-          confirmPassword={confirmPassword}
-        />
-        {otpRequestGen && (
-          <div className=" flex flex-col gap-4 w-full h-full max-w-[300px] justify-center">
-            <div>
-              <h2 className="text-2xl font-bold">Verify your email</h2>
-              <p className="text-sm text-gray-500">
-                Enter the OTP sent to your email to verify your account
-              </p>
+  }
+
+  return (
+    <div
+      className={`w-full ${pageBg} flex items-center justify-center gap-8 p-6`}
+    >
+      <CreateAccount
+        setConfirmPassword={setConfirmPassword}
+        setOtpRequestGen={setOtpRequestGen}
+        firstName={firstName}
+        password={password}
+        lastName={lastName}
+        email={email}
+        setEmail={setEmail}
+        setFirstName={setFirstName}
+        setLastName={setLastName}
+        setPassword={setPassword}
+        confirmPassword={confirmPassword}
+      />
+      {otpRequestGen && (
+        <div className="flex w-full max-w-[380px] flex-col gap-4">
+          <div className="rounded-2xl border-0 bg-white/80 p-8 shadow-xl shadow-slate-200/50 backdrop-blur-sm dark:bg-slate-900/80 dark:shadow-slate-950/50">
+            <h2 className="text-xl font-semibold tracking-tight">
+              Verify your email
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Enter the code sent to your email to verify your account
+            </p>
+            <div className="mt-6">
+              <InputOTPForm email={email} otpRequestGen={otpRequestGen} />
             </div>
-            <InputOTPForm email={email} otpRequestGen={otpRequestGen} />
           </div>
-        )}
-      </div>
-    );
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SignUp;

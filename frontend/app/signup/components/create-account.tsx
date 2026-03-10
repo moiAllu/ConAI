@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import LoadingSpinner from "@/components/loading-spinner";
 import { useMeStore } from "@/app/dashboard/store";
+import { GoogleIcon } from "@/components/icons/google-icon";
 interface CreateAccountProps {
   setOtpRequestGen: (otpRequestGen: any) => void;
   firstName: string;
@@ -154,16 +155,43 @@ export default function CreateAccount({
       console.log(e);
     }
   };
+  const handleGoogleSignUp = () => {
+    window.location.href = "/api/auth/google";
+  };
+
   return (
-    <div className="flex justify-center items-center">
-      <Card className="mx-auto max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Sign Up</CardTitle>
-          <CardDescription>
-            Enter your information to create an account
+    <div className="flex items-center justify-center">
+      <Card className="mx-auto w-full max-w-[420px] border-0 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-sm dark:bg-slate-900/80 dark:shadow-slate-950/50 rounded-2xl">
+        <CardHeader className="space-y-1.5 pb-6 text-center">
+          <CardTitle className="text-2xl font-semibold tracking-tight">
+            Create an account
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Enter your details to get started
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-5">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 w-full border-slate-200 bg-white font-medium hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-800/80"
+            onClick={handleGoogleSignUp}
+          >
+            <GoogleIcon className="mr-2 h-5 w-5" />
+            Continue with Google
+          </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-slate-200 dark:border-slate-700" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-muted-foreground dark:bg-slate-900/80">
+                or continue with email
+              </span>
+            </div>
+          </div>
+
           <form className="grid gap-4 mb-2" onSubmit={formSubmitHandler}>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -184,7 +212,7 @@ export default function CreateAccount({
                     }
                     setFirstName(e.target.value);
                   }}
-                  className={`${errors.firstName && "border-red-700"}`}
+                  className={`h-11 rounded-lg ${errors.firstName ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={loading}
                 />
                 {errors.firstName && (
@@ -211,7 +239,7 @@ export default function CreateAccount({
                     }
                     setLastName(e.target.value);
                   }}
-                  className={`${errors.lastName && "border-red-700"}`}
+                  className={`h-11 rounded-lg ${errors.lastName ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                   disabled={loading}
                 />
                 {errors.lastName && (
@@ -240,7 +268,7 @@ export default function CreateAccount({
                   }
                   setEmail(e.target.value);
                 }}
-                className={`${errors.email && "border-red-700"}`}
+                className={`h-11 rounded-lg ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                 disabled={loading}
               />
               {errors.email && (
@@ -257,71 +285,74 @@ export default function CreateAccount({
                   setErrors({ ...errors, password: "" });
                   setPassword(e.target.value);
                 }}
-                className={`${errors.password && "border-red-700"}`}
+                className={`h-11 rounded-lg ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                 disabled={loading}
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setErrors({ ...errors, confirmPassword: "" });
-                  setConfirmPassword(e.target.value);
-                  console.log(e.target.value);
-                }}
-                className={`${errors.confirmPassword && "border-red-700"}`}
-                disabled={loading}
-              />
-            </div>
-            <div className="text-xs space-y-1">
-              <p className="text-muted-foreground">Password requirements:</p>
-              {Object.entries(getPasswordRequirementStatus(password)).map(
-                ([requirement, isMet]) => (
-                  <div key={requirement} className="flex items-center gap-2">
-                    {isMet ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-green-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 text-gray-300"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    )}
-                    <span
-                      className={isMet ? "text-green-500" : "text-gray-500"}
-                    >
-                      {requirement === "minLength" && "At least 8 characters"}
-                      {requirement === "uppercase" && "One uppercase letter"}
-                      {requirement === "lowercase" && "One lowercase letter"}
-                      {requirement === "number" && "One number"}
-                      {requirement === "special" &&
-                        'One special character (!@#$%^&*(),.?":{}|<>)'}
-                    </span>
-                  </div>
-                )
-              )}
-            </div>
+            {password.length > 0 && (
+              <>
+                <div className="text-xs space-y-1">
+                  <p className="text-muted-foreground">Password requirements:</p>
+                  {Object.entries(getPasswordRequirementStatus(password)).map(
+                    ([requirement, isMet]) => (
+                      <div key={requirement} className="flex items-center gap-2">
+                        {isMet ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-green-500"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-gray-300"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        )}
+                        <span
+                          className={isMet ? "text-green-500" : "text-gray-500"}
+                        >
+                          {requirement === "minLength" && "At least 8 characters"}
+                          {requirement === "uppercase" && "One uppercase letter"}
+                          {requirement === "lowercase" && "One lowercase letter"}
+                          {requirement === "number" && "One number"}
+                          {requirement === "special" &&
+                            'One special character (!@#$%^&*(),.?":{}|<>)'}
+                        </span>
+                      </div>
+                    ),
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setErrors({ ...errors, confirmPassword: "" });
+                      setConfirmPassword(e.target.value);
+                    }}
+                    className={`h-11 rounded-lg ${errors.confirmPassword ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                    disabled={loading}
+                  />
+                </div>
+              </>
+            )}
             {errors.general && (
               <div className="flex w-full justify-center text-red-700 p-2 rounded bg-muted">
                 <Label className="font-semibold text-md">
@@ -336,19 +367,28 @@ export default function CreateAccount({
             )}
             <Button
               type="submit"
-              className="w-full flex space-x-2 items-center"
+              className="h-11 w-full rounded-lg font-medium"
               disabled={loading}
             >
-              <span> Create an account</span>
-              {loading && <LoadingSpinner />}
+              {loading ? (
+                <>
+                  <LoadingSpinner />
+                  <span className="ml-2">Creating account…</span>
+                </>
+              ) : (
+                "Create account"
+              )}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
+          <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="underline">
+            <Link
+              href="/login"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+            >
               Sign in
             </Link>
-          </div>
+          </p>
         </CardContent>
       </Card>
     </div>

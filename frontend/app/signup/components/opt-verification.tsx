@@ -22,7 +22,6 @@ import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMeStore } from "@/app/dashboard/store";
-import { User } from "@/app/dashboard/store";
 
 const FormSchema = z.object({
   pin: z
@@ -40,7 +39,7 @@ const OTP_TIMER_INTERVAL = 60;
 export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
   const [loading, setLoading] = React.useState(false);
   const [otpLoading, setOtpLoading] = React.useState(false);
-  const otpSentRef = useRef(false); // Track if OTP was sent before
+  const otpSentRef = useRef(false);
   const [error, setError] = React.useState("");
   const [success, setSuccess] = React.useState("");
   const [timer, setTimer] = React.useState(OTP_TIMER_INTERVAL);
@@ -74,14 +73,15 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
         setOtpLoading(false);
         return;
       }
-      toast({ title: "Error", description: "something went wrong!" });
+      toast({ title: "Error", description: "Something went wrong." });
       setOtpLoading(false);
-    } catch (error) {
+    } catch (err) {
       toast({
         title: "Error",
         description: "Failed to send OTP",
         variant: "destructive",
       });
+      setOtpLoading(false);
     }
   };
 
@@ -89,7 +89,7 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
     const savedOtpSent = localStorage.getItem("otpSent");
     const savedTimer = localStorage.getItem("otpTimer");
     if (savedOtpSent) {
-      otpSentRef.current = true; // OTP was already sent
+      otpSentRef.current = true;
     }
 
     const currentTime = Math.floor(Date.now() / 1000);
@@ -105,7 +105,7 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
     }
 
     if (!savedOtpSent) {
-      handleOtpRequest(); // Send OTP only if not sent before
+      handleOtpRequest();
     }
   }, []);
 
@@ -124,8 +124,7 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
     return () => clearInterval(intervalId);
   }, [timer]);
 
-  async function onSubmit(data: z.infer<typeof FormSchema>, e: any) {
-    e.preventDefault();
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     setError("");
     setSuccess("");
     setLoading(true);
@@ -141,7 +140,7 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ otp, email }),
           credentials: "include",
-        }
+        },
       );
       const result = await response.json();
       if (result.status === 200) {
@@ -164,16 +163,24 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-5"
+      >
         <FormField
           control={form.control}
           name="pin"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>One-Time Password</FormLabel>
+            <FormItem className="space-y-2">
+              <FormLabel>Verification code</FormLabel>
               <FormControl>
-                <InputOTP maxLength={6} {...field} disabled={loading}>
-                  <InputOTPGroup>
+                <InputOTP
+                  maxLength={6}
+                  {...field}
+                  disabled={loading}
+                  containerClassName="justify-center gap-2"
+                >
+                  <InputOTPGroup className="rounded-lg">
                     <InputOTPSlot index={0} />
                     <InputOTPSlot index={1} />
                     <InputOTPSlot index={2} />
@@ -183,8 +190,8 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
-              <FormDescription className="w-full">
-                Please enter the one-time password sent to your phone.
+              <FormDescription className="text-muted-foreground">
+                Enter the code sent to your email.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -194,41 +201,46 @@ export function InputOTPForm({ email, otpRequestGen }: InputOTPFormProps) {
         <Button
           type="button"
           variant="outline"
-          className="w-full"
-          disabled={!canResend}
+          className="h-11 w-full rounded-lg border-slate-200 font-medium hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800/80"
+          disabled={!canResend || otpLoading}
           onClick={handleOtpRequest}
         >
           {otpLoading ? (
-            <LoadingSpinner />
+            <>
+              <LoadingSpinner />
+              <span className="ml-2">Sending…</span>
+            </>
           ) : canResend ? (
-            "Resend OTP"
+            "Resend code"
           ) : (
-            `Resend OTP in ${timer}s`
+            `Resend code in ${timer}s`
           )}
         </Button>
 
-        {error && <FormMessage className="w-full">{error}</FormMessage>}
+        {error && (
+          <p className="text-center text-sm text-red-600 dark:text-red-400">
+            {error}
+          </p>
+        )}
         {success && (
-          <FormMessage className="w-full text-green-700 ">
+          <p className="text-center text-sm text-green-600 dark:text-green-400">
             {success}
-          </FormMessage>
+          </p>
         )}
 
         <Button
           type="submit"
-          className=" flex space-x-2 items-center"
+          className="h-11 w-full rounded-lg font-medium"
           disabled={loading}
-          onClick={() => {
-            if (loading) {
-              toast({
-                title: "Uh oh! Something went wrong.",
-                description: "There was a problem with your request.",
-              });
-            }
-          }}
         >
-          <span> Submit</span>
-          {loading && <LoadingSpinner />}
+          {loading ? (
+            <>
+              <LoadingSpinner />
+              <span className="ml-2">Verifying…</span>
+            </>
+          ) : (
+            "Verify email"
+          )}
         </Button>
       </form>
     </Form>

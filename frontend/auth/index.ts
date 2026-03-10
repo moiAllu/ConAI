@@ -1,4 +1,6 @@
 export * from './signIn'
 export * from './signUp'
+export * from './signInWithGoogle'
 export * from './forgotPassword'
 export * from './resetPassword'
+export * from './device'
