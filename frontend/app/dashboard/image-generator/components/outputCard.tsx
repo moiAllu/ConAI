@@ -1,32 +1,26 @@
-import React, { useEffect } from "react";
-import { Badge } from "@/components/ui/badge";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useMeStore } from "../../store";
 import { useSearchParams } from "next/navigation";
-import {
-  downloadImageEndPoint,
-  getImageById,
-} from "@/lib/apicalls/image-generation";
+import { getImageById } from "@/lib/apicalls/image-generation";
 import { useImageStore } from "../store";
-// import { Image } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Download, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const OutputCard = () => {
   const userId = useMeStore((state) => state._id);
-  const [base64Image, setBase64Image] = React.useState() as any;
   const { addImage, images } = useImageStore();
   const searchParams = useSearchParams();
   const imageId = searchParams.get("imageId") || "";
   const selectedImage = images.find((img) => img._id === imageId);
+  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"image" | "prompt">("image");
+
   useEffect(() => {
-    if (!imageId) return;
+    if (!imageId || !userId) return;
     const fetchImageById = async () => {
       const response = await getImageById(imageId, userId);
       if (response.status === 200) {
@@ -36,127 +30,140 @@ const OutputCard = () => {
       }
     };
     fetchImageById();
-  }, [imageId]);
-  const downloadImage = async () => {
-    const response = await downloadImageEndPoint(imageId, "1080");
+  }, [imageId, userId, addImage]);
+
+  const handleDownload = () => {
+    if (!base64Image) return;
     try {
-      // Replace with your server's API endpoint
-      const b64_json = response;
-
-      // Determine the image type (e.g., png, jpeg). Adjust if needed.
-      const imageType = "image/png"; // Change based on your image type
-
-      // Create a Blob from the Base64 string
-      const byteCharacters = atob(b64_json);
+      const byteCharacters = atob(base64Image);
       const byteNumbers = new Array(byteCharacters.length);
       for (let i = 0; i < byteCharacters.length; i++) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: imageType });
-
-      // Create a link and trigger the download
+      const blob = new Blob([byteArray], { type: "image/png" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `downloaded_image${selectedImage?._id}.png`; // Set desired file name and extension
+      link.download = `image-${selectedImage?._id ?? "download"}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading the image:", error);
+    } catch (err) {
+      console.error("Error downloading image:", err);
     }
   };
-  const handleDownload = async () => {
-    try {
-      // Replace with your server's API endpoint
-      const b64_json = base64Image;
 
-      // Determine the image type (e.g., png, jpeg). Adjust if needed.
-      const imageType = "image/png"; // Change based on your image type
+  if (!selectedImage && !base64Image) {
+    return (
+      <div className="flex h-full min-h-0 w-full flex-col">
+        <div
+          className={cn(
+            "flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-border/50 p-8",
+            "bg-muted/5 bg-gradient-to-b from-muted/10 to-transparent"
+          )}
+        >
+          <div className="rounded-full border border-border/40 bg-muted/20 p-3">
+            <Sparkles className="h-7 w-7 text-muted-foreground/60" />
+          </div>
+          <p className="mt-3 text-sm font-medium text-muted-foreground">
+            Image appears here
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground/80">
+            Generate an image to see the result.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-      // Create a Blob from the Base64 string
-      const byteCharacters = atob(b64_json);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: imageType });
-
-      // Create a link and trigger the download
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `downloaded_image${selectedImage?._id}.png`; // Set desired file name and extension
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading the image:", error);
-    }
-  };
   return (
-    <div className="relative flex h-full w-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2 ">
-      {!selectedImage && (
-        <Badge variant="outline" className="absolute right-3 top-3">
-          Output
-        </Badge>
+    <div
+      className={cn(
+        "flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border/50",
+        "bg-background/70 shadow-sm backdrop-blur-sm"
       )}
-      <div className="w-full min-h-full overflow-y-auto">
-        {base64Image && imageId && (
-          <div className="gap-2  flex flex-col w-full mt-2 h-full">
-            <h1 className="md:hidden font-semibold w-full text-center">
-              {selectedImage?.prompt}
-            </h1>
-            <div className="flex w-full gap-2 justify-evenly h-full items-center">
-              <div>
-                <h1 className="md:flex justify-center hidden font-semibold w-full max-w-[400px] text-center">
-                  {selectedImage?.prompt}
-                </h1>
-                <Separator className="my-1" />
-                {selectedImage ? (
-                  <Image
-                    src={`data:image/png;base64,${selectedImage?.image}`}
-                    width={400}
-                    height={400}
-                    alt="Base64 Example"
-                    className="rounded-lg 2xl:w-[700px] max-w-[320px] sm:max-w-[400px] md:max-w-[400px]"
-                  />
-                ) : (
-                  <></>
-                )}
-                <Separator className="my-1" />
-                <div className=" md:hidden h-full flex flex-col md:flex-row gap-2 justify-center mt-2">
-                  <Button variant="default" onClick={handleDownload}>
-                    {" "}
-                    Download Original
-                  </Button>
-                </div>
-              </div>
-              <div className="md:flex md:flex-col hidden gap-1 items-start">
-                <Card className="border-none bg-inherit md:visible shadow-none">
-                  <CardHeader className="p-0">
-                    <CardTitle className="text-lg">Revised Prompt</CardTitle>
-                  </CardHeader>
-                  <Separator className="my-1" />
-                  <CardDescription>
-                    <p className=" flex text-sm justify-center text-justify h-full items-center max-w-xs">
-                      {selectedImage?.revised_prompt}
-                    </p>
-                  </CardDescription>
-                </Card>
-                <Separator className="my-1" />
-                <div className="h-full flex flex-col md:flex-row gap-2 justify-center mt-1">
-                  <Button variant="default" onClick={handleDownload}>
-                    {" "}
-                    Download Original
-                  </Button>
-                </div>
-              </div>
+    >
+      <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 border-b border-border/40 px-4 py-2">
+        <span className="mr-auto text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          Result
+        </span>
+        <div className="flex rounded-lg border border-border/40 bg-muted/20 p-0.5">
+          <button
+            type="button"
+            onClick={() => setViewMode("image")}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors",
+              viewMode === "image"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Image
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode("prompt")}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-colors",
+              viewMode === "prompt"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Prompt
+          </button>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleDownload}
+          className="h-8 gap-1.5 rounded-lg px-2.5 text-xs"
+        >
+          <Download className="h-3.5 w-3.5" />
+          Download
+        </Button>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+        {viewMode === "image" ? (
+          <div className="flex flex-col items-center gap-4">
+            {selectedImage?.prompt && (
+              <p className="text-center text-sm font-medium text-foreground max-w-lg">
+                {selectedImage.prompt}
+              </p>
+            )}
+            {base64Image && (
+              <Image
+                src={`data:image/png;base64,${base64Image}`}
+                width={400}
+                height={400}
+                alt="Generated"
+                className="rounded-xl max-w-full h-auto object-contain shadow-md"
+              />
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                Your prompt
+              </p>
+              <p className="mt-1 text-sm text-foreground">
+                {selectedImage?.prompt ?? "—"}
+              </p>
             </div>
+            {selectedImage?.revised_prompt && (
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Revised prompt
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground whitespace-pre-wrap">
+                  {selectedImage.revised_prompt}
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
