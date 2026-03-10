@@ -91,97 +91,75 @@ export function AccountForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="sm:flex items-start space-x-2 ">
-          <div className="flex flex-col space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your name" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is the name that will be displayed on your profile and
-                    in emails.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dob"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date of birth</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>
-                    Your date of birth is used to calculate your age.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          {/* <FormField
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid gap-2 sm:gap-6 md:grid-cols-2 items-center justify-center ">
+          <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Profile Picture</FormLabel>
+                <FormLabel className="w-full">Name</FormLabel>
                 <FormControl>
-                  <Card className=" flex flex-col items-center space-y-2 p-2 ">
-                    <Card className="flex flex-col relative h-[220px] w-[180px]">
-                      <Image
-                        src="/profile.jpg"
-                        alt="Profile picture"
-                        fill
-                        className="rounded-lg shadow-sm"
-                        sizes="(max-width: 640px) 320px, 270px"
-                      />
-                    </Card>
-                    <Input id="picture" type="file" />
-                  </Card>
+                  <Input placeholder="Your name" {...field} />
                 </FormControl>
+                <FormDescription className="text-xs text-muted-foreground sm:text-sm">
+                  This is the name that will be displayed on your profile and in
+                  emails.
+                </FormDescription>
+                <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
+
+          <FormField
+            control={form.control}
+            name="dob"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-sm font-medium pb-[1px]">
+                  Date of birth
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-between pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription className="text-xs text-muted-foreground sm:text-sm">
+                  Your date of birth is used to calculate your age.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-        {/* <FormField
+
+        <FormField
           control={form.control}
           name="language"
           render={({ field }) => (
@@ -194,20 +172,20 @@ export function AccountForm() {
                       variant="outline"
                       role="combobox"
                       className={cn(
-                        "w-[200px] justify-between",
-                        !field.value && "text-muted-foreground"
+                        "w-full justify-between",
+                        !field.value && "text-muted-foreground",
                       )}
                     >
                       {field.value
                         ? languages.find(
-                            (language) => language.value === field.value
+                            (language) => language.value === field.value,
                           )?.label
                         : "Select language"}
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
+                <PopoverContent className="w-[240px] p-0">
                   <Command>
                     <CommandInput placeholder="Search language..." />
                     <CommandEmpty>No language found.</CommandEmpty>
@@ -225,7 +203,7 @@ export function AccountForm() {
                               "mr-2 h-4 w-4",
                               language.value === field.value
                                 ? "opacity-100"
-                                : "opacity-0"
+                                : "opacity-0",
                             )}
                           />
                           {language.label}
@@ -241,8 +219,11 @@ export function AccountForm() {
               <FormMessage />
             </FormItem>
           )}
-        /> */}
-        <Button type="submit">Update account</Button>
+        />
+
+        <Button type="submit" className="mt-2">
+          Update account
+        </Button>
       </form>
     </Form>
   );

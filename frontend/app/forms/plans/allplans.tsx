@@ -1,4 +1,6 @@
 "use client";
+
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -6,21 +8,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import React, { use } from "react";
-import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMeStore } from "@/app/dashboard/store";
 import {
   createCheckoutSession,
   fetchAllPlans,
 } from "@/lib/apicalls/subcriptionPlans";
-import { useEffect } from "react";
 import { usePlanStore } from "./store";
+import { CreditCard } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const AllPlans = () => {
-  const { _id, email } = useMeStore((state) => state);
+  const { email } = useMeStore((state) => state);
   const { plans, setPlans } = usePlanStore((state) => state);
+
   useEffect(() => {
     const fetch = async () => {
       const response = await fetchAllPlans();
@@ -29,58 +30,66 @@ const AllPlans = () => {
       }
     };
     fetch();
-  }, [_id]);
+  }, [setPlans]);
 
   return (
-    <div className="w-full h-full">
-      <div className="flex flex-col justify-start space-y-2 py-2">
-        <h1 className="text-xl md:text-3xl font-semibold">All Plans</h1>
-      </div>
-      <Card>
+    <div className=" w-full space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => (
-          <div key={plan._id}>
-            <CardHeader className="bg-muted" key={plan._id}>
-              <CardTitle>
-                {plan.name.charAt(0).toUpperCase() +
-                  plan.name.slice(1) +
-                  " Plan"}
-              </CardTitle>
-              <CardDescription>
-                <div className="text-sm font-semibold space-y-1 flex flex-col mt-2 ">
-                  <h2>{plan?.description}</h2>
-                  <h2>Price: {plan.ammount + "$"}</h2>
+          <Card
+            key={plan._id}
+            className={cn(
+              "flex flex-col overflow-hidden rounded-2xl border border-border/50",
+              "bg-background/80 shadow-sm transition-shadow hover:shadow-md",
+            )}
+          >
+            <CardHeader className="border-b border-border/40 bg-muted/20 pb-4">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <CreditCard className="h-4 w-4 text-primary" />
                 </div>
-              </CardDescription>
-            </CardHeader>
-            <Separator className="mb-2" />
-            <CardContent>
-              <div className="grid gap-5 sm:gap-0 sm:flex justify-between my-10 items-center">
-                <ol className="text-sm space-y-2 grid-cols-2 grid  w-full">
-                  {plan?.features?.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ol>
+                <CardTitle className="text-lg">
+                  {plan.name.charAt(0).toUpperCase() + plan.name.slice(1)} Plan
+                </CardTitle>
               </div>
+              <CardDescription className="mt-2 text-sm">
+                {plan?.description}
+              </CardDescription>
+              <p className="mt-2 text-xl font-semibold tracking-tight">
+                {plan.ammount}$
+                <span className="text-sm font-normal text-muted-foreground">
+                  /month
+                </span>
+              </p>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col gap-4 pt-4">
+              <ul className="grid gap-2 text-sm text-muted-foreground">
+                {plan?.features?.map((feature: string, index: number) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
               <Button
-                className="w-full"
+                className="mt-auto w-full rounded-xl bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
                 variant="outline"
                 onClick={async () => {
                   const buySubscription = await createCheckoutSession(
                     plan.stripe_price_id,
-                    email
+                    email,
                   );
                   if (buySubscription.status === 200) {
                     window.location.href = buySubscription.data.url;
-                    console.log("BuySubscription", buySubscription);
                   }
                 }}
               >
-                Change Plan
+                Choose plan
               </Button>
             </CardContent>
-          </div>
+          </Card>
         ))}
-      </Card>
+      </div>
     </div>
   );
 };
