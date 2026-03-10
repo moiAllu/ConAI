@@ -1,14 +1,13 @@
 "use client";
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { SendHorizontal, Paperclip, FileSearch } from "lucide-react";
+import { Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { AI_CHAT_CONFIG } from "@/config";
 import { useAIChatStore } from "../store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMeStore } from "../../store";
-import { OctagonPause, ArrowUp, MoveUp } from "lucide-react";
+import { OctagonPause, ArrowUp } from "lucide-react";
 import { addMessageInChat } from "@/lib/apicalls/chat-assisstance";
 type Props = {};
 
@@ -121,16 +120,15 @@ const AIChatForm = (props: Props) => {
   };
 
   return (
-    <Card className="flex flex-col p-2 sm:px-3 sm:py-1 rounded-full items-center w-full  sm:w-[90%] outline-none  ">
-      <form onSubmit={handleSubmit} className="flex w-full">
-        <div className="flex items-center hover:bg-muted p-2 rounded-full cursor-pointer transition-colors">
-          <Paperclip size={19} />
-        </div>
-
+    <div className="flex flex-col gap-2 rounded-2xl border border-border/40 bg-muted/10 p-2">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 rounded-xl border border-border/50 bg-background pl-3 pr-1 py-1 shadow-sm">
+        <button type="button" className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted/60" aria-label="Attach">
+          <Paperclip size={18} />
+        </button>
         <Input
           type="text"
-          placeholder="Ask me anything..."
-          className="py-1 border-none px-0 w-full focus:border-transparent focus:ring-0 focus-visible:ring-0"
+          placeholder="Ask me anything…"
+          className="min-h-0 flex-1 border-0 bg-transparent py-2.5 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
           value={input}
           disabled={isLoading}
           onChange={(e) => {
@@ -141,39 +139,17 @@ const AIChatForm = (props: Props) => {
         />
         <Button
           type="submit"
-          disabled={input === ""}
+          disabled={!input.trim()}
           size="sm"
-          className="rounded-full px-2"
+          className="h-9 w-9 shrink-0 rounded-lg bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
         >
-          {isLoading ? <OctagonPause /> : <ArrowUp size={20} />}
+          {isLoading ? <OctagonPause className="h-4 w-4" /> : <ArrowUp size={18} />}
         </Button>
       </form>
-      {/* <div className="flex justify-between w-full items-center">
-        <div className=" flex items-start w-full text-gray-600 sm:space-x-2 ">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center sm:space-x-1"
-          >
-            <Paperclip size={16} />
-            <span className=" hidden sm:flex">Attach</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex items-center space-x-1"
-          >
-            <FileSearch size={16} />
-            <span className=" hidden sm:flex">Browse Prompts</span>
-          </Button>
-        </div>
-        <div>
-          <span className="text-gray-500 dark:text-gray-700 sm:text-sm text-xs">
-            {input.length}/{AI_CHAT_CONFIG.MAX_INPUT_CHARS}
-          </span>
-        </div>
-      </div> */}
-    </Card>
+      <p className="text-right text-[10px] text-muted-foreground">
+        {input.length} / {AI_CHAT_CONFIG.MAX_INPUT_CHARS}
+      </p>
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ export function SelectModel() {
   const [value, setValue] = React.useState("3.5 Turbo");
   return (
     <Select onValueChange={(e) => setValue(e)}>
-      <SelectTrigger className="w-[180px] border none">
+      <SelectTrigger className="h-9 w-[180px] rounded-lg border-border/80 bg-muted/30 text-xs">
         <SelectValue placeholder="3.5 Turbo" />
       </SelectTrigger>
       <SelectContent>

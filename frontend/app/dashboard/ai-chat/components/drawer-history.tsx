@@ -43,15 +43,19 @@ const DrawerChatHistory = () => {
     fetchChatHistory(_id);
   }, [_id]);
   return (
-    <div className="sm:hidden">
-      <Drawer direction="right">
+    <div className="md:hidden">
+      <Drawer direction="left">
         <DrawerTrigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <History className="size-6" />
-            <span className="sr-only">Settings</span>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-9 gap-1.5 rounded-lg border border-border/40 bg-muted/20 px-2.5 text-xs font-medium md:h-9 [&_svg]:shrink-0"
+          >
+            <History className="h-4 w-4" />
+            <span>History</span>
           </Button>
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent className="w-screen sm:max-w-[450px] max-w-[270px] h-full">
           <DrawerHeader className="jusitfy-start">
             <DrawerTitle className="text-left">History</DrawerTitle>
             <DrawerDescription className="text-left h-full ">
